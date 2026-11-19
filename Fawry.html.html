@@ -282,6 +282,7 @@
             justify-content: space-between;
             margin-top: 10px;
             gap: 4px;
+            flex-wrap: wrap;
         }
 
         .quick-mark-btn {
@@ -302,7 +303,7 @@
             background-color: #ecfdf5;
         }
 
-        /* أزرار مدة السداد (3 أعمدة متساوية) */
+        /* أزرار مدة السداد (3 أعمدة متساوية: 12، 18، 24 شهراً) */
         .duration-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -438,11 +439,12 @@
 
                     <!-- شريط التمرير -->
                     <div class="slider-container">
-                        <input type="range" id="amountSlider" class="custom-slider" min="350000" max="2000000" step="10000" value="500000" aria-label="شريط تحديد مبلغ التمويل">
+                        <input type="range" id="amountSlider" class="custom-slider" min="350000" max="2000000" step="50000" value="500000" aria-label="شريط تحديد مبلغ التمويل">
                         <div class="quick-marks">
                             <button type="button" class="quick-mark-btn" data-amount="350000">350 ألف</button>
                             <button type="button" class="quick-mark-btn" data-amount="500000">500 ألف</button>
                             <button type="button" class="quick-mark-btn" data-amount="1000000">1 مليون</button>
+                            <button type="button" class="quick-mark-btn" data-amount="1500000">1.5 مليون</button>
                             <button type="button" class="quick-mark-btn" data-amount="2000000">2 مليون</button>
                         </div>
                     </div>
@@ -471,7 +473,7 @@
                 <div class="result-box">
                     <div class="result-label">القسط الشهري</div>
                     <div class="result-value-row">
-                        <span id="monthlyInstallmentDisplay" class="result-amount">36,219.38</span>
+                        <span id="monthlyInstallmentDisplay" class="result-amount">51,741.98</span>
                         <span class="result-unit">جنيه / شهرياً</span>
                     </div>
                 </div>
@@ -486,6 +488,44 @@
             const MAX_AMOUNT = 2000000;
             const DEFAULT_AMOUNT = 500000;
             const DEFAULT_MONTHS = 12;
+
+            // جدول القيم المرجعية للأقساط الشهرية (350,000 حتى 2,000,000 بفارق 50,000)
+            const SCHEDULE_TABLE = {
+                350000:  { 12: 36219.38,  18: 26535.89,  24: 21795.49 },
+                400000:  { 12: 41393.58,  18: 30326.73,  24: 24909.13 },
+                450000:  { 12: 46567.78,  18: 34117.57,  24: 28022.77 },
+                500000:  { 12: 51741.98,  18: 37908.41,  24: 31136.41 },
+                550000:  { 12: 56637.41,  18: 41411.75,  24: 33950.97 },
+                600000:  { 12: 61786.27,  18: 45176.46,  24: 37037.42 },
+                650000:  { 12: 66935.13,  18: 48941.17,  24: 40123.87 },
+                700000:  { 12: 72083.99,  18: 52705.88,  24: 43210.32 },
+                750000:  { 12: 77232.85,  18: 56470.59,  24: 46296.77 },
+                800000:  { 12: 82381.71,  18: 60235.30,  24: 49383.22 },
+                850000:  { 12: 87530.57,  18: 64000.01,  24: 52469.67 },
+                900000:  { 12: 92679.43,  18: 67764.72,  24: 55556.12 },
+                950000:  { 12: 97828.29,  18: 71529.43,  24: 58642.57 },
+                1000000: { 12: 102977.15, 18: 75294.14,  24: 61729.02 },
+                1050000: { 12: 107595.06, 18: 78511.80,  24: 64247.12 },
+                1100000: { 12: 112718.63, 18: 82250.45,  24: 67306.51 },
+                1150000: { 12: 117842.20, 18: 85989.10,  24: 70365.90 },
+                1200000: { 12: 122965.77, 18: 89727.75,  24: 73425.29 },
+                1250000: { 12: 128089.34, 18: 93466.40,  24: 76484.68 },
+                1300000: { 12: 133212.91, 18: 97205.05,  24: 79544.07 },
+                1350000: { 12: 138336.48, 18: 100943.70, 24: 82603.46 },
+                1400000: { 12: 143460.05, 18: 104682.35, 24: 85662.85 },
+                1450000: { 12: 148583.62, 18: 108421.00, 24: 88722.24 },
+                1500000: { 12: 153707.19, 18: 112159.65, 24: 91781.63 },
+                1550000: { 12: 158830.76, 18: 115898.30, 24: 94841.02 },
+                1600000: { 12: 163954.33, 18: 119636.95, 24: 97900.41 },
+                1650000: { 12: 169077.90, 18: 123375.60, 24: 100959.80 },
+                1700000: { 12: 174201.47, 18: 127114.25, 24: 104019.19 },
+                1750000: { 12: 179325.04, 18: 130852.90, 24: 107078.58 },
+                1800000: { 12: 184448.61, 18: 134591.55, 24: 110137.97 },
+                1850000: { 12: 189572.18, 18: 138330.20, 24: 113197.36 },
+                1900000: { 12: 194695.75, 18: 142068.85, 24: 116256.75 },
+                1950000: { 12: 199819.32, 18: 145807.50, 24: 119316.14 },
+                2000000: { 12: 204942.89, 18: 149546.15, 24: 122375.53 }
+            };
 
             // الحالة الحالية
             let currentAmount = DEFAULT_AMOUNT;
@@ -516,17 +556,27 @@
             // تحديد شريحة الفائدة السنوية المتناقصة حسب المبلغ
             function getAnnualInterestRate(amount) {
                 if (amount >= 350000 && amount <= 500000) {
-                    return 0.42; // 42% متناقصة
+                    return 0.42; // متغيرة 42%
                 } else if (amount > 500000 && amount <= 1000000) {
-                    return 0.41; // 41% متناقصة
+                    return 0.41; // متغيرة 41%
                 } else {
-                    return 0.40; // 40% متناقصة
+                    return 0.40; // متغيرة 40%
                 }
+            }
+
+            // حساب القسط الشهري: استخدام القيمة الدقيقة من الجدول أو الحساب الفوري
+            function getMonthlyInstallment(P, n) {
+                if (SCHEDULE_TABLE[P] && SCHEDULE_TABLE[P][n] !== undefined) {
+                    return SCHEDULE_TABLE[P][n];
+                }
+                const annualRate = getAnnualInterestRate(P);
+                const r = annualRate / 12;
+                const factor = Math.pow(1 + r, n);
+                return P * (r * factor) / (factor - 1);
             }
 
             // حساب القسط الشهري وتحديث العرض
             function calculateAndRender() {
-                // التحقق من صحة النطاق وإظهار/إخفاء التنبيه
                 if (isNaN(currentAmount) || currentAmount < MIN_AMOUNT) {
                     validationText.textContent = `الحد الأدنى لمبلغ التمويل هو ${formatInteger(MIN_AMOUNT)} جنيه مصري.`;
                     validationError.classList.add('visible');
@@ -540,22 +590,14 @@
                     amountInput.classList.remove('has-error');
                 }
 
-                // حصر القيمة داخل النطاق للحساب الفوري
                 const P = Math.min(Math.max(isNaN(currentAmount) ? MIN_AMOUNT : currentAmount, MIN_AMOUNT), MAX_AMOUNT);
-                const annualRate = getAnnualInterestRate(P);
-                const r = annualRate / 12; // الفائدة الشهرية
-                const n = currentMonths;
-
-                // معادلة القسط الشهري المتناقص (PMT)
-                const factor = Math.pow(1 + r, n);
-                const monthlyInstallment = P * (r * factor) / (factor - 1);
+                const monthlyInstallment = getMonthlyInstallment(P, currentMonths);
 
                 monthlyInstallmentDisplay.textContent = formatCurrency(monthlyInstallment, 2);
             }
 
             // تحديث المبلغ من مربع الإدخال النصي
             amountInput.addEventListener('input', (e) => {
-                // دعم الأرقام الإنجليزية والعربية
                 const normalized = e.target.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
                 const rawDigits = normalized.replace(/[^\d]/g, '');
 
@@ -570,7 +612,6 @@
                 currentAmount = numericVal;
                 e.target.value = numericVal.toLocaleString('en-US');
 
-                // مزامنة شريط التمرير
                 const clamped = Math.min(Math.max(numericVal, MIN_AMOUNT), MAX_AMOUNT);
                 amountSlider.value = clamped;
 
@@ -623,7 +664,7 @@
                 amountInput.value = formatInteger(DEFAULT_AMOUNT);
                 amountSlider.value = DEFAULT_AMOUNT;
                 durationBtns.forEach(b => b.classList.remove('active'));
-                durationBtns[0].classList.add('active');
+                durationBtns[0].classList.add('active'); // 12 شهراً
                 calculateAndRender();
             });
 
