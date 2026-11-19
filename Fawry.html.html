@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الأقساط التمويلية - فائدة متناقصة</title>
+    <!-- تحميل مكتبة Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- تحميل خط Cairo و Tajawal للغة العربية الاحترافية -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        slate: {
+                            850: '#172033',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* تخصيص شريط التمرير لجدول الأقساط */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* تنسيق الطباعة لإخفاء الأزرار غير الضرورية */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: white !important;
+            }
+            .print-full {
+                max-height: none !important;
+                overflow: visible !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- الشريط العلوي (Header) -->
+    <header class="bg-slate-900 text-white shadow-md no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-brand-500/20 border border-brand-500/30 p-2.5 rounded-xl text-brand-400">
+                    <!-- أيقونة حاسبة مالية -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white">حاسبة الأقساط التمويلية</h1>
+                    <p class="text-xs sm:text-sm text-slate-400">نظام الفائدة المتناقصة التلقائي حسب شرائح التمويل</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 text-xs bg-slate-800 px-3.5 py-2 rounded-lg border border-slate-700 text-slate-300">
+                <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+                <span>العملة المعتمدة: الجنيه المصري (ج.م)</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        
+        <!-- بطاقة دليل الشرائح السريعة -->
+        <section class="mb-6 bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4 sm:p-5">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-brand-600" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                    دليل شرائح الفائدة السنوية المتناقصة المطبقة تلقائياً
+                </h2>
+                <span id="activeTierTopBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-brand-100 text-brand-800">
+                    الشريحة الأولى نشطة
+                </span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="tiersContainer">
+                <!-- الشريحة 1 -->
+                <div id="tierCard1" class="tier-card transition-all duration-200 rounded-xl p-3.5 border-2 border-brand-500 bg-brand-50/50 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500 block">الشريحة الأولى</span>
+                        <span class="text-sm font-bold text-slate-800">350,000 إلى 500,000 ج.م</span>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-lg font-extrabold text-brand-700">42%</span>
+                        <span class="text-[11px] text-slate-500 block">سنوياً متناقصة</span>
+                    </div>
+                </div>
+
+                <!-- الشريحة 2 -->
+                <div id="tierCard2" class="tier-card transition-all duration-200 rounded-xl p-3.5 border border-slate-200 bg-slate-50/50 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500 block">الشريحة الثانية</span>
+                        <span class="text-sm font-bold text-slate-800">أكثر من 500,000 إلى 1,000,000 ج.م</span>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-lg font-extrabold text-slate-700">41%</span>
+                        <span class="text-[11px] text-slate-500 block">سنوياً متناقصة</span>
+                    </div>
+                </div>
+
+                <!-- الشريحة 3 -->
+                <div id="tierCard3" class="tier-card transition-all duration-200 rounded-xl p-3.5 border border-slate-200 bg-slate-50/50 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500 block">الشريحة الثالثة</span>
+                        <span class="text-sm font-bold text-slate-800">أكثر من 1,000,000 إلى 2,000,000 ج.م</span>
+                    </div>
+                    <div class="text-left">
+                        <span class="text-lg font-extrabold text-slate-700">40%</span>
+                        <span class="text-[11px] text-slate-500 block">سنوياً متناقصة</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- الشبكة الرئيسية: مدخلات الحساب والنتائج -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- العمود الأيمن: مدخلات البيانات (5 أعمدة) -->
+            <div class="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 sm:p-6">
+                <h2 class="text-lg font-bold text-slate-800 mb-5 pb-3 border-b border-slate-100 flex items-center gap-2">
+                    <span class="w-1.5 h-6 bg-brand-600 rounded-full"></span>
+                    بيانات التمويل المطلوب
+                </h2>
+
+                <!-- رسالة تنبيه في حال الخروج عن النطاق -->
+                <div id="rangeAlert" class="hidden mb-5 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs sm:text-sm flex items-start gap-2.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <span id="rangeAlertText">المبلغ المدخل خارج النطاق المحدد للشرائح (من 350,000 إلى 2,000,000 ج.م). تم تطبيق أقرب شريحة تلقائياً.</span>
+                </div>
+
+                <!-- حقل إدخال المبلغ -->
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="loanAmount" class="block text-sm font-bold text-slate-700">مبلغ التمويل (ج.م)</label>
+                        <span id="formattedAmountPreview" class="text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-0.5 rounded-md">400,000 ج.م</span>
+                    </div>
+                    
+                    <div class="relative">
+                        <input 
+                            type="number" 
+                            id="loanAmount" 
+                            value="400000" 
+                            min="1000" 
+                            step="5000"
+                            placeholder="أدخل المبلغ من 350,000 إلى 2,000,000"
+                            class="w-full text-lg font-bold text-slate-900 bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3.5 pl-16 focus:outline-none focus:border-brand-500 focus:bg-white transition-colors"
+                        >
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">ج.م</span>
+                    </div>
+
+                    <!-- شريط تمرير سريع للمبلغ -->
+                    <div class="mt-3">
+                        <input 
+                            type="range" 
+                            id="loanAmountSlider" 
+                            min="350000" 
+                            max="2000000" 
+                            step="10000" 
+                            value="400000"
+                            class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600"
+                        >
+                        <div class="flex justify-between text-[11px] font-medium text-slate-400 mt-1">
+                            <span>350 ألف</span>
+                            <span>500 ألف</span>
+                            <span>1 مليون</span>
+                            <span>2 مليون</span>
+                        </div>
+                    </div>
+
+                    <!-- أزرار مبالغ سريعة للتجربة -->
+                    <div class="mt-3 flex flex-wrap gap-1.5">
+                        <button type="button" onclick="setAmount(350000)" class="amount-preset text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">350,000</button>
+                        <button type="button" onclick="setAmount(500000)" class="amount-preset text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">500,000</button>
+                        <button type="button" onclick="setAmount(750000)" class="amount-preset text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">750,000</button>
+                        <button type="button" onclick="setAmount(1000000)" class="amount-preset text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">1,000,000</button>
+                        <button type="button" onclick="setAmount(1500000)" class="amount-preset text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">1,500,000</button>
+                        <button type="button" onclick="setAmount(2000000)" class="amount-preset text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">2,000,000</button>
+                    </div>
+                </div>
+
+                <!-- حقل إدخال المدة بالشهور -->
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="loanMonths" class="block text-sm font-bold text-slate-700">مدة السداد (بالشهور)</label>
+                        <span id="yearsEquivalent" class="text-xs font-semibold text-slate-500">تعادل 1 سنة</span>
+                    </div>
+                    
+                    <div class="relative">
+                        <input 
+                            type="number" 
+                            id="loanMonths" 
+                            value="12" 
+                            min="1" 
+                            max="120"
+                            placeholder="عدد الشهور (مثال: 12، 24، 36)"
+                            class="w-full text-lg font-bold text-slate-900 bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-3.5 pl-16 focus:outline-none focus:border-brand-500 focus:bg-white transition-colors"
+                        >
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">شهر</span>
+                    </div>
+
+                    <!-- أزرار اختيار سريع للمدة -->
+                    <div class="mt-3">
+                        <span class="text-xs text-slate-500 block mb-2">اختيار سريع للمدة:</span>
+                        <div class="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                            <button type="button" onclick="setMonths(6)" data-months="6" class="month-btn py-2 px-1 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-brand-500 transition">6 شهور</button>
+                            <button type="button" onclick="setMonths(12)" data-months="12" class="month-btn py-2 px-1 rounded-xl text-xs font-bold border-2 border-brand-600 bg-brand-50 text-brand-800 transition">12 شهر</button>
+                            <button type="button" onclick="setMonths(18)" data-months="18" class="month-btn py-2 px-1 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-brand-500 transition">18 شهر</button>
+                            <button type="button" onclick="setMonths(24)" data-months="24" class="month-btn py-2 px-1 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-brand-500 transition">24 شهر</button>
+                            <button type="button" onclick="setMonths(36)" data-months="36" class="month-btn py-2 px-1 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-brand-500 transition">36 شهر</button>
+                            <button type="button" onclick="setMonths(48)" data-months="48" class="month-btn py-2 px-1 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-brand-500 transition">48 شهر</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- أزرار الإجراءات -->
+                <div class="flex gap-3 pt-2 no-print">
+                    <button type="button" onclick="calculateInstallment()" class="flex-1 bg-brand-600 hover:bg-brand-700 active:scale-[0.99] text-white font-bold py-3.5 px-5 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13zM9 9a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM7 8a1 1 0 000 2h.01a1 1 0 000-2H7z" clip-rule="evenodd" />
+                        </svg>
+                        احسب القسط الآن
+                    </button>
+                    <button type="button" onclick="resetForm()" title="إعادة ضبط" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-xl transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- العمود الأيسر: النتائج والتفاصيل (7 أعمدة) -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+                
+                <!-- البطاقة الرئيسية للقسط الشهري -->
+                <div class="bg-gradient-to-bl from-slate-900 via-slate-850 to-slate-900 text-white rounded-2xl p-6 sm:p-7 shadow-lg relative overflow-hidden">
+                    <!-- خلفية زخرفية خفيفة -->
+                    <div class="absolute -left-10 -bottom-10 w-44 h-44 bg-brand-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                    
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-700/80 pb-5 mb-5">
+                        <div>
+                            <span class="text-slate-400 text-xs sm:text-sm font-medium block mb-1">قيمة القسط الشهري المستحق</span>
+                            <div class="flex items-baseline gap-2">
+                                <span id="monthlyInstallmentDisplay" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-400 tracking-tight">41,259.67</span>
+                                <span class="text-base sm:text-lg font-bold text-slate-300">ج.م / شهرياً</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-800/90 border border-slate-700 rounded-xl px-4 py-3 text-right sm:text-center shrink-0">
+                            <span class="text-[11px] text-slate-400 block">نسبة الفائدة المطبقة</span>
+                            <span id="appliedRateDisplay" class="text-2xl font-extrabold text-white">42%</span>
+                            <span class="text-[11px] text-brand-400 block font-semibold">سنوياً متناقصة</span>
+                        </div>
+                    </div>
+
+                    <!-- ملخص الأرقام الإجمالية -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3.5">
+                            <span class="text-xs text-slate-400 block mb-1">أصل مبلغ التمويل</span>
+                            <span id="principalSummary" class="text-base sm:text-lg font-bold text-white">400,000.00 ج.م</span>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3.5">
+                            <span class="text-xs text-slate-400 block mb-1">إجمالي الفوائد (طوال المدة)</span>
+                            <span id="totalInterestSummary" class="text-base sm:text-lg font-bold text-amber-400">95,116.02 ج.م</span>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3.5">
+                            <span class="text-xs text-slate-400 block mb-1">إجمالي المبلغ المسدد</span>
+                            <span id="totalRepaymentSummary" class="text-base sm:text-lg font-bold text-emerald-300">495,116.02 ج.م</span>
+                        </div>
+                    </div>
+
+                    <!-- شريط توزيع أصل المبلغ مقابل الفوائد -->
+                    <div class="mt-5 pt-4 border-t border-slate-700/60">
+                        <div class="flex justify-between text-xs mb-1.5">
+                            <span class="text-slate-300 flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-sm bg-brand-500 inline-block"></span>
+                                أصل التمويل (<span id="principalPercent">81%</span>)
+                            </span>
+                            <span class="text-slate-300 flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block"></span>
+                                إجمالي الفائدة (<span id="interestPercent">19%</span>)
+                            </span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-700 rounded-full overflow-hidden flex">
+                            <div id="principalBar" class="bg-brand-500 h-full transition-all duration-300" style="width: 81%"></div>
+                            <div id="interestBar" class="bg-amber-400 h-full transition-all duration-300" style="width: 19%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- جدول سداد الأقساط التفصيلي -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+                    <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800">جدول السداد الشهري التفصيلي</h3>
+                            <p class="text-xs text-slate-500">يوضح تناقص الفائدة وزيادة سداد الأصل مع كل قسط شهري</p>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 no-print">
+                            <button type="button" onclick="copySummary()" id="copyBtn" class="text-xs font-bold px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                                <span id="copyBtnText">نسخ النتيجة</span>
+                            </button>
+                            <button type="button" onclick="window.print()" class="text-xs font-bold px-3 py-2 rounded-lg bg-brand-50 hover:bg-brand-100 text-brand-700 transition flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                </svg>
+                                طباعة
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- حاوية الجدول القابلة للتمرير -->
+                    <div class="overflow-x-auto max-h-[380px] overflow-y-auto print-full">
+                        <table class="w-full text-right border-collapse">
+                            <thead class="bg-slate-50 sticky top-0 z-10 border-b border-slate-200 text-xs font-bold text-slate-600">
+                                <tr>
+                                    <th class="py-3 px-4">الشهر</th>
+                                    <th class="py-3 px-4">القسط الشهري</th>
+                                    <th class="py-3 px-4 text-brand-700">أصل المبلغ</th>
+                                    <th class="py-3 px-4 text-amber-600">الفائدة الشهرية</th>
+                                    <th class="py-3 px-4">الرصيد المتبقي</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleTableBody" class="divide-y divide-slate-100 text-xs sm:text-sm font-medium text-slate-700">
+                                <!-- يتم تعبئة الصفوف ديناميكياً عبر JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- التذييل (Footer) -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-8 no-print">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            تم الحساب وفق معادلة الفائدة المتناقصة القياسية (Declining Balance PMT) • الأسعار بالجنيه المصري
+        </div>
+    </footer>
+
+    <!-- المنطق البرمجي للحاسبة -->
+    <script>
+        // عناصر واجهة المستخدم
+        const loanAmountInput = document.getElementById('loanAmount');
+        const loanAmountSlider = document.getElementById('loanAmountSlider');
+        const loanMonthsInput = document.getElementById('loanMonths');
+        const rangeAlert = document.getElementById('rangeAlert');
+        const rangeAlertText = document.getElementById('rangeAlertText');
+
+        // دالة تنسيق الأرقام بفواصل عشرية وآلاف
+        function formatCurrency(num, decimals = 2) {
+            if (isNaN(num) || !isFinite(num)) return '0.00';
+            return num.toLocaleString('en-US', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+        }
+
+        // تحديد نسبة الفائدة والشريحة بناءً على المبلغ
+        function getInterestTier(amount) {
+            let rate = 42;
+            let tierNumber = 1;
+            let outOfRange = false;
+            let message = '';
+
+            if (amount < 350000) {
+                rate = 42;
+                tierNumber = 1;
+                outOfRange = true;
+                message = 'تنبيه: المبلغ أقل من الحد الأدنى للشرائح (350,000 ج.م). تم تطبيق نسبة الشريحة الأولى (42%).';
+            } else if (amount >= 350000 && amount <= 500000) {
+                rate = 42;
+                tierNumber = 1;
+            } else if (amount > 500000 && amount <= 1000000) {
+                rate = 41;
+                tierNumber = 2;
+            } else if (amount > 1000000 && amount <= 2000000) {
+                rate = 40;
+                tierNumber = 3;
+            } else {
+                // أكبر من 2,000,000
+                rate = 40;
+                tierNumber = 3;
+                outOfRange = true;
+                message = 'تنبيه: المبلغ يتجاوز الحد الأقصى للشرائح (2,000,000 ج.م). تم تطبيق نسبة الشريحة الثالثة (40%).';
+            }
+
+            return { rate, tierNumber, outOfRange, message };
+        }
+
+        // تحديث المظهر البصري لبطاقات الشرائح الثلاث
+        function updateTierCardsUI(activeTier, outOfRange) {
+            const tierNames = {
+                1: 'الشريحة الأولى نشطة (42%)',
+                2: 'الشريحة الثانية نشطة (41%)',
+                3: 'الشريحة الثالثة نشطة (40%)'
+            };
+
+            const topBadge = document.getElementById('activeTierTopBadge');
+            topBadge.textContent = outOfRange ? 'خارج النطاق المحدد' : tierNames[activeTier];
+            topBadge.className = outOfRange 
+                ? 'text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-800'
+                : 'text-xs font-bold px-3 py-1 rounded-full bg-brand-100 text-brand-800';
+
+            for (let i = 1; i <= 3; i++) {
+                const card = document.getElementById(`tierCard${i}`);
+                const rateSpan = card.querySelector('div:last-child span:first-child');
+                
+                if (i === activeTier) {
+                    card.className = 'tier-card transition-all duration-200 rounded-xl p-3.5 border-2 border-brand-500 bg-brand-50/70 shadow-sm flex items-center justify-between';
+                    rateSpan.className = 'text-lg font-extrabold text-brand-700';
+                } else {
+                    card.className = 'tier-card transition-all duration-200 rounded-xl p-3.5 border border-slate-200 bg-slate-50/50 opacity-75 flex items-center justify-between';
+                    rateSpan.className = 'text-lg font-extrabold text-slate-700';
+                }
+            }
+        }
+
+        // تحديث أزرار المدد السريعة
+        function updateMonthButtonsUI(months) {
+            document.querySelectorAll('.month-btn').forEach(btn => {
+                const btnMonths = parseInt(btn.getAttribute('data-months'));
+                if (btnMonths === months) {
+                    btn.className = 'month-btn py-2 px-1 rounded-xl text-xs font-bold border-2 border-brand-600 bg-brand-50 text-brand-800 transition';
+                } else {
+                    btn.className = 'month-btn py-2 px-1 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:border-brand-500 transition';
+                }
+            });
+
+            // تحديث نص السنوات المكافئة
+            const yearsText = document.getElementById('yearsEquivalent');
+            if (months < 12) {
+                yearsText.textContent = `${months} شهور`;
+            } else {
+                const years = (months / 12).toFixed(1).replace('.0', '');
+                yearsText.textContent = `تعادل ${years} ${years == 1 ? 'سنة' : 'سنوات'}`;
+            }
+        }
+
+        // الدالة الرئيسية لحساب القسط وجدول السداد
+        function calculateInstallment() {
+            let principal = parseFloat(loanAmountInput.value);
+            let months = parseInt(loanMonthsInput.value);
+
+            // حماية من القيم الفارغة أو السالبة
+            if (isNaN(principal) || principal <= 0) principal = 350000;
+            if (isNaN(months) || months < 1) months = 12;
+
+            // تحديث معاينة المبلغ وشريط التمرير
+            document.getElementById('formattedAmountPreview').textContent = `${formatCurrency(principal, 0)} ج.م`;
+            if (principal >= 350000 && principal <= 2000000) {
+                loanAmountSlider.value = principal;
+            }
+
+            // الحصول على الشريحة ونسبة الفائدة
+            const tierInfo = getInterestTier(principal);
+            updateTierCardsUI(tierInfo.tierNumber, tierInfo.outOfRange);
+            updateMonthButtonsUI(months);
+
+            // إظهار أو إخفاء تنبيه النطاق
+            if (tierInfo.outOfRange) {
+                rangeAlertText.textContent = tierInfo.message;
+                rangeAlert.classList.remove('hidden');
+            } else {
+                rangeAlert.classList.add('hidden');
+            }
+
+            // معادلة الفائدة المتناقصة القياسية (PMT)
+            // r = معدل الفائدة الشهري
+            const annualRate = tierInfo.rate;
+            const monthlyRate = (annualRate / 100) / 12;
+            
+            const factor = Math.pow(1 + monthlyRate, months);
+            const monthlyInstallment = (principal * monthlyRate * factor) / (factor - 1);
+            
+            const totalRepayment = monthlyInstallment * months;
+            const totalInterest = totalRepayment - principal;
+
+            // تحديث البطاقات الرئيسية
+            document.getElementById('monthlyInstallmentDisplay').textContent = formatCurrency(monthlyInstallment, 2);
+            document.getElementById('appliedRateDisplay').textContent = `${annualRate}%`;
+            document.getElementById('principalSummary').textContent = `${formatCurrency(principal, 2)} ج.م`;
+            document.getElementById('totalInterestSummary').textContent = `${formatCurrency(totalInterest, 2)} ج.م`;
+            document.getElementById('totalRepaymentSummary').textContent = `${formatCurrency(totalRepayment, 2)} ج.م`;
+
+            // تحديث شريط النسب المئوية
+            const principalPct = Math.round((principal / totalRepayment) * 100);
+            const interestPct = 100 - principalPct;
+            document.getElementById('principalPercent').textContent = `${principalPct}%`;
+            document.getElementById('interestPercent').textContent = `${interestPct}%`;
+            document.getElementById('principalBar').style.width = `${principalPct}%`;
+            document.getElementById('interestBar').style.width = `${interestPct}%`;
+
+            // بناء جدول السداد التفصيلي شهر بشهر
+            buildAmortizationTable(principal, monthlyRate, monthlyInstallment, months);
+        }
+
+        // بناء صفوف جدول السداد
+        function buildAmortizationTable(principal, monthlyRate, monthlyInstallment, months) {
+            const tbody = document.getElementById('scheduleTableBody');
+            let balance = principal;
+            let rowsHTML = '';
+
+            // حد أقصى للعرض السلس في المتصفح (مثلاً 120 شهر)
+            const maxRows = Math.min(months, 120);
+
+            for (let m = 1; m <= maxRows; m++) {
+                const interestForMonth = balance * monthlyRate;
+                let principalForMonth = monthlyInstallment - interestForMonth;
+                
+                // معالجة التقريب في الشهر الأخير ليصبح الرصيد 0.00 تماماً
+                if (m === months) {
+                    principalForMonth = balance;
+                    balance = 0;
+                } else {
+                    balance = Math.max(0, balance - principalForMonth);
+                }
+
+                rowsHTML += `
+                    <tr class="hover:bg-slate-50/90 transition-colors">
+                        <td class="py-3 px-4 font-bold text-slate-800">${m}</td>
+                        <td class="py-3 px-4 font-bold text-slate-900">${formatCurrency(monthlyInstallment, 2)}</td>
+                        <td class="py-3 px-4 text-brand-700 font-semibold">${formatCurrency(principalForMonth, 2)}</td>
+                        <td class="py-3 px-4 text-amber-600">${formatCurrency(interestForMonth, 2)}</td>
+                        <td class="py-3 px-4 text-slate-500">${formatCurrency(balance, 2)}</td>
+                    </tr>
+                `;
+            }
+
+            tbody.innerHTML = rowsHTML;
+        }
+
+        // تعيين مبلغ سريع
+        function setAmount(val) {
+            loanAmountInput.value = val;
+            loanAmountSlider.value = val;
+            calculateInstallment();
+        }
+
+        // تعيين مدة سريعة
+        function setMonths(val) {
+            loanMonthsInput.value = val;
+            calculateInstallment();
+        }
+
+        // إعادة ضبط النموذج
+        function resetForm() {
+            loanAmountInput.value = 400000;
+            loanAmountSlider.value = 400000;
+            loanMonthsInput.value = 12;
+            calculateInstallment();
+        }
+
+        // نسخ ملخص النتيجة للحافظة
+        function copySummary() {
+            const amount = document.getElementById('principalSummary').textContent;
+            const months = loanMonthsInput.value;
+            const rate = document.getElementById('appliedRateDisplay').textContent;
+            const monthly = document.getElementById('monthlyInstallmentDisplay').textContent;
+            const total = document.getElementById('totalRepaymentSummary').textContent;
+
+            const textToCopy = `تفاصيل التمويل:\n- مبلغ التمويل: ${amount}\n- المدة: ${months} شهر\n- الفائدة المتناقصة: ${rate} سنوياً\n- القسط الشهري: ${monthly} ج.م\n- إجمالي السداد: ${total}`;
+
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = textToCopy;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextarea);
+
+            const copyBtnText = document.getElementById('copyBtnText');
+            const originalText = copyBtnText.textContent;
+            copyBtnText.textContent = 'تم النسخ!';
+            setTimeout(() => {
+                copyBtnText.textContent = originalText;
+            }, 2000);
+        }
+
+        // مستمعي الأحداث للتحديث الفوري
+        loanAmountInput.addEventListener('input', calculateInstallment);
+        loanMonthsInput.addEventListener('input', calculateInstallment);
+        
+        loanAmountSlider.addEventListener('input', function() {
+            loanAmountInput.value = this.value;
+            calculateInstallment();
+        });
+
+        // التشغيل المبدئي عند فتح الصفحة
+        window.addEventListener('DOMContentLoaded', calculateInstallment);
+    </script>
+</body>
+</html>
