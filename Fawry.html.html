@@ -1,676 +1,646 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>حاسبة القسط الشهري | جلال علي</title>
-    <style>
-        /* إعادة ضبط شاملة وتأسيس الخطوط المتوافقة مع iOS و Android */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>حاسبة القسط الشهري | جلال علي</title>
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f1f5f9;
-            color: #0f172a;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            line-height: 1.5;
-        }
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
 
-        /* الحاوية الرئيسية */
-        .app-wrapper {
-            width: 100%;
-            max-width: 460px;
-            margin: 0 auto;
-        }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+    background: #f1f5f9;
+    color: #0f172a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    line-height: 1.5;
+}
 
-        /* البطاقة الرئيسية */
-        .calculator-card {
-            background-color: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-        }
+.app-wrapper {
+    width: 100%;
+    max-width: 460px;
+}
 
-        /* رأس البطاقة */
-        .card-header {
-            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
-            color: #ffffff;
-            padding: 20px 22px 24px;
-            text-align: center;
-            position: relative;
-        }
+.calculator-card {
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 12px 32px rgba(15,23,42,.08);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
 
-        .top-signature {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            background-color: rgba(255, 255, 255, 0.14);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            padding: 4px 14px;
-            border-radius: 999px;
-            margin-bottom: 12px;
-            font-size: 0.78rem;
-            color: #ecfdf5;
-            font-weight: 600;
-        }
+.card-header {
+    background: linear-gradient(135deg,#065f46,#047857);
+    color: white;
+    padding: 22px;
+    text-align: center;
+}
 
-        .top-signature-name {
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: 0.02em;
-            direction: ltr;
-            display: inline-block;
-        }
+.top-signature {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.25);
+    padding: 4px 14px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: #ecfdf5;
+    font-weight: 600;
+}
 
-        .card-header h1 {
-            font-size: 1.45rem;
-            font-weight: 800;
-            letter-spacing: -0.01em;
-            margin-bottom: 4px;
-        }
+.top-signature-name {
+    font-weight: 800;
+    direction: ltr;
+    color: white;
+}
 
-        .card-header p {
-            font-size: 0.85rem;
-            color: #d1fae5;
-            font-weight: 500;
-        }
+.card-header h1 {
+    font-size: 23px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
 
-        /* جسم البطاقة */
-        .card-body {
-            padding: 22px 20px 24px;
-        }
+.card-header p {
+    font-size: 13px;
+    color: #d1fae5;
+}
 
-        /* شريط العنوان الداخلي وزر إعادة الضبط */
-        .section-top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 14px;
-            margin-bottom: 18px;
-            border-bottom: 1px solid #f1f5f9;
-        }
+.card-body {
+    padding: 22px 20px 24px;
+}
 
-        .section-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+.section-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #f1f5f9;
+}
 
-        .section-title-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #059669;
-            display: inline-block;
-        }
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-        .reset-btn {
-            background-color: #f8fafc;
-            color: #475569;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 6px 12px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
+.section-title-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #059669;
+}
 
-        .reset-btn:hover, .reset-btn:active {
-            background-color: #ecfdf5;
-            color: #065f46;
-            border-color: #a7f3d0;
-        }
+.reset-btn {
+    background: #f8fafc;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+}
 
-        /* مجموعة حقل المبلغ */
-        .form-group {
-            margin-bottom: 22px;
-        }
+.reset-btn:hover {
+    background: #ecfdf5;
+    color: #065f46;
+}
 
-        .label-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
+.form-group {
+    margin-bottom: 22px;
+}
 
-        .input-label {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #334155;
-        }
+.label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
 
-        .range-hint {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #64748b;
-            background-color: #f1f5f9;
-            padding: 3px 9px;
-            border-radius: 8px;
-            direction: ltr;
-        }
+.input-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #334155;
+}
 
-        /* مربع إدخال المبلغ */
-        .amount-input-box {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+.range-hint {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 4px 9px;
+    border-radius: 8px;
+    direction: ltr;
+}
 
-        .amount-input {
-            width: 100%;
-            height: 58px;
-            padding: 12px 16px 12px 58px;
-            font-size: 1.65rem;
-            font-weight: 800;
-            font-family: inherit;
-            color: #0f172a;
-            background-color: #f8fafc;
-            border: 2px solid #cbd5e1;
-            border-radius: 16px;
-            text-align: right;
-            direction: ltr;
-            outline: none;
-            transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-        }
+.amount-input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
 
-        .amount-input:focus {
-            background-color: #ffffff;
-            border-color: #059669;
-            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12);
-        }
+.amount-input {
+    width: 100%;
+    height: 58px;
+    padding: 12px 16px 12px 65px;
+    font-size: 26px;
+    font-weight: 800;
+    font-family: inherit;
+    color: #0f172a;
+    background: #f8fafc;
+    border: 2px solid #cbd5e1;
+    border-radius: 16px;
+    text-align: right;
+    direction: ltr;
+    outline: none;
+}
 
-        .amount-input.has-error {
-            border-color: #e11d48;
-            background-color: #fff1f2;
-        }
+.amount-input:focus {
+    background: white;
+    border-color: #059669;
+    box-shadow: 0 0 0 4px rgba(5,150,105,.12);
+}
 
-        .currency-badge {
-            position: absolute;
-            left: 14px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #059669;
-            background-color: #ecfdf5;
-            padding: 4px 10px;
-            border-radius: 8px;
-            pointer-events: none;
-        }
+.amount-input.has-error {
+    border-color: #e11d48;
+    background: #fff1f2;
+}
 
-        /* رسالة التحقق والخطأ (مخفية افتراضياً تماماً) */
-        .error-banner {
-            display: none;
-            margin-top: 10px;
-            padding: 10px 12px;
-            background-color: #fff1f2;
-            border: 1px solid #fecdd3;
-            border-radius: 12px;
-            color: #be123c;
-            font-size: 0.82rem;
-            font-weight: 700;
-            align-items: center;
-            gap: 8px;
-        }
+.currency-badge {
+    position: absolute;
+    left: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #059669;
+    background: #ecfdf5;
+    padding: 4px 10px;
+    border-radius: 8px;
+}
 
-        .error-banner.visible {
-            display: flex;
-        }
+.error-banner {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-radius: 12px;
+    color: #be123c;
+    font-size: 12px;
+    font-weight: 700;
+}
 
-        /* شريط التمرير Range Slider */
-        .slider-container {
-            margin-top: 18px;
-        }
+.error-banner.visible {
+    display: block;
+}
 
-        input[type="range"].custom-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 999px;
-            outline: none;
-            cursor: pointer;
-            direction: rtl;
-        }
+.slider-container {
+    margin-top: 20px;
+}
 
-        input[type="range"].custom-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #059669;
-            border: 3px solid #ffffff;
-            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.45);
-            cursor: pointer;
-            transition: transform 0.15s ease;
-        }
+.custom-slider {
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+}
 
-        input[type="range"].custom-slider::-webkit-slider-thumb:active {
-            transform: scale(1.15);
-        }
+.custom-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #059669;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(5,150,105,.45);
+}
 
-        input[type="range"].custom-slider::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #059669;
-            border: 3px solid #ffffff;
-            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.45);
-            cursor: pointer;
-        }
+.custom-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #059669;
+    border: 3px solid white;
+}
 
-        /* العلامات السريعة أسفل الشريط */
-        .quick-marks {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
+.quick-marks {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    gap: 4px;
+}
 
-        .quick-mark-btn {
-            background: none;
-            border: none;
-            font-family: inherit;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #64748b;
-            padding: 4px 6px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: color 0.15s ease, background-color 0.15s ease;
-        }
+.quick-mark-btn {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    padding: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-        .quick-mark-btn:hover, .quick-mark-btn:active {
-            color: #065f46;
-            background-color: #ecfdf5;
-        }
+.quick-mark-btn:hover {
+    color: #065f46;
+    background: #ecfdf5;
+}
 
-        /* أزرار مدة السداد (3 أعمدة متساوية: 12، 18، 24 شهراً) */
-        .duration-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
+.duration-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
 
-        .duration-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 8px;
-            background-color: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s ease;
-            position: relative;
-        }
+.duration-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 8px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    cursor: pointer;
+    font-family: inherit;
+}
 
-        .duration-btn .months-num {
-            font-size: 1.45rem;
-            font-weight: 800;
-            color: #334155;
-            line-height: 1.2;
-        }
+.duration-btn .months-num {
+    font-size: 23px;
+    font-weight: 800;
+    color: #334155;
+}
 
-        .duration-btn .months-text {
-            font-size: 0.82rem;
-            font-weight: 700;
-            color: #64748b;
-            margin-top: 2px;
-        }
+.duration-btn .months-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748b;
+}
 
-        .duration-btn.active {
-            background-color: #ecfdf5;
-            border-color: #059669;
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.14);
-        }
+.duration-btn.active {
+    background: #ecfdf5;
+    border-color: #059669;
+    box-shadow: 0 4px 12px rgba(5,150,105,.14);
+}
 
-        .duration-btn.active .months-num {
-            color: #065f46;
-        }
+.duration-btn.active .months-num {
+    color: #065f46;
+}
 
-        .duration-btn.active .months-text {
-            color: #047857;
-        }
+.duration-btn.active .months-text {
+    color: #047857;
+}
 
-        /* صندوق نتيجة القسط الشهري */
-        .result-box {
-            margin-top: 24px;
-            background-color: #ecfdf5;
-            border: 2px solid #a7f3d0;
-            border-radius: 20px;
-            padding: 20px 18px;
-            text-align: center;
-        }
+.interest-info {
+    margin-top: 18px;
+    padding: 11px 13px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
 
-        .result-label {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #047857;
-            margin-bottom: 6px;
-        }
+.interest-value {
+    color: #047857;
+    font-weight: 800;
+    direction: ltr;
+}
 
-        .result-value-row {
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+.result-box {
+    margin-top: 22px;
+    background: #ecfdf5;
+    border: 2px solid #a7f3d0;
+    border-radius: 20px;
+    padding: 20px 14px;
+    text-align: center;
+}
 
-        .result-amount {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: #065f46;
-            letter-spacing: -0.02em;
-            direction: ltr;
-        }
+.result-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #047857;
+    margin-bottom: 6px;
+}
 
-        .result-unit {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #059669;
-        }
-    </style>
+.result-value-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.result-amount {
+    font-size: 34px;
+    font-weight: 900;
+    color: #065f46;
+    direction: ltr;
+    letter-spacing: -.5px;
+}
+
+.result-unit {
+    font-size: 14px;
+    font-weight: 800;
+    color: #059669;
+}
+
+.footer-note {
+    text-align: center;
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 15px;
+}
+
+@media(max-width:360px) {
+    .result-amount {
+        font-size: 29px;
+    }
+    .card-body {
+        padding: 18px 14px;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="app-wrapper">
-        <main class="calculator-card">
-            <!-- رأس البطاقة -->
-            <header class="card-header">
-                <div class="top-signature">
-                    <span>تصميم وإعداد:</span>
-                    <span class="top-signature-name">Galal Ali</span>
-                </div>
-                <h1>حاسبة القسط الشهري</h1>
-                <p>حساب فوري بنظام الفائدة المتناقصة</p>
-            </header>
+<div class="app-wrapper">
+<main class="calculator-card">
 
-            <!-- محتوى الحاسبة -->
-            <div class="card-body">
-                <!-- شريط بيانات التمويل وزر إعادة الضبط -->
-                <div class="section-top-bar">
-                    <h2 class="section-title">
-                        <span class="section-title-dot"></span>
-                        بيانات التمويل المطلوب
-                    </h2>
-                    <button type="button" id="resetBtn" class="reset-btn">إعادة ضبط</button>
-                </div>
-
-                <!-- إدخال مبلغ التمويل -->
-                <div class="form-group">
-                    <div class="label-row">
-                        <label for="amountInput" class="input-label">مبلغ التمويل</label>
-                        <span class="range-hint">350,000 - 2,000,000</span>
-                    </div>
-
-                    <div class="amount-input-box">
-                        <input type="text" id="amountInput" class="amount-input" inputmode="numeric" value="500,000" autocomplete="off" aria-label="مبلغ التمويل">
-                        <span class="currency-badge">ج.م</span>
-                    </div>
-
-                    <!-- رسالة الخطأ (تظهر فقط عند تجاوز الحدود) -->
-                    <div id="validationError" class="error-banner" role="alert">
-                        <span>⚠️</span>
-                        <span id="validationText">يرجى إدخال مبلغ يتراوح بين 350,000 و 2,000,000 جنيه مصري.</span>
-                    </div>
-
-                    <!-- شريط التمرير -->
-                    <div class="slider-container">
-                        <input type="range" id="amountSlider" class="custom-slider" min="350000" max="2000000" step="50000" value="500000" aria-label="شريط تحديد مبلغ التمويل">
-                        <div class="quick-marks">
-                            <button type="button" class="quick-mark-btn" data-amount="350000">350 ألف</button>
-                            <button type="button" class="quick-mark-btn" data-amount="500000">500 ألف</button>
-                            <button type="button" class="quick-mark-btn" data-amount="1000000">1 مليون</button>
-                            <button type="button" class="quick-mark-btn" data-amount="1500000">1.5 مليون</button>
-                            <button type="button" class="quick-mark-btn" data-amount="2000000">2 مليون</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- اختيار مدة السداد -->
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label class="input-label">مدة السداد</label>
-                    <div class="duration-grid" id="durationGroup">
-                        <button type="button" class="duration-btn active" data-months="12">
-                            <span class="months-num">12</span>
-                            <span class="months-text">شهر</span>
-                        </button>
-                        <button type="button" class="duration-btn" data-months="18">
-                            <span class="months-num">18</span>
-                            <span class="months-text">شهر</span>
-                        </button>
-                        <button type="button" class="duration-btn" data-months="24">
-                            <span class="months-num">24</span>
-                            <span class="months-text">شهر</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- نتيجة القسط الشهري -->
-                <div class="result-box">
-                    <div class="result-label">القسط الشهري</div>
-                    <div class="result-value-row">
-                        <span id="monthlyInstallmentDisplay" class="result-amount">51,741.98</span>
-                        <span class="result-unit">جنيه / شهرياً</span>
-                    </div>
-                </div>
-            </div>
-        </main>
+<header class="card-header">
+    <div class="top-signature">
+        <span>تصميم وإعداد:</span>
+        <span class="top-signature-name">Galal Ali</span>
     </div>
+    <h1>حاسبة القسط الشهري</h1>
+    <p>حساب فوري بنظام الفائدة المتناقصة</p>
+</header>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // الثوابت والحدود المسموحة
-            const MIN_AMOUNT = 350000;
-            const MAX_AMOUNT = 2000000;
-            const DEFAULT_AMOUNT = 500000;
-            const DEFAULT_MONTHS = 12;
+<div class="card-body">
 
-            // جدول القيم المرجعية للأقساط الشهرية (350,000 حتى 2,000,000 بفارق 50,000)
-            const SCHEDULE_TABLE = {
-                350000:  { 12: 36219.38,  18: 26535.89,  24: 21795.49 },
-                400000:  { 12: 41393.58,  18: 30326.73,  24: 24909.13 },
-                450000:  { 12: 46567.78,  18: 34117.57,  24: 28022.77 },
-                500000:  { 12: 51741.98,  18: 37908.41,  24: 31136.41 },
-                550000:  { 12: 56637.41,  18: 41411.75,  24: 33950.97 },
-                600000:  { 12: 61786.27,  18: 45176.46,  24: 37037.42 },
-                650000:  { 12: 66935.13,  18: 48941.17,  24: 40123.87 },
-                700000:  { 12: 72083.99,  18: 52705.88,  24: 43210.32 },
-                750000:  { 12: 77232.85,  18: 56470.59,  24: 46296.77 },
-                800000:  { 12: 82381.71,  18: 60235.30,  24: 49383.22 },
-                850000:  { 12: 87530.57,  18: 64000.01,  24: 52469.67 },
-                900000:  { 12: 92679.43,  18: 67764.72,  24: 55556.12 },
-                950000:  { 12: 97828.29,  18: 71529.43,  24: 58642.57 },
-                1000000: { 12: 102977.15, 18: 75294.14,  24: 61729.02 },
-                1050000: { 12: 107595.06, 18: 78511.80,  24: 64247.12 },
-                1100000: { 12: 112718.63, 18: 82250.45,  24: 67306.51 },
-                1150000: { 12: 117842.20, 18: 85989.10,  24: 70365.90 },
-                1200000: { 12: 122965.77, 18: 89727.75,  24: 73425.29 },
-                1250000: { 12: 128089.34, 18: 93466.40,  24: 76484.68 },
-                1300000: { 12: 133212.91, 18: 97205.05,  24: 79544.07 },
-                1350000: { 12: 138336.48, 18: 100943.70, 24: 82603.46 },
-                1400000: { 12: 143460.05, 18: 104682.35, 24: 85662.85 },
-                1450000: { 12: 148583.62, 18: 108421.00, 24: 88722.24 },
-                1500000: { 12: 153707.19, 18: 112159.65, 24: 91781.63 },
-                1550000: { 12: 158830.76, 18: 115898.30, 24: 94841.02 },
-                1600000: { 12: 163954.33, 18: 119636.95, 24: 97900.41 },
-                1650000: { 12: 169077.90, 18: 123375.60, 24: 100959.80 },
-                1700000: { 12: 174201.47, 18: 127114.25, 24: 104019.19 },
-                1750000: { 12: 179325.04, 18: 130852.90, 24: 107078.58 },
-                1800000: { 12: 184448.61, 18: 134591.55, 24: 110137.97 },
-                1850000: { 12: 189572.18, 18: 138330.20, 24: 113197.36 },
-                1900000: { 12: 194695.75, 18: 142068.85, 24: 116256.75 },
-                1950000: { 12: 199819.32, 18: 145807.50, 24: 119316.14 },
-                2000000: { 12: 204942.89, 18: 149546.15, 24: 122375.53 }
-            };
+<div class="section-top-bar">
+    <h2 class="section-title">
+        <span class="section-title-dot"></span>
+        بيانات التمويل المطلوب
+    </h2>
+    <button type="button" id="resetBtn" class="reset-btn">إعادة ضبط</button>
+</div>
 
-            // الحالة الحالية
-            let currentAmount = DEFAULT_AMOUNT;
-            let currentMonths = DEFAULT_MONTHS;
+<div class="form-group">
 
-            // عناصر الواجهة
-            const amountInput = document.getElementById('amountInput');
-            const amountSlider = document.getElementById('amountSlider');
-            const validationError = document.getElementById('validationError');
-            const validationText = document.getElementById('validationText');
-            const durationBtns = document.querySelectorAll('.duration-btn');
-            const quickMarkBtns = document.querySelectorAll('.quick-mark-btn');
-            const resetBtn = document.getElementById('resetBtn');
-            const monthlyInstallmentDisplay = document.getElementById('monthlyInstallmentDisplay');
+<div class="label-row">
+    <label for="amountInput" class="input-label">مبلغ التمويل</label>
+    <span class="range-hint">350,000 - 2,000,000</span>
+</div>
 
-            // تنسيق الأرقام بفواصل الآلاف
-            function formatCurrency(num, decimals = 2) {
-                return Number(num).toLocaleString('en-US', {
-                    minimumFractionDigits: decimals,
-                    maximumFractionDigits: decimals
-                });
-            }
+<div class="amount-input-box">
+    <input type="text" id="amountInput" class="amount-input"
+    inputmode="numeric" value="500,000" autocomplete="off">
+    <span class="currency-badge">ج.م</span>
+</div>
 
-            function formatInteger(num) {
-                return Math.round(Number(num)).toLocaleString('en-US');
-            }
+<div id="validationError" class="error-banner" role="alert">
+    <span id="validationText"></span>
+</div>
 
-            // تحديد شريحة الفائدة السنوية المتناقصة حسب المبلغ
-            function getAnnualInterestRate(amount) {
-                if (amount >= 350000 && amount <= 500000) {
-                    return 0.42; // متغيرة 42%
-                } else if (amount > 500000 && amount <= 1000000) {
-                    return 0.41; // متغيرة 41%
-                } else {
-                    return 0.40; // متغيرة 40%
-                }
-            }
+<div class="slider-container">
+    <input type="range" id="amountSlider" class="custom-slider"
+    min="350000" max="2000000" step="50000" value="500000">
 
-            // حساب القسط الشهري: استخدام القيمة الدقيقة من الجدول أو الحساب الفوري
-            function getMonthlyInstallment(P, n) {
-                if (SCHEDULE_TABLE[P] && SCHEDULE_TABLE[P][n] !== undefined) {
-                    return SCHEDULE_TABLE[P][n];
-                }
-                const annualRate = getAnnualInterestRate(P);
-                const r = annualRate / 12;
-                const factor = Math.pow(1 + r, n);
-                return P * (r * factor) / (factor - 1);
-            }
+    <div class="quick-marks">
+        <button class="quick-mark-btn" data-amount="350000">350 ألف</button>
+        <button class="quick-mark-btn" data-amount="500000">500 ألف</button>
+        <button class="quick-mark-btn" data-amount="1000000">1 مليون</button>
+        <button class="quick-mark-btn" data-amount="1500000">1.5 مليون</button>
+        <button class="quick-mark-btn" data-amount="2000000">2 مليون</button>
+    </div>
+</div>
+</div>
 
-            // حساب القسط الشهري وتحديث العرض
-            function calculateAndRender() {
-                if (isNaN(currentAmount) || currentAmount < MIN_AMOUNT) {
-                    validationText.textContent = `الحد الأدنى لمبلغ التمويل هو ${formatInteger(MIN_AMOUNT)} جنيه مصري.`;
-                    validationError.classList.add('visible');
-                    amountInput.classList.add('has-error');
-                } else if (currentAmount > MAX_AMOUNT) {
-                    validationText.textContent = `الحد الأقصى لمبلغ التمويل هو ${formatInteger(MAX_AMOUNT)} جنيه مصري.`;
-                    validationError.classList.add('visible');
-                    amountInput.classList.add('has-error');
-                } else {
-                    validationError.classList.remove('visible');
-                    amountInput.classList.remove('has-error');
-                }
+<div class="form-group" style="margin-bottom:0">
+<label class="input-label">مدة السداد</label>
 
-                const P = Math.min(Math.max(isNaN(currentAmount) ? MIN_AMOUNT : currentAmount, MIN_AMOUNT), MAX_AMOUNT);
-                const monthlyInstallment = getMonthlyInstallment(P, currentMonths);
+<div class="duration-grid" id="durationGroup">
+    <button type="button" class="duration-btn active" data-months="12">
+        <span class="months-num">12</span>
+        <span class="months-text">شهر</span>
+    </button>
 
-                monthlyInstallmentDisplay.textContent = formatCurrency(monthlyInstallment, 2);
-            }
+    <button type="button" class="duration-btn" data-months="18">
+        <span class="months-num">18</span>
+        <span class="months-text">شهر</span>
+    </button>
 
-            // تحديث المبلغ من مربع الإدخال النصي
-            amountInput.addEventListener('input', (e) => {
-                const normalized = e.target.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
-                const rawDigits = normalized.replace(/[^\d]/g, '');
+    <button type="button" class="duration-btn" data-months="24">
+        <span class="months-num">24</span>
+        <span class="months-text">شهر</span>
+    </button>
+</div>
+</div>
 
-                if (rawDigits === '') {
-                    currentAmount = NaN;
-                    e.target.value = '';
-                    calculateAndRender();
-                    return;
-                }
+<div class="interest-info">
+    <span>الفائدة السنوية المتناقصة</span>
+    <span id="interestDisplay" class="interest-value">42%</span>
+</div>
 
-                const numericVal = parseInt(rawDigits, 10);
-                currentAmount = numericVal;
-                e.target.value = numericVal.toLocaleString('en-US');
+<div class="result-box">
+    <div class="result-label">القسط الشهري</div>
+    <div class="result-value-row">
+        <span id="monthlyInstallmentDisplay" class="result-amount">51,741.98</span>
+        <span class="result-unit">جنيه / شهرياً</span>
+    </div>
+</div>
 
-                const clamped = Math.min(Math.max(numericVal, MIN_AMOUNT), MAX_AMOUNT);
-                amountSlider.value = clamped;
+<div class="footer-note">
+    تصميم وإعداد Galal Ali
+</div>
 
-                calculateAndRender();
-            });
+</div>
+</main>
+</div>
 
-            // ضبط القيمة تلقائياً عند الخروج من الحقل
-            amountInput.addEventListener('blur', () => {
-                if (isNaN(currentAmount) || currentAmount < MIN_AMOUNT) {
-                    currentAmount = MIN_AMOUNT;
-                } else if (currentAmount > MAX_AMOUNT) {
-                    currentAmount = MAX_AMOUNT;
-                }
-                amountInput.value = formatInteger(currentAmount);
-                amountSlider.value = currentAmount;
-                calculateAndRender();
-            });
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
-            // تحديث المبلغ من شريط التمرير
-            amountSlider.addEventListener('input', (e) => {
-                currentAmount = parseInt(e.target.value, 10);
-                amountInput.value = formatInteger(currentAmount);
-                calculateAndRender();
-            });
+    const MIN_AMOUNT = 350000;
+    const MAX_AMOUNT = 2000000;
+    const DEFAULT_AMOUNT = 500000;
+    const DEFAULT_MONTHS = 12;
 
-            // الأزرار السريعة أسفل شريط التمرير
-            quickMarkBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    currentAmount = parseInt(btn.getAttribute('data-amount'), 10);
-                    amountInput.value = formatInteger(currentAmount);
-                    amountSlider.value = currentAmount;
-                    calculateAndRender();
-                });
-            });
+    let currentAmount = DEFAULT_AMOUNT;
+    let currentMonths = DEFAULT_MONTHS;
 
-            // أزرار اختيار مدة السداد
-            durationBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    durationBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentMonths = parseInt(btn.getAttribute('data-months'), 10);
-                    calculateAndRender();
-                });
-            });
+    const amountInput = document.getElementById('amountInput');
+    const amountSlider = document.getElementById('amountSlider');
+    const validationError = document.getElementById('validationError');
+    const validationText = document.getElementById('validationText');
+    const durationBtns = document.querySelectorAll('.duration-btn');
+    const quickMarkBtns = document.querySelectorAll('.quick-mark-btn');
+    const resetBtn = document.getElementById('resetBtn');
+    const monthlyDisplay = document.getElementById('monthlyInstallmentDisplay');
+    const interestDisplay = document.getElementById('interestDisplay');
 
-            // زر إعادة الضبط
-            resetBtn.addEventListener('click', () => {
-                currentAmount = DEFAULT_AMOUNT;
-                currentMonths = DEFAULT_MONTHS;
-                amountInput.value = formatInteger(DEFAULT_AMOUNT);
-                amountSlider.value = DEFAULT_AMOUNT;
-                durationBtns.forEach(b => b.classList.remove('active'));
-                durationBtns[0].classList.add('active'); // 12 شهراً
-                calculateAndRender();
-            });
+    function formatCurrency(num) {
+        return Number(num).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
 
-            // الحساب المبدئي عند فتح الصفحة
+    function formatInteger(num) {
+        return Math.round(num).toLocaleString('en-US');
+    }
+
+    function getAnnualInterestRate(amount) {
+        if (amount <= 500000) {
+            return 0.42;
+        } else if (amount <= 1000000) {
+            return 0.41;
+        } else {
+            return 0.40;
+        }
+    }
+
+    function calculateAndRender() {
+
+        if (isNaN(currentAmount) || currentAmount < MIN_AMOUNT) {
+            validationText.textContent =
+                'الحد الأدنى للتمويل 350,000 جنيه مصري';
+            validationError.classList.add('visible');
+            amountInput.classList.add('has-error');
+        } else if (currentAmount > MAX_AMOUNT) {
+            validationText.textContent =
+                'الحد الأقصى للتمويل 2,000,000 جنيه مصري';
+            validationError.classList.add('visible');
+            amountInput.classList.add('has-error');
+        } else {
+            validationError.classList.remove('visible');
+            amountInput.classList.remove('has-error');
+        }
+
+        const P = Math.min(
+            Math.max(isNaN(currentAmount) ? MIN_AMOUNT : currentAmount, MIN_AMOUNT),
+            MAX_AMOUNT
+        );
+
+        const annualRate = getAnnualInterestRate(P);
+        const r = annualRate / 12;
+        const n = currentMonths;
+
+        const factor = Math.pow(1 + r, n);
+        const installment = P * (r * factor) / (factor - 1);
+
+        monthlyDisplay.textContent = formatCurrency(installment);
+        interestDisplay.textContent = (annualRate * 100) + '%';
+    }
+
+    function updateAmount(value) {
+        currentAmount = Number(value);
+        amountInput.value = formatInteger(currentAmount);
+        amountSlider.value = currentAmount;
+        calculateAndRender();
+    }
+
+    amountInput.addEventListener('input', (e) => {
+
+        const normalized = e.target.value
+            .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+            .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+
+        const rawDigits = normalized.replace(/[^\d]/g, '');
+
+        if (rawDigits === '') {
+            currentAmount = NaN;
+            e.target.value = '';
+            calculateAndRender();
+            return;
+        }
+
+        currentAmount = parseInt(rawDigits, 10);
+        e.target.value = formatInteger(currentAmount);
+
+        amountSlider.value = Math.min(
+            Math.max(currentAmount, MIN_AMOUNT),
+            MAX_AMOUNT
+        );
+
+        calculateAndRender();
+    });
+
+    amountInput.addEventListener('blur', () => {
+        if (isNaN(currentAmount) || currentAmount < MIN_AMOUNT) {
+            currentAmount = MIN_AMOUNT;
+        } else if (currentAmount > MAX_AMOUNT) {
+            currentAmount = MAX_AMOUNT;
+        }
+
+        updateAmount(currentAmount);
+    });
+
+    amountSlider.addEventListener('input', (e) => {
+        updateAmount(e.target.value);
+    });
+
+    quickMarkBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            updateAmount(btn.dataset.amount);
+        });
+    });
+
+    durationBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+
+            durationBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            currentMonths = Number(btn.dataset.months);
             calculateAndRender();
         });
-    </script>
+    });
+
+    resetBtn.addEventListener('click', () => {
+
+        currentAmount = DEFAULT_AMOUNT;
+        currentMonths = DEFAULT_MONTHS;
+
+        amountInput.value = formatInteger(DEFAULT_AMOUNT);
+        amountSlider.value = DEFAULT_AMOUNT;
+
+        durationBtns.forEach(b => b.classList.remove('active'));
+        durationBtns[0].classList.add('active');
+
+        calculateAndRender();
+    });
+
+    calculateAndRender();
+
+});
+</script>
+
 </body>
 </html>
