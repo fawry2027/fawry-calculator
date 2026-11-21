@@ -29,7 +29,7 @@
 
         .app-wrapper {
             width: 100%;
-            max-width: 540px;
+            max-width: 620px;
             margin: 0 auto;
         }
 
@@ -93,7 +93,7 @@
 
         .nav-tabs {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 8px;
             margin-bottom: 14px;
         }
@@ -104,7 +104,7 @@
             border: 1px solid #cbd5e1;
             border-radius: 14px;
             padding: 11px 10px;
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             font-weight: 800;
             font-family: inherit;
             cursor: pointer;
@@ -412,6 +412,7 @@
             margin-top: 10px;
             display: flex;
             justify-content: flex-end;
+            gap: 8px;
         }
 
         .delete-visit-btn {
@@ -429,6 +430,49 @@
         .delete-visit-btn:hover {
             background-color: #be123c;
             color: #ffffff;
+        }
+
+        .emp-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            background-color: #ffffff;
+        }
+
+        .emp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.86rem;
+            min-width: 480px;
+        }
+
+        .emp-table th, .emp-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: right;
+            vertical-align: middle;
+        }
+
+        .emp-table th {
+            background-color: #ecfdf5;
+            color: #065f46;
+            font-weight: 800;
+        }
+
+        .emp-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cred-pill {
+            display: inline-block;
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-family: monospace;
+            direction: ltr;
+            font-weight: 700;
         }
 
         .error-banner {
@@ -657,6 +701,8 @@
         <div id="navTabs" class="nav-tabs">
             <button type="button" id="tabBtnVisits" class="nav-tab-btn active" data-tab="visitsTab">📍 الزيارات</button>
             <button type="button" id="tabBtnCalc" class="nav-tab-btn" data-tab="calcTab">▦ حاسبة القسط</button>
+            <button type="button" id="tabBtnAddEmp" class="nav-tab-btn hidden" data-tab="addEmpTab">➕ إضافة موظف</button>
+            <button type="button" id="tabBtnEmpDb" class="nav-tab-btn hidden" data-tab="empDbTab">📋 قاعدة الموظفين</button>
         </div>
 
         <div id="visitsTab">
@@ -834,6 +880,85 @@
                 </div>
             </main>
         </div>
+
+        <div id="addEmpTab" class="hidden calc-wrapper">
+            <div class="calculator-card">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>تصميم وإعداد:</span>
+                        <span class="top-signature-name">Galal Ali</span>
+                    </div>
+                    <h1>إضافة موظف جديد</h1>
+                    <p>إنشاء يوزر وباسوورد للموظف على النظام</p>
+                </header>
+                <div class="card-body">
+                    <form id="createEmployeeForm">
+                        <div class="form-group">
+                            <label for="empName" class="input-label">اسم الموظف</label>
+                            <input type="text" id="empName" class="field-input" placeholder="الاسم الكامل للموظف" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="empPhone" class="input-label">رقم الموبايل / اليوزر (11 رقماً)</label>
+                            <input type="tel" id="empPhone" class="field-input" placeholder="01xxxxxxxxx" maxlength="11" minlength="11" inputmode="numeric" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="empPassword" class="input-label">كلمة المرور (6 أحرف أو أرقام فأكثر)</label>
+                            <input type="text" id="empPassword" class="field-input" placeholder="اكتب كلمة مرور الموظف" minlength="6" required>
+                        </div>
+                        <button type="submit" id="createEmpBtn" class="primary-action-btn">إنشاء حساب الموظف</button>
+                        <div id="empStatus" class="status-text"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="empDbTab" class="hidden">
+            <div class="calculator-card">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>تصميم وإعداد:</span>
+                        <span class="top-signature-name">Galal Ali</span>
+                    </div>
+                    <h1>قاعدة بيانات الموظفين</h1>
+                    <p>عرض اليوزر والباسوورد لكل الموظفين المضافين</p>
+                </header>
+                <div class="card-body">
+                    <div class="section-top-bar">
+                        <h2 class="section-title">
+                            <span class="section-title-dot"></span>
+                            قائمة الموظفين (<span id="empCount">0</span>)
+                        </h2>
+                        <div class="actions-row" style="margin-bottom:0;">
+                            <button type="button" id="refreshEmpBtn" class="reset-btn">تحديث القائمة</button>
+                            <button type="button" id="exportEmpExcelBtn" class="reset-btn">تصدير Excel</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <input type="text" id="empSearchInput" class="field-input" placeholder="بحث باسم الموظف أو رقم الموبايل...">
+                    </div>
+
+                    <div class="emp-table-wrap">
+                        <table class="emp-table">
+                            <thead>
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>اليوزر (رقم الموبايل)</th>
+                                    <th>الباسوورد</th>
+                                    <th>إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="empTableBody">
+                                <tr>
+                                    <td colspan="4" style="text-align:center; color:#64748b; padding:16px;">جاري التحميل...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="empDbStatus" class="status-text"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -988,9 +1113,15 @@
             let currentUser = null;
             let currentProfile = null;
             let allVisits = [];
+            let allEmployees = [];
 
             const clientPhoneInput = document.getElementById('clientPhone');
             clientPhoneInput.addEventListener('input', (e) => {
+                e.target.value = normalizePhone(e.target.value).slice(0, 11);
+            });
+
+            const empPhoneInput = document.getElementById('empPhone');
+            empPhoneInput.addEventListener('input', (e) => {
                 e.target.value = normalizePhone(e.target.value).slice(0, 11);
             });
 
@@ -1025,15 +1156,27 @@
 
             setTodayDate();
 
+            const tabMap = {
+                visitsTab: 'tabBtnVisits',
+                calcTab: 'tabBtnCalc',
+                addEmpTab: 'tabBtnAddEmp',
+                empDbTab: 'tabBtnEmpDb'
+            };
+
             function switchTab(targetTab) {
-                document.getElementById('tabBtnVisits').classList.toggle('active', targetTab === 'visitsTab');
-                document.getElementById('tabBtnCalc').classList.toggle('active', targetTab === 'calcTab');
-                document.getElementById('visitsTab').classList.toggle('hidden', targetTab !== 'visitsTab');
-                document.getElementById('calcTab').classList.toggle('hidden', targetTab !== 'calcTab');
+                Object.entries(tabMap).forEach(([tabId, btnId]) => {
+                    document.getElementById(btnId).classList.toggle('active', tabId === targetTab);
+                    document.getElementById(tabId).classList.toggle('hidden', tabId !== targetTab);
+                });
+                if (targetTab === 'empDbTab' && currentProfile?.role === 'manager') {
+                    loadEmployeesDb();
+                }
             }
 
             document.getElementById('tabBtnVisits').addEventListener('click', () => switchTab('visitsTab'));
             document.getElementById('tabBtnCalc').addEventListener('click', () => switchTab('calcTab'));
+            document.getElementById('tabBtnAddEmp').addEventListener('click', () => switchTab('addEmpTab'));
+            document.getElementById('tabBtnEmpDb').addEventListener('click', () => switchTab('empDbTab'));
 
             function saveLocalSession(session, profile) {
                 try {
@@ -1073,7 +1216,7 @@
                 const cleanPhone = normalizePhone(rawLogin);
                 const password = document.getElementById('loginPassword').value;
 
-                if (!rawLogin.includes('@') && cleanPhone.length < 11) {
+                if (!rawLogin.includes('@') && cleanPhone.length !== 11) {
                     statusEl.textContent = 'أدخل رقم موبايل صحيحاً من 11 رقماً';
                     return;
                 }
@@ -1120,6 +1263,8 @@
                 document.getElementById('navTabs').classList.remove('hidden');
                 document.getElementById('tabBtnVisits').classList.remove('hidden');
                 document.getElementById('tabBtnCalc').classList.remove('hidden');
+                document.getElementById('tabBtnAddEmp').classList.toggle('hidden', !isManager);
+                document.getElementById('tabBtnEmpDb').classList.toggle('hidden', !isManager);
                 document.getElementById('visitEntryCard').classList.toggle('hidden', isManager);
                 document.getElementById('managerHeader').classList.toggle('hidden', !isManager);
                 document.getElementById('exportExcelBtnManager').classList.toggle('hidden', !isManager);
@@ -1163,6 +1308,9 @@
                 document.getElementById('appSection').classList.remove('hidden');
 
                 await loadVisits();
+                if (isManager) {
+                    await loadEmployeesDb();
+                }
             }
 
             document.getElementById('clearVisitBtn').addEventListener('click', () => {
@@ -1368,6 +1516,163 @@
 
             document.getElementById('exportExcelBtnEmployee').addEventListener('click', exportVisitsToExcel);
             document.getElementById('exportExcelBtnManager').addEventListener('click', exportVisitsToExcel);
+
+            document.getElementById('createEmployeeForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (currentProfile?.role !== 'manager') return;
+
+                const statusEl = document.getElementById('empStatus');
+                const btn = document.getElementById('createEmpBtn');
+                statusEl.textContent = '';
+                statusEl.className = 'status-text';
+
+                if (!sb) return;
+
+                const fullName = document.getElementById('empName').value.trim();
+                const phone = normalizePhone(empPhoneInput.value);
+                const password = document.getElementById('empPassword').value;
+
+                if (!fullName) {
+                    statusEl.textContent = 'أدخل اسم الموظف';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                if (phone.length !== 11) {
+                    statusEl.textContent = 'رقم الموبايل يجب أن يكون 11 رقماً بالضبط';
+                    statusEl.classList.add('status-err');
+                    empPhoneInput.focus();
+                    return;
+                }
+
+                if (password.length < 6) {
+                    statusEl.textContent = 'كلمة المرور يجب أن تكون 6 أحرف أو أرقام فأكثر';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = 'جاري إنشاء الحساب...';
+
+                try {
+                    const { error } = await sb.rpc('admin_create_employee', {
+                        p_full_name: fullName,
+                        p_phone: phone,
+                        p_password: password
+                    });
+
+                    if (error) throw error;
+
+                    document.getElementById('createEmployeeForm').reset();
+                    statusEl.textContent = `تم إنشاء حساب الموظف (${phone}) وحفظه في قاعدة بيانات الموظفين`;
+                    statusEl.classList.add('status-ok');
+                    await loadEmployeesDb();
+                } catch (err) {
+                    statusEl.textContent = `تعذر إنشاء الحساب: ${err.message || err}`;
+                    statusEl.classList.add('status-err');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'إنشاء حساب الموظف';
+                }
+            });
+
+            async function loadEmployeesDb() {
+                if (!sb || currentProfile?.role !== 'manager') return;
+                const tbody = document.getElementById('empTableBody');
+                const dbStatus = document.getElementById('empDbStatus');
+                dbStatus.textContent = '';
+
+                const { data, error } = await sb
+                    .from('employee_credentials')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="status-err" style="text-align:center; padding:14px;">تعذر تحميل قاعدة بيانات الموظفين: ${escapeHTML(error.message)}</td></tr>`;
+                    return;
+                }
+
+                allEmployees = data || [];
+                renderEmployeesDb();
+            }
+
+            function getFilteredEmployees() {
+                const q = document.getElementById('empSearchInput').value.trim().toLowerCase();
+                if (!q) return allEmployees;
+                return allEmployees.filter(emp => {
+                    const hay = `${emp.full_name || ''} ${emp.phone || ''} ${emp.password || ''}`.toLowerCase();
+                    return hay.includes(q);
+                });
+            }
+
+            function renderEmployeesDb() {
+                const list = getFilteredEmployees();
+                document.getElementById('empCount').textContent = list.length;
+                const tbody = document.getElementById('empTableBody');
+
+                if (!list.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#64748b; padding:16px;">لا يوجد موظفون مضافون بعد</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = list.map(emp => `
+                    <tr>
+                        <td><strong>${escapeHTML(emp.full_name || '')}</strong></td>
+                        <td><span class="cred-pill">${escapeHTML(emp.phone || '')}</span></td>
+                        <td><span class="cred-pill">${escapeHTML(emp.password || '')}</span></td>
+                        <td>
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button type="button" class="reset-btn" onclick="copyEmpCred('${escapeHTML(emp.phone || '')}', '${escapeHTML(emp.password || '')}')">نسخ</button>
+                                <button type="button" class="delete-visit-btn" onclick="deleteEmpAccount('${emp.user_id}')">حذف</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            window.copyEmpCred = async function(phone, password) {
+                const text = `اليوزر: ${phone}\nالباسوورد: ${password}`;
+                const dbStatus = document.getElementById('empDbStatus');
+                try {
+                    await navigator.clipboard.writeText(text);
+                    dbStatus.textContent = `تم نسخ بيانات الموظف (${phone})`;
+                    dbStatus.className = 'status-text status-ok';
+                } catch (_) {
+                    dbStatus.textContent = text;
+                    dbStatus.className = 'status-text status-ok';
+                }
+            };
+
+            window.deleteEmpAccount = async function(userId) {
+                if (!sb || !userId || !confirm('هل أنت متأكد من حذف حساب هذا الموظف نهائياً؟')) return;
+                const dbStatus = document.getElementById('empDbStatus');
+                const { error } = await sb.rpc('admin_delete_employee', { p_user_id: userId });
+                if (error) {
+                    dbStatus.textContent = `تعذر حذف الموظف: ${error.message}`;
+                    dbStatus.className = 'status-text status-err';
+                    return;
+                }
+                dbStatus.textContent = 'تم حذف حساب الموظف بنجاح';
+                dbStatus.className = 'status-text status-ok';
+                await loadEmployeesDb();
+            };
+
+            document.getElementById('empSearchInput').addEventListener('input', renderEmployeesDb);
+            document.getElementById('refreshEmpBtn').addEventListener('click', loadEmployeesDb);
+
+            document.getElementById('exportEmpExcelBtn').addEventListener('click', () => {
+                if (!window.XLSX) return;
+                const rows = getFilteredEmployees().map(emp => ({
+                    'اسم الموظف': emp.full_name || '',
+                    'اليوزر (رقم الموبايل)': emp.phone || '',
+                    'الباسوورد': emp.password || '',
+                    'تاريخ الإضافة': emp.created_at ? emp.created_at.split('T')[0] : ''
+                }));
+                const ws = XLSX.utils.json_to_sheet(rows);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'الموظفون');
+                XLSX.writeFile(wb, `employees_${new Date().toISOString().split('T')[0]}.xlsx`);
+            });
 
             async function restoreSession() {
                 const cached = getLocalSession();
