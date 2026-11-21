@@ -766,7 +766,7 @@
 
                         <div class="form-group">
                             <label for="clientPhone" class="input-label">رقم العميل</label>
-                            <input type="tel" id="clientPhone" class="field-input" placeholder="01xxxxxxxxx" required>
+                            <input type="tel" id="clientPhone" class="field-input" placeholder="01xxxxxxxxx" maxlength="11" minlength="11" inputmode="numeric" required>
                         </div>
 
                         <div class="form-group">
@@ -999,6 +999,11 @@
             let currentProfile = null;
             let allVisits = [];
 
+            const clientPhoneInput = document.getElementById('clientPhone');
+            clientPhoneInput.addEventListener('input', (e) => {
+                e.target.value = normalizePhone(e.target.value).slice(0, 11);
+            });
+
             function escapeHTML(str = '') {
                 return String(str)
                     .replace(/&/g, '&amp;')
@@ -1150,7 +1155,7 @@
 
                 const clientName = document.getElementById('clientName').value.trim();
                 const visitDate = document.getElementById('visitDate').value;
-                const clientPhone = normalizePhone(document.getElementById('clientPhone').value);
+                const clientPhone = normalizePhone(clientPhoneInput.value);
                 const activityType = document.getElementById('activityType').value.trim();
                 const visitResult = document.getElementById('visitResult').value;
                 const photoFile = document.getElementById('visitPhoto').files[0];
@@ -1158,6 +1163,13 @@
                 if (!clientName || !visitDate || !clientPhone || !activityType || !visitResult) {
                     statusEl.textContent = 'يرجى استكمال جميع الحقول المطلوبة';
                     statusEl.classList.add('status-err');
+                    return;
+                }
+
+                if (clientPhone.length !== 11) {
+                    statusEl.textContent = 'رقم موبايل العميل يجب أن يكون 11 رقماً بالضبط';
+                    statusEl.classList.add('status-err');
+                    clientPhoneInput.focus();
                     return;
                 }
 
