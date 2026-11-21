@@ -450,8 +450,8 @@
   </div>
 
   <script>
-    const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const SUPABASE_URL = 'https://xuuddxaqkmblotqvxard.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1dWRkeGFxa21ibG90cXZ4YXJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyNjQyNDgsImV4cCI6MjExMDg0MDI0OH0.aBjKy59KwghDczH3jnAreE355u_F-NpHsum6TKq99Xs';
     const PHOTO_BUCKET = 'visit-photos';
 
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -496,11 +496,6 @@
       e.preventDefault();
       const statusEl = document.getElementById('loginStatus');
       statusEl.textContent = '';
-
-      if (SUPABASE_URL.includes('YOUR_PROJECT_ID') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) {
-        statusEl.textContent = 'يرجى وضع SUPABASE_URL و SUPABASE_ANON_KEY الخاصين بمشروعك في الكود أولاً';
-        return;
-      }
 
       const cleanPhone = normalizePhone(document.getElementById('loginPhone').value);
       const password = document.getElementById('loginPassword').value;
