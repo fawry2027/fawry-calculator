@@ -1,1206 +1,814 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Fawry MSME | حاسبة الأقساط والزيارات</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fawry MSME | حاسبة الأقساط والزيارات</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
-    background: #f1f5f9;
-    color: #0f172a;
-    min-height: 100vh;
-    padding: 18px 12px 28px;
-    line-height: 1.5;
-}
+    :root {
+      --primary: #0b6b3a;
+      --primary-dark: #074c29;
+      --primary-light: #e8f5ee;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+    }
 
-.site-shell {
-    width: 100%;
-    max-width: 520px;
-    margin: 0 auto;
-}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 18px 12px 32px;
+      line-height: 1.5;
+    }
 
-.auth-card, .calculator-card, .visits-card, .manager-card {
-    background: #fff;
-    border-radius: 24px;
-    box-shadow: 0 12px 32px rgba(15,23,42,.08);
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-    margin-bottom: 14px;
-}
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
 
-.card-header, .visits-header {
-    background: linear-gradient(135deg,#065f46,#047857);
-    color: #fff;
-    padding: 22px;
-    text-align: center;
-}
+    .topbar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-.top-signature {
-    display: inline-flex;
-    gap: 6px;
-    align-items: center;
-    background: rgba(255,255,255,.14);
-    border: 1px solid rgba(255,255,255,.25);
-    padding: 4px 14px;
-    border-radius: 999px;
-    margin-bottom: 12px;
-    font-size: 12px;
-    color: #ecfdf5;
-    font-weight: 600;
-}
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 14px;
+    }
 
-.top-signature-name {
-    font-weight: 800;
-    direction: ltr;
-    color: #fff;
-}
+    .role-pill {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
 
-.card-header h1, .visits-header h1 {
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 4px;
-}
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
 
-.card-header p, .visits-header p {
-    font-size: 13px;
-    color: #d1fae5;
-}
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      width: 100%;
+    }
 
-.card-body, .visits-body {
-    padding: 20px;
-}
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
 
-.session-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-}
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
 
-.role-badge {
-    background: #ecfdf5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 800;
-    margin-right: 6px;
-}
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
 
-.main-nav {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin: 0 auto 14px;
-}
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
 
-.main-nav.two-cols {
-    grid-template-columns: 1fr 1fr;
-}
+    .tab-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
 
-.nav-tab {
-    border: 1px solid #dbe4e8;
-    background: #fff;
-    color: #475569;
-    border-radius: 14px;
-    padding: 12px 8px;
-    font: 700 13px inherit;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    box-shadow: 0 3px 10px rgba(15,23,42,.04);
-}
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
 
-.nav-tab.active {
-    background: #065f46;
-    color: #fff;
-    border-color: #065f46;
-}
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
 
-.app-view { display: none; }
-.app-view.active { display: block; }
-.hidden { display: none !important; }
+    .card-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      padding: 18px 20px;
+      text-align: center;
+    }
 
-.section-top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 14px;
-    margin-bottom: 18px;
-    border-bottom: 1px solid #f1f5f9;
-}
+    .card-header .credit {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 3px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
 
-.section-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #1e293b;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+    .card-body {
+      padding: 18px;
+    }
 
-.section-title-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #059669;
-}
+    .form-group {
+      margin-bottom: 13px;
+    }
 
-.reset-btn {
-    background: #f8fafc;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 7px 12px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-}
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
 
-.form-group { margin-bottom: 20px; }
-.label-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fff;
+      color: var(--text);
+    }
 
-.input-label {
-    font-size: 14px;
-    font-weight: 700;
-    color: #334155;
-}
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
 
-.range-hint {
-    font-size: 11px;
-    font-weight: 700;
-    color: #64748b;
-    background: #f1f5f9;
-    padding: 4px 9px;
-    border-radius: 8px;
-    direction: ltr;
-}
+    .status-msg {
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      min-height: 20px;
+    }
 
-.amount-input-box {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
+    .status-ok {
+      color: var(--primary);
+    }
 
-.amount-input {
-    width: 100%;
-    height: 56px;
-    padding: 12px 16px 12px 65px;
-    font-size: 24px;
-    font-weight: 800;
-    font-family: inherit;
-    color: #0f172a;
-    background: #f8fafc;
-    border: 2px solid #cbd5e1;
-    border-radius: 16px;
-    text-align: right;
-    direction: ltr;
-    outline: none;
-}
+    .status-err {
+      color: var(--danger);
+    }
 
-.amount-input:focus {
-    background: #fff;
-    border-color: #059669;
-    box-shadow: 0 0 0 4px rgba(5,150,105,.12);
-}
+    .visits-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+    }
 
-.currency-badge {
-    position: absolute;
-    left: 14px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #059669;
-    background: #ecfdf5;
-    padding: 4px 10px;
-    border-radius: 8px;
-}
+    .visit-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: #f8fafc;
+    }
 
-.error-banner {
-    display: none;
-    margin-top: 10px;
-    padding: 10px;
-    background: #fff1f2;
-    border: 1px solid #fecdd3;
-    border-radius: 12px;
-    color: #be123c;
-    font-size: 12px;
-    font-weight: 700;
-}
+    .visit-item {
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
 
-.error-banner.visible { display: block; }
-.slider-container { margin-top: 18px; }
+    .visit-label {
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
 
-.custom-slider {
-    appearance: none;
-    width: 100%;
-    height: 8px;
-    background: #e2e8f0;
-    border-radius: 999px;
-    outline: none;
-    cursor: pointer;
-}
+    .visit-photo {
+      display: block;
+      max-width: 100%;
+      max-height: 260px;
+      border-radius: 10px;
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      object-fit: contain;
+      background: #fff;
+    }
 
-.custom-slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #059669;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 8px rgba(5,150,105,.45);
-}
+    .visit-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
 
-.quick-marks {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    gap: 4px;
-}
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
 
-.quick-mark-btn {
-    background: none;
-    border: none;
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 700;
-    color: #64748b;
-    padding: 5px;
-    border-radius: 6px;
-    cursor: pointer;
-}
+    .calc-box {
+      background: var(--primary-light);
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 14px;
+      font-weight: 700;
+    }
 
-.duration-grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 10px;
-    margin-top: 10px;
-}
+    .hidden {
+      display: none !important;
+    }
 
-.duration-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 8px;
-    background: #f8fafc;
-    border: 2px solid #e2e8f0;
-    border-radius: 16px;
-    cursor: pointer;
-    font-family: inherit;
-}
-
-.duration-btn .months-num { font-size: 22px; font-weight: 800; color: #334155; }
-.duration-btn .months-text { font-size: 13px; font-weight: 700; color: #64748b; }
-.duration-btn.active { background: #ecfdf5; border-color: #059669; }
-.duration-btn.active .months-num, .duration-btn.active .months-text { color: #065f46; }
-
-.interest-info {
-    margin-top: 18px;
-    padding: 11px 13px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-}
-
-.interest-value { color: #047857; font-weight: 800; direction: ltr; }
-
-.result-box {
-    margin-top: 20px;
-    background: #ecfdf5;
-    border: 2px solid #a7f3d0;
-    border-radius: 20px;
-    padding: 20px 14px;
-    text-align: center;
-}
-
-.result-label { font-size: 15px; font-weight: 700; color: #047857; margin-bottom: 6px; }
-.result-value-row { display: flex; align-items: baseline; justify-content: center; gap: 7px; flex-wrap: wrap; }
-.result-amount { font-size: 32px; font-weight: 900; color: #065f46; direction: ltr; }
-.result-unit { font-size: 14px; font-weight: 800; color: #059669; }
-
-.visit-form { display: grid; gap: 13px; }
-.visit-field { display: grid; gap: 6px; }
-.visit-field label { color: #334155; font-size: 13px; font-weight: 700; }
-
-.visit-field input, .visit-field select, .visit-field textarea {
-    width: 100%;
-    border: 1.5px solid #cbd5e1;
-    border-radius: 12px;
-    background: #f8fafc;
-    padding: 11px 12px;
-    font: 14px inherit;
-    color: #0f172a;
-    outline: none;
-}
-
-.visit-field input:focus, .visit-field select:focus, .visit-field textarea:focus {
-    border-color: #059669;
-    background: #fff;
-}
-
-.visit-field textarea { min-height: 76px; resize: vertical; }
-
-.photo-preview-box {
-    margin-top: 6px;
-    border: 1px dashed #cbd5e1;
-    border-radius: 12px;
-    padding: 8px;
-    background: #f8fafc;
-    text-align: center;
-}
-
-.photo-preview-box img {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 10px;
-    display: block;
-    margin: 0 auto;
-}
-
-.visit-submit {
-    border: 0;
-    border-radius: 13px;
-    padding: 13px;
-    color: #fff;
-    background: #047857;
-    font: 700 15px inherit;
-    cursor: pointer;
-}
-
-.visit-submit:disabled { opacity: .6; cursor: not-allowed; }
-
-.visits-list-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin: 22px 0 10px;
-}
-
-.visits-list-head h2 { font-size: 16px; color: #1e293b; }
-.visits-count {
-    font-size: 12px;
-    color: #047857;
-    background: #ecfdf5;
-    border-radius: 20px;
-    padding: 5px 9px;
-    font-weight: 700;
-}
-
-.visit-record {
-    border: 1px solid #e2e8f0;
-    border-radius: 13px;
-    padding: 12px;
-    margin-top: 9px;
-    background: #fff;
-}
-
-.visit-record-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    align-items: start;
-}
-
-.visit-record strong { color: #0f172a; font-size: 14px; }
-.visit-meta { color: #64748b; font-size: 12px; margin-top: 5px; line-height: 1.7; }
-.visit-notes { color: #334155; font-size: 12px; margin-top: 7px; white-space: pre-wrap; }
-
-.visit-photo-thumb {
-    margin-top: 8px;
-    width: 100%;
-    max-height: 190px;
-    object-fit: cover;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-}
-
-.delete-visit {
-    border: 1px solid #fecdd3;
-    color: #be123c;
-    background: #fff1f2;
-    border-radius: 8px;
-    padding: 5px 8px;
-    font: 700 11px inherit;
-    cursor: pointer;
-}
-
-.empty-visits { text-align: center; color: #94a3b8; font-size: 13px; padding: 22px 8px; }
-.visits-footer, .footer-note { text-align: center; font-size: 10px; color: #94a3b8; margin-top: 15px; }
-
-.visit-tools { display: grid; gap: 10px; margin: 14px 0 12px; }
-.visit-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-.visit-filter-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.visit-filter-reset, .visit-export-btn {
-    border: 1px solid #047857;
-    color: #047857;
-    background: #ecfdf5;
-    border-radius: 11px;
-    padding: 11px 7px;
-    font: 700 12px inherit;
-    cursor: pointer;
-}
-.visit-export-btn.primary { color: #fff; background: #047857; }
-.visit-filter-reset { border-color: #cbd5e1; color: #475569; background: #f8fafc; }
-
-.status-msg { margin-top: 10px; font-size: 13px; font-weight: 700; }
-.status-ok { color: #15803d; }
-.status-err { color: #be123c; }
-</style>
+    @media (max-width: 560px) {
+      .filters {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="site-shell">
-
-  <div id="authSection" class="auth-card">
-    <div class="card-header">
-      <div class="top-signature"><span>تصميم وإعداد:</span><span class="top-signature-name">Galal Ali</span></div>
-      <h1>تسجيل الدخول</h1>
-      <p>أدخل رقم الموبايل وكلمة المرور للوصول للنظام</p>
-    </div>
-    <div class="card-body">
-      <form id="loginForm" class="visit-form" autocomplete="off">
-        <div class="visit-field">
-          <label for="loginPhone">رقم الموبايل</label>
-          <input id="loginPhone" type="tel" inputmode="numeric" placeholder="01095451344" autocomplete="off" required>
-        </div>
-        <div class="visit-field">
-          <label for="loginPassword">كلمة المرور</label>
-          <input id="loginPassword" type="password" placeholder="أدخل كلمة المرور" autocomplete="new-password" required>
-        </div>
-        <button id="loginBtn" class="visit-submit" type="submit">دخول</button>
-      </form>
-      <div id="loginMsg" class="status-msg"></div>
-    </div>
-  </div>
-
-  <div id="appSection" class="hidden">
-    <div class="session-bar">
-      <div>
-        <strong id="currentUserName"></strong>
-        <span id="currentUserRole" class="role-badge"></span>
+  <div class="container">
+    <!-- شاشة تسجيل الدخول -->
+    <div id="loginSection" class="card">
+      <div class="card-header">
+        <div class="credit">تصميم وإعداد: Galal Ali</div>
+        <h2>تسجيل الدخول</h2>
+        <p style="font-size:13px; opacity:0.9;">أدخل رقم الموبايل وكلمة المرور للوصول للنظام</p>
       </div>
-      <button id="logoutBtn" type="button" class="reset-btn">تسجيل خروج</button>
-    </div>
-
-    <nav id="mainNav" class="main-nav two-cols" aria-label="التنقل بين الأقسام">
-      <button type="button" class="nav-tab active" data-view="visitsView">📍 الزيارات</button>
-      <button type="button" class="nav-tab" data-view="calculatorView">▦ الحاسبة</button>
-      <button type="button" class="nav-tab hidden" id="managerTabBtn" data-view="managerView">👥 الموظفون</button>
-    </nav>
-
-    <section id="visitsView" class="app-view active">
-      <main class="visits-card">
-        <header class="visits-header">
-          <div class="top-signature"><span>تصميم وإعداد:</span><span class="top-signature-name">Galal Ali</span></div>
-          <h1>إدارة الزيارات</h1>
-          <p>تسجيل ومتابعة زيارات العملاء مع صورة الزيارة</p>
-        </header>
-        <div class="visits-body">
-          <div class="section-top-bar">
-            <h2 class="section-title"><span class="section-title-dot"></span> تسجيل زيارة جديدة</h2>
-            <button type="button" id="clearVisitForm" class="reset-btn">مسح البيانات</button>
-          </div>
-
-          <form id="visitForm" class="visit-form">
-            <div class="visit-field">
-              <label for="clientName">اسم العميل</label>
-              <input id="clientName" name="clientName" type="text" placeholder="اكتب اسم العميل" required>
-            </div>
-            <div class="visit-field">
-              <label for="clientPhone">رقم الهاتف</label>
-              <input id="clientPhone" name="clientPhone" type="tel" inputmode="numeric" minlength="11" maxlength="11" pattern="[0-9]{11}" placeholder="01xxxxxxxxx" required>
-            </div>
-            <div class="visit-field">
-              <label for="visitArea">المحافظة / المنطقة</label>
-              <input id="visitArea" name="visitArea" type="text" placeholder="مثال: المنيا - ملوي">
-            </div>
-            <div class="visit-field">
-              <label for="visitDate">تاريخ الزيارة</label>
-              <input id="visitDate" name="visitDate" type="date" required>
-            </div>
-            <div class="visit-field">
-              <label for="visitResult">نتيجة الزيارة</label>
-              <select id="visitResult" name="visitResult" required>
-                <option value="">اختر نتيجة الزيارة</option>
-                <option>مهتم بالتمويل</option>
-                <option>طلب مستندات</option>
-                <option>متابعة لاحقة</option>
-                <option>غير مهتم</option>
-                <option>لم يتم مقابلة العميل</option>
-              </select>
-            </div>
-            <div class="visit-field">
-              <label for="visitNotes">ملاحظات</label>
-              <textarea id="visitNotes" name="visitNotes" placeholder="اكتب تفاصيل الزيارة أو المطلوب متابعته"></textarea>
-            </div>
-            <div class="visit-field">
-              <label for="visitPhoto">صورة الزيارة (اختياري)</label>
-              <input id="visitPhoto" name="visitPhoto" type="file" accept="image/*" capture="environment">
-              <div id="photoPreviewBox" class="photo-preview-box hidden">
-                <img id="photoPreviewImg" alt="معاينة صورة الزيارة">
-              </div>
-            </div>
-            <button id="visitSubmitBtn" class="visit-submit" type="submit">حفظ الزيارة</button>
-          </form>
-          <div id="visitMsg" class="status-msg"></div>
-
-          <div class="visits-list-head">
-            <h2 id="visitsListTitle">سجل الزيارات</h2>
-            <span class="visits-count" id="visitsCount">0 زيارة</span>
-          </div>
-
-          <div id="managerFiltersBox" class="visit-tools hidden">
-            <div class="visit-filters">
-              <div class="visit-field">
-                <label for="filterEmployee">اسم الموظف</label>
-                <input id="filterEmployee" type="search" placeholder="ابحث باسم الموظف">
-              </div>
-              <div class="visit-field">
-                <label for="filterClient">اسم العميل</label>
-                <input id="filterClient" type="search" placeholder="ابحث باسم العميل">
-              </div>
-              <div class="visit-field">
-                <label for="filterPhone">رقم الموبايل</label>
-                <input id="filterPhone" type="search" inputmode="numeric" placeholder="رقم الموبايل">
-              </div>
-              <div class="visit-field">
-                <label for="filterArea">المحافظة / المنطقة</label>
-                <input id="filterArea" type="search" placeholder="ابحث بالمنطقة">
-              </div>
-              <div class="visit-field">
-                <label for="filterResult">نتيجة الزيارة</label>
-                <select id="filterResult">
-                  <option value="">كل النتائج</option>
-                  <option>مهتم بالتمويل</option>
-                  <option>طلب مستندات</option>
-                  <option>متابعة لاحقة</option>
-                  <option>غير مهتم</option>
-                  <option>لم يتم مقابلة العميل</option>
-                </select>
-              </div>
-              <div class="visit-field">
-                <label for="filterNotes">الملاحظات</label>
-                <input id="filterNotes" type="search" placeholder="ابحث في الملاحظات">
-              </div>
-              <div class="visit-field">
-                <label for="filterDateFrom">من تاريخ</label>
-                <input id="filterDateFrom" type="date">
-              </div>
-              <div class="visit-field">
-                <label for="filterDateTo">إلى تاريخ</label>
-                <input id="filterDateTo" type="date">
-              </div>
-            </div>
-            <div class="visit-filter-actions">
-              <button type="button" class="visit-filter-reset" id="resetVisitFilters">مسح الفلاتر</button>
-              <button type="button" class="visit-export-btn" id="exportFilteredVisits">تصدير المفلترة Excel</button>
-            </div>
-            <button type="button" class="visit-export-btn primary" id="exportAllVisits">تحميل جميع الزيارات Excel</button>
-          </div>
-
-          <div id="visitsList"><div class="empty-visits">لا توجد زيارات مسجلة حتى الآن</div></div>
-          <div class="visits-footer">تصميم وإعداد Galal Ali</div>
-        </div>
-      </main>
-    </section>
-
-    <section id="calculatorView" class="app-view">
-      <main class="calculator-card">
-        <header class="card-header">
-          <div class="top-signature"><span>تصميم وإعداد:</span><span class="top-signature-name">Galal Ali</span></div>
-          <h1>حاسبة القسط الشهري</h1>
-          <p>حساب فوري بنظام الفائدة المتناقصة</p>
-        </header>
-        <div class="card-body">
-          <div class="section-top-bar">
-            <h2 class="section-title"><span class="section-title-dot"></span> بيانات التمويل المطلوب</h2>
-            <button type="button" id="resetBtn" class="reset-btn">إعادة ضبط</button>
+      <div class="card-body">
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginPhone">رقم الموبايل</label>
+            <input type="tel" id="loginPhone" placeholder="01xxxxxxxxx" required>
           </div>
           <div class="form-group">
-            <div class="label-row">
-              <label for="amountInput" class="input-label">مبلغ التمويل</label>
-              <span class="range-hint">350,000 - 2,000,000</span>
+            <label for="loginPassword">كلمة المرور</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-primary">دخول</button>
+          <div id="loginStatus" class="status-msg status-err"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- التطبيق بعد الدخول -->
+    <div id="appSection" class="hidden">
+      <div class="topbar">
+        <div class="user-badge">
+          <span id="currentUserName">مستخدم</span>
+          <span id="currentUserRole" class="role-pill">موظف</span>
+        </div>
+        <button type="button" id="logoutBtn" class="btn btn-secondary">تسجيل خروج</button>
+      </div>
+
+      <div class="tabs">
+        <button type="button" class="tab-btn active" data-tab="visitsTab">📍 الزيارات</button>
+        <button type="button" class="tab-btn" data-tab="calcTab">▦ الحاسبة</button>
+        <button type="button" id="employeesTabBtn" class="tab-btn hidden" data-tab="employeesTab">👥 الموظفون</button>
+      </div>
+
+      <!-- تبويب الزيارات -->
+      <div id="visitsTab">
+        <div class="card">
+          <div class="card-header">
+            <div class="credit">تصميم وإعداد: Galal Ali</div>
+            <h2>إدارة الزيارات</h2>
+            <p style="font-size:13px; opacity:0.9;">تسجيل ومتابعة زيارات العملاء مع صورة الزيارة</p>
+          </div>
+          <div class="card-body">
+            <div class="row-actions">
+              <button type="button" id="clearFormBtn" class="btn btn-secondary">مسح البيانات</button>
+              <button type="button" id="exportExcelBtn" class="btn btn-secondary">تصدير Excel</button>
             </div>
-            <div class="amount-input-box">
-              <input type="text" id="amountInput" class="amount-input" inputmode="numeric" value="500,000" autocomplete="off">
-              <span class="currency-badge">ج.م</span>
-            </div>
-            <div id="validationError" class="error-banner" role="alert"><span id="validationText"></span></div>
-            <div class="slider-container">
-              <input type="range" id="amountSlider" class="custom-slider" min="350000" max="2000000" step="50000" value="500000">
-              <div class="quick-marks">
-                <button type="button" class="quick-mark-btn" data-amount="350000">350 ألف</button>
-                <button type="button" class="quick-mark-btn" data-amount="500000">500 ألف</button>
-                <button type="button" class="quick-mark-btn" data-amount="1000000">1 مليون</button>
-                <button type="button" class="quick-mark-btn" data-amount="1500000">1.5 مليون</button>
-                <button type="button" class="quick-mark-btn" data-amount="2000000">2 مليون</button>
+
+            <form id="visitForm">
+              <div class="form-group">
+                <label for="clientName">اسم العميل</label>
+                <input type="text" id="clientName" placeholder="اكتب اسم العميل" required>
               </div>
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom:0">
-            <label class="input-label">مدة السداد</label>
-            <div class="duration-grid" id="durationGroup">
-              <button type="button" class="duration-btn active" data-months="12"><span class="months-num">12</span><span class="months-text">شهر</span></button>
-              <button type="button" class="duration-btn" data-months="18"><span class="months-num">18</span><span class="months-text">شهر</span></button>
-              <button type="button" class="duration-btn" data-months="24"><span class="months-num">24</span><span class="months-text">شهر</span></button>
-            </div>
-          </div>
-          <div class="interest-info">
-            <span>الفائدة السنوية المتناقصة</span>
-            <span id="interestDisplay" class="interest-value">42%</span>
-          </div>
-          <div class="result-box">
-            <div class="result-label">القسط الشهري</div>
-            <div class="result-value-row">
-              <span id="monthlyInstallmentDisplay" class="result-amount">51,741.98</span>
-              <span class="result-unit">جنيه / شهرياً</span>
-            </div>
-          </div>
-          <div class="footer-note">تصميم وإعداد Galal Ali</div>
-        </div>
-      </main>
-    </section>
 
-    <section id="managerView" class="app-view">
-      <main class="manager-card">
-        <header class="card-header">
-          <div class="top-signature"><span>إدارة الفريق</span><span class="top-signature-name">Galal Ali</span></div>
-          <h1>إضافة حساب موظف</h1>
-          <p>إنشاء حساب دخول جديد برقم الموبايل وكلمة المرور</p>
-        </header>
-        <div class="card-body">
-          <form id="createEmployeeForm" class="visit-form">
-            <div class="visit-field">
-              <label for="empFullName">اسم الموظف</label>
-              <input id="empFullName" type="text" placeholder="الاسم الكامل للموظف" required>
-            </div>
-            <div class="visit-field">
-              <label for="empPhone">رقم الموبايل</label>
-              <input id="empPhone" type="tel" inputmode="numeric" minlength="11" maxlength="11" pattern="[0-9]{11}" placeholder="01xxxxxxxxx" required>
-            </div>
-            <div class="visit-field">
-              <label for="empPassword">كلمة المرور</label>
-              <input id="empPassword" type="password" minlength="6" placeholder="6 أحرف أو أرقام على الأقل" required>
-            </div>
-            <button id="createEmpBtn" class="visit-submit" type="submit">إنشاء حساب الموظف</button>
-          </form>
-          <div id="createEmpMsg" class="status-msg"></div>
+              <div class="form-group">
+                <label for="clientPhone">رقم العميل</label>
+                <input type="tel" id="clientPhone" placeholder="01xxxxxxxxx" required>
+              </div>
+
+              <div class="form-group">
+                <label for="region">المحافظة / المنطقة</label>
+                <input type="text" id="region" placeholder="مثال: المنيا - ملوي">
+              </div>
+
+              <div class="form-group">
+                <label for="visitDate">تاريخ الزيارة</label>
+                <input type="date" id="visitDate" required>
+              </div>
+
+              <div class="form-group">
+                <label for="activityType">نوع النشاط</label>
+                <input type="text" id="activityType" placeholder="مثال: تجارة مواد غذائية، ملابس، صيدلية..." required>
+              </div>
+
+              <div class="form-group">
+                <label for="visitResult">نتيجة الزيارة</label>
+                <select id="visitResult" required>
+                  <option value="">اختر نتيجة الزيارة</option>
+                  <option value="مهتم بالتمويل">مهتم بالتمويل</option>
+                  <option value="جاري استكمال المستندات">جاري استكمال المستندات</option>
+                  <option value="تم التعاقد">تم التعاقد</option>
+                  <option value="غير مهتم حالياً">غير مهتم حالياً</option>
+                  <option value="إعادة متابعة">إعادة متابعة</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="visitPhoto">صورة الزيارة (اختياري)</label>
+                <input type="file" id="visitPhoto" accept="image/*">
+              </div>
+
+              <button type="submit" id="saveVisitBtn" class="btn btn-primary">حفظ الزيارة</button>
+              <div id="visitStatus" class="status-msg"></div>
+            </form>
+          </div>
         </div>
-      </main>
-    </section>
+
+        <div class="card">
+          <div class="card-body">
+            <h3 style="margin-bottom:10px;">سجل الزيارات (<span id="visitsCount">0</span>)</h3>
+
+            <div class="filters">
+              <input type="text" id="filterSearch" placeholder="بحث باسم العميل أو الرقم أو النشاط...">
+              <select id="filterResult">
+                <option value="">كل النتائج</option>
+                <option value="مهتم بالتمويل">مهتم بالتمويل</option>
+                <option value="جاري استكمال المستندات">جاري استكمال المستندات</option>
+                <option value="تم التعاقد">تم التعاقد</option>
+                <option value="غير مهتم حالياً">غير مهتم حالياً</option>
+                <option value="إعادة متابعة">إعادة متابعة</option>
+              </select>
+              <select id="filterEmployee" class="hidden">
+                <option value="">كل الموظفين</option>
+              </select>
+            </div>
+
+            <div id="visitsContainer" class="visits-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- تبويب الحاسبة -->
+      <div id="calcTab" class="hidden">
+        <div class="card">
+          <div class="card-header">
+            <h2>حاسبة الأقساط</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="loanAmount">قيمة التمويل (جنيه)</label>
+              <input type="number" id="loanAmount" placeholder="مثال: 50000" min="1">
+            </div>
+            <div class="form-group">
+              <label for="loanMonths">المدة (بالأشهر)</label>
+              <input type="number" id="loanMonths" placeholder="مثال: 12" min="1">
+            </div>
+            <div class="form-group">
+              <label for="annualRate">معدل الفائدة السنوي (%)</label>
+              <input type="number" id="annualRate" placeholder="مثال: 24" step="0.1" min="0">
+            </div>
+            <button type="button" id="calcBtn" class="btn btn-primary">احسب القسط</button>
+            <div id="calcResult" class="calc-box hidden"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- تبويب الموظفون -->
+      <div id="employeesTab" class="hidden">
+        <div class="card">
+          <div class="card-header">
+            <h2>إدارة الموظفين</h2>
+          </div>
+          <div class="card-body">
+            <form id="createEmployeeForm">
+              <div class="form-group">
+                <label for="empName">اسم الموظف</label>
+                <input type="text" id="empName" placeholder="الاسم الكامل" required>
+              </div>
+              <div class="form-group">
+                <label for="empPhone">رقم الموبايل (11 رقماً)</label>
+                <input type="tel" id="empPhone" placeholder="01xxxxxxxxx" maxlength="11" required>
+              </div>
+              <div class="form-group">
+                <label for="empPassword">كلمة المرور</label>
+                <input type="password" id="empPassword" placeholder="6 أحرف أو أرقام فأكثر" minlength="6" required>
+              </div>
+              <button type="submit" class="btn btn-primary">إنشاء حساب الموظف</button>
+              <div id="empStatus" class="status-msg"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<script>
-const SUPABASE_URL = "https://xuuddxaqkmblotqvxard.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_VxT_ZKsO130QihAHn9OT-w_kRAI-_2n";
-const PHOTO_BUCKET = "visit-photos";
+  <script>
+    const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const PHOTO_BUCKET = 'visit-photos';
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let currentUser = null;
-let currentProfile = null;
-let visits = [];
+    let currentUser = null;
+    let currentProfile = null;
+    let allVisits = [];
 
-function normalizePhone(val) {
-  return String(val || '')
-    .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
-    .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
-    .replace(/\D/g, '');
-}
-
-function phoneToEmail(phone) {
-  return `${normalizePhone(phone)}@team.local`;
-}
-
-function escapeHTML(value) {
-  return String(value ?? '').replace(/[&<>"']/g, ch => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  }[ch]));
-}
-
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const phone = normalizePhone(document.getElementById('loginPhone').value);
-  const password = document.getElementById('loginPassword').value;
-  const msg = document.getElementById('loginMsg');
-  const btn = document.getElementById('loginBtn');
-
-  msg.textContent = 'جاري التحقق من البيانات...';
-  msg.className = 'status-msg';
-  btn.disabled = true;
-
-  const { data, error } = await sb.auth.signInWithPassword({
-    email: phoneToEmail(phone),
-    password
-  });
-
-  btn.disabled = false;
-
-  if (error || !data?.user) {
-    msg.textContent = 'رقم الموبايل أو كلمة المرور غير صحيحة';
-    msg.className = 'status-msg status-err';
-    return;
-  }
-
-  currentUser = data.user;
-  await startApp();
-});
-
-async function startApp() {
-  const { data: rpcRows } = await sb.rpc('get_my_profile');
-  const profile = Array.isArray(rpcRows) ? rpcRows[0] : rpcRows;
-
-  currentProfile = profile || {
-    id: currentUser.id,
-    full_name: currentUser.user_metadata?.full_name || currentUser.email,
-    role: 'employee'
-  };
-
-  document.getElementById('authSection').classList.add('hidden');
-  document.getElementById('appSection').classList.remove('hidden');
-
-  const isManager = currentProfile.role === 'manager';
-  document.getElementById('currentUserName').textContent = currentProfile.full_name;
-  document.getElementById('currentUserRole').textContent = isManager ? 'مدير' : 'موظف';
-
-  const nav = document.getElementById('mainNav');
-  const mgrTab = document.getElementById('managerTabBtn');
-  const mgrFilters = document.getElementById('managerFiltersBox');
-
-  if (isManager) {
-    nav.classList.remove('two-cols');
-    mgrTab.classList.remove('hidden');
-    mgrFilters.classList.remove('hidden');
-    document.getElementById('visitsListTitle').textContent = 'سجل زيارات الفريق';
-  } else {
-    nav.classList.add('two-cols');
-    mgrTab.classList.add('hidden');
-    mgrFilters.classList.add('hidden');
-    document.getElementById('visitsListTitle').textContent = 'سجل زياراتي';
-  }
-
-  await loadVisits();
-}
-
-document.getElementById('logoutBtn').addEventListener('click', async () => {
-  await sb.auth.signOut();
-  currentUser = null;
-  currentProfile = null;
-  visits = [];
-  document.getElementById('appSection').classList.add('hidden');
-  document.getElementById('authSection').classList.remove('hidden');
-  document.getElementById('loginForm').reset();
-  document.getElementById('loginMsg').textContent = '';
-});
-
-document.querySelectorAll('.nav-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(tab.dataset.view).classList.add('active');
-  });
-});
-
-document.getElementById('createEmployeeForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  if (currentProfile?.role !== 'manager') return;
-
-  const fullName = document.getElementById('empFullName').value.trim();
-  const phone = normalizePhone(document.getElementById('empPhone').value);
-  const password = document.getElementById('empPassword').value;
-  const msg = document.getElementById('createEmpMsg');
-  const btn = document.getElementById('createEmpBtn');
-
-  if (phone.length < 11) {
-    msg.textContent = 'أدخل رقم موبايل صحيح من 11 رقماً';
-    msg.className = 'status-msg status-err';
-    return;
-  }
-
-  btn.disabled = true;
-  msg.textContent = 'جاري إنشاء الحساب...';
-  msg.className = 'status-msg';
-
-  const { error } = await sb.rpc('admin_create_employee', {
-    p_full_name: fullName,
-    p_phone: phone,
-    p_password: password
-  });
-
-  btn.disabled = false;
-
-  if (error) {
-    msg.textContent = 'تعذر إنشاء الحساب: ' + error.message;
-    msg.className = 'status-msg status-err';
-    return;
-  }
-
-  msg.textContent = `تم إنشاء حساب الموظف (${fullName}) بنجاح`;
-  msg.className = 'status-msg status-ok';
-  document.getElementById('createEmployeeForm').reset();
-});
-
-const visitPhotoInput = document.getElementById('visitPhoto');
-const photoPreviewBox = document.getElementById('photoPreviewBox');
-const photoPreviewImg = document.getElementById('photoPreviewImg');
-
-visitPhotoInput.addEventListener('change', () => {
-  const file = visitPhotoInput.files?.[0];
-  if (!file) {
-    photoPreviewBox.classList.add('hidden');
-    photoPreviewImg.removeAttribute('src');
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = () => {
-    photoPreviewImg.src = reader.result;
-    photoPreviewBox.classList.remove('hidden');
-  };
-  reader.readAsDataURL(file);
-});
-
-async function uploadVisitPhoto(file) {
-  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
-  const filePath = `${currentUser.id}/${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${ext}`;
-
-  const { error: upErr } = await sb.storage
-    .from(PHOTO_BUCKET)
-    .upload(filePath, file, { cacheControl: '3600', upsert: false });
-
-  if (upErr) throw upErr;
-
-  const { data } = sb.storage.from(PHOTO_BUCKET).getPublicUrl(filePath);
-  return data.publicUrl;
-}
-
-const visitForm = document.getElementById('visitForm');
-const visitDateInput = document.getElementById('visitDate');
-const clientPhoneInput = document.getElementById('clientPhone');
-visitDateInput.value = new Date().toISOString().slice(0, 10);
-
-clientPhoneInput.addEventListener('input', () => {
-  clientPhoneInput.value = normalizePhone(clientPhoneInput.value).slice(0, 11);
-});
-
-visitForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const msg = document.getElementById('visitMsg');
-  const submitBtn = document.getElementById('visitSubmitBtn');
-  msg.textContent = '';
-  msg.className = 'status-msg';
-
-  const phone = normalizePhone(clientPhoneInput.value);
-  if (phone.length !== 11) {
-    msg.textContent = 'رقم الهاتف يجب أن يتكون من 11 رقماً';
-    msg.className = 'status-msg status-err';
-    return;
-  }
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'جاري الحفظ...';
-
-  try {
-    let photoUrl = null;
-    const file = visitPhotoInput.files?.[0];
-    if (file) {
-      photoUrl = await uploadVisitPhoto(file);
+    function escapeHTML(str = '') {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
-    const payload = {
-      user_id: currentUser.id,
-      employee_name: currentProfile.full_name,
-      client_name: document.getElementById('clientName').value.trim(),
-      client_phone: phone,
-      visit_area: document.getElementById('visitArea').value.trim(),
-      visit_date: visitDateInput.value,
-      visit_result: document.getElementById('visitResult').value,
-      visit_notes: document.getElementById('visitNotes').value.trim(),
-      photo_url: photoUrl
-    };
-
-    const { error } = await sb.from('visits').insert(payload);
-    if (error) throw error;
-
-    visitForm.reset();
-    visitDateInput.value = new Date().toISOString().slice(0, 10);
-    photoPreviewBox.classList.add('hidden');
-    photoPreviewImg.removeAttribute('src');
-
-    msg.textContent = 'تم حفظ الزيارة بنجاح';
-    msg.className = 'status-msg status-ok';
-    await loadVisits();
-  } catch (err) {
-    msg.textContent = 'تعذر حفظ الزيارة: ' + (err.message || 'خطأ غير متوقع');
-    msg.className = 'status-msg status-err';
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'حفظ الزيارة';
-  }
-});
-
-document.getElementById('clearVisitForm').addEventListener('click', () => {
-  visitForm.reset();
-  visitDateInput.value = new Date().toISOString().slice(0, 10);
-  photoPreviewBox.classList.add('hidden');
-  photoPreviewImg.removeAttribute('src');
-});
-
-async function loadVisits() {
-  const { data, error } = await sb
-    .from('visits')
-    .select('*')
-    .order('visit_date', { ascending: false })
-    .order('created_at', { ascending: false });
-
-  if (!error && Array.isArray(data)) {
-    visits = data;
-  }
-  renderVisits();
-}
-
-function getFilteredVisits() {
-  const isManager = currentProfile?.role === 'manager';
-  if (!isManager) return visits;
-
-  const val = id => document.getElementById(id).value.trim().toLowerCase();
-  const emp = val('filterEmployee');
-  const client = val('filterClient');
-  const phone = normalizePhone(document.getElementById('filterPhone').value);
-  const area = val('filterArea');
-  const result = document.getElementById('filterResult').value;
-  const notes = val('filterNotes');
-  const from = document.getElementById('filterDateFrom').value;
-  const to = document.getElementById('filterDateTo').value;
-
-  return visits.filter(v =>
-    (!emp || String(v.employee_name || '').toLowerCase().includes(emp)) &&
-    (!client || String(v.client_name || '').toLowerCase().includes(client)) &&
-    (!phone || String(v.client_phone || '').includes(phone)) &&
-    (!area || String(v.visit_area || '').toLowerCase().includes(area)) &&
-    (!result || v.visit_result === result) &&
-    (!notes || String(v.visit_notes || '').toLowerCase().includes(notes)) &&
-    (!from || String(v.visit_date || '') >= from) &&
-    (!to || String(v.visit_date || '') <= to)
-  );
-}
-
-function renderVisits() {
-  const listEl = document.getElementById('visitsList');
-  const countEl = document.getElementById('visitsCount');
-  const filtered = getFilteredVisits();
-
-  countEl.textContent = `${filtered.length} من ${visits.length} زيارة`;
-
-  if (!filtered.length) {
-    listEl.innerHTML = `<div class="empty-visits">${visits.length ? 'لا توجد نتائج مطابقة للفلاتر' : 'لا توجد زيارات مسجلة حتى الآن'}</div>`;
-    return;
-  }
-
-  listEl.innerHTML = filtered.map(v => `
-    <article class="visit-record">
-      <div class="visit-record-top">
-        <div>
-          <strong>${escapeHTML(v.client_name)}</strong>
-          <div class="visit-meta">${escapeHTML(v.visit_date)} · ${escapeHTML(v.visit_area || 'لم تحدد المنطقة')}</div>
-        </div>
-        <button type="button" class="delete-visit" data-delete="${escapeHTML(v.id)}">حذف</button>
-      </div>
-      <div class="visit-meta">
-        الموظف: ${escapeHTML(v.employee_name || 'غير محدد')}<br>
-        الهاتف: ${escapeHTML(v.client_phone || 'غير مسجل')}<br>
-        النتيجة: ${escapeHTML(v.visit_result)}
-      </div>
-      ${v.visit_notes ? `<div class="visit-notes">${escapeHTML(v.visit_notes)}</div>` : ''}
-      ${v.photo_url ? `<a href="${escapeHTML(v.photo_url)}" target="_blank" rel="noopener"><img class="visit-photo-thumb" src="${escapeHTML(v.photo_url)}" alt="صورة الزيارة"></a>` : ''}
-    </article>
-  `).join('');
-}
-
-document.getElementById('visitsList').addEventListener('click', async (e) => {
-  const btn = e.target.closest('[data-delete]');
-  if (!btn) return;
-  const id = btn.dataset.delete;
-  const { error } = await sb.from('visits').delete().eq('id', id);
-  if (!error) {
-    visits = visits.filter(v => v.id !== id);
-    renderVisits();
-  }
-});
-
-const filterIds = [
-  'filterEmployee', 'filterClient', 'filterPhone', 'filterArea',
-  'filterResult', 'filterNotes', 'filterDateFrom', 'filterDateTo'
-];
-filterIds.forEach(id => {
-  const el = document.getElementById(id);
-  el.addEventListener('input', renderVisits);
-  el.addEventListener('change', renderVisits);
-});
-
-document.getElementById('resetVisitFilters').addEventListener('click', () => {
-  filterIds.forEach(id => { document.getElementById(id).value = ''; });
-  renderVisits();
-});
-
-function exportVisitsToExcel(rows, fileBaseName) {
-  if (!rows.length) {
-    alert('لا توجد زيارات لتصديرها');
-    return;
-  }
-  const excelRows = rows.map((v, index) => ({
-    'م': index + 1,
-    'اسم الموظف': v.employee_name || '',
-    'اسم العميل': v.client_name || '',
-    'رقم الموبايل': v.client_phone || '',
-    'المحافظة / المنطقة': v.visit_area || '',
-    'تاريخ الزيارة': v.visit_date || '',
-    'نتيجة الزيارة': v.visit_result || '',
-    'ملاحظات': v.visit_notes || '',
-    'رابط صورة الزيارة': v.photo_url || ''
-  }));
-
-  if (window.XLSX) {
-    const sheet = XLSX.utils.json_to_sheet(excelRows);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, sheet, 'الزيارات');
-    XLSX.writeFile(workbook, fileBaseName + '.xlsx');
-  }
-}
-
-document.getElementById('exportAllVisits').addEventListener('click', () => {
-  exportVisitsToExcel(visits, 'Fawry_MSME_All_Visits');
-});
-document.getElementById('exportFilteredVisits').addEventListener('click', () => {
-  exportVisitsToExcel(getFilteredVisits(), 'Fawry_MSME_Filtered_Visits');
-});
-
-(() => {
-  const MIN_AMOUNT = 350000;
-  const MAX_AMOUNT = 2000000;
-  const DEFAULT_AMOUNT = 500000;
-  const DEFAULT_MONTHS = 12;
-
-  let currentAmount = DEFAULT_AMOUNT;
-  let currentMonths = DEFAULT_MONTHS;
-
-  const amountInput = document.getElementById('amountInput');
-  const amountSlider = document.getElementById('amountSlider');
-  const validationError = document.getElementById('validationError');
-  const validationText = document.getElementById('validationText');
-  const durationBtns = document.querySelectorAll('.duration-btn');
-  const quickMarkBtns = document.querySelectorAll('.quick-mark-btn');
-  const resetBtn = document.getElementById('resetBtn');
-  const monthlyDisplay = document.getElementById('monthlyInstallmentDisplay');
-  const interestDisplay = document.getElementById('interestDisplay');
-
-  const formatCurrency = num => Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const formatInteger = num => Math.round(num).toLocaleString('en-US');
-  const getRate = amt => amt <= 500000 ? 0.42 : (amt <= 1000000 ? 0.41 : 0.40);
-
-  function calculateAndRender() {
-    if (isNaN(currentAmount) || currentAmount < MIN_AMOUNT) {
-      validationText.textContent = 'الحد الأدنى للتمويل 350,000 جنيه مصري';
-      validationError.classList.add('visible');
-    } else if (currentAmount > MAX_AMOUNT) {
-      validationText.textContent = 'الحد الأقصى للتمويل 2,000,000 جنيه مصري';
-      validationError.classList.add('visible');
-    } else {
-      validationError.classList.remove('visible');
+    function normalizePhone(phone = '') {
+      return phone.replace(/[^0-9]/g, '');
     }
 
-    const P = Math.min(Math.max(isNaN(currentAmount) ? MIN_AMOUNT : currentAmount, MIN_AMOUNT), MAX_AMOUNT);
-    const annualRate = getRate(P);
-    const r = annualRate / 12;
-    const factor = Math.pow(1 + r, currentMonths);
-    const installment = P * (r * factor) / (factor - 1);
-
-    monthlyDisplay.textContent = formatCurrency(installment);
-    interestDisplay.textContent = (annualRate * 100) + '%';
-  }
-
-  function updateAmount(value) {
-    currentAmount = Number(value);
-    amountInput.value = formatInteger(currentAmount);
-    amountSlider.value = currentAmount;
-    calculateAndRender();
-  }
-
-  amountInput.addEventListener('input', (e) => {
-    const rawDigits = normalizePhone(e.target.value);
-    if (!rawDigits) {
-      currentAmount = NaN;
-      e.target.value = '';
-      calculateAndRender();
-      return;
+    function setTodayDate() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('visitDate').value = today;
     }
-    currentAmount = parseInt(rawDigits, 10);
-    e.target.value = formatInteger(currentAmount);
-    amountSlider.value = Math.min(Math.max(currentAmount, MIN_AMOUNT), MAX_AMOUNT);
-    calculateAndRender();
-  });
 
-  amountInput.addEventListener('blur', () => {
-    if (isNaN(currentAmount) || currentAmount < MIN_AMOUNT) currentAmount = MIN_AMOUNT;
-    else if (currentAmount > MAX_AMOUNT) currentAmount = MAX_AMOUNT;
-    updateAmount(currentAmount);
-  });
+    setTodayDate();
 
-  amountSlider.addEventListener('input', e => updateAmount(e.target.value));
-  quickMarkBtns.forEach(btn => btn.addEventListener('click', () => updateAmount(btn.dataset.amount)));
+    // التبويبات
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-  durationBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      durationBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentMonths = Number(btn.dataset.months);
-      calculateAndRender();
+        const targetId = btn.dataset.tab;
+        ['visitsTab', 'calcTab', 'employeesTab'].forEach(id => {
+          document.getElementById(id).classList.toggle('hidden', id !== targetId);
+        });
+      });
     });
-  });
 
-  resetBtn.addEventListener('click', () => {
-    currentAmount = DEFAULT_AMOUNT;
-    currentMonths = DEFAULT_MONTHS;
-    amountInput.value = formatInteger(DEFAULT_AMOUNT);
-    amountSlider.value = DEFAULT_AMOUNT;
-    durationBtns.forEach(b => b.classList.remove('active'));
-    durationBtns[0].classList.add('active');
-    calculateAndRender();
-  });
+    // تسجيل الدخول
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statusEl = document.getElementById('loginStatus');
+      statusEl.textContent = '';
 
-  calculateAndRender();
-})();
-</script>
+      const cleanPhone = normalizePhone(document.getElementById('loginPhone').value);
+      const password = document.getElementById('loginPassword').value;
+
+      if (cleanPhone.length < 11) {
+        statusEl.textContent = 'أدخل رقم موبايل صحيحاً من 11 رقماً';
+        return;
+      }
+
+      const email = `${cleanPhone}@team.local`;
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        statusEl.textContent = 'رقم الموبايل أو كلمة المرور غير صحيحة';
+        return;
+      }
+
+      await initSession(data.user);
+    });
+
+    // تسجيل الخروج
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await sb.auth.signOut();
+      currentUser = null;
+      currentProfile = null;
+      document.getElementById('appSection').classList.add('hidden');
+      document.getElementById('loginSection').classList.remove('hidden');
+    });
+
+    async function initSession(user) {
+      currentUser = user;
+      const { data: profile } = await sb
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      currentProfile = profile || {
+        id: user.id,
+        full_name: user.email,
+        role: 'employee'
+      };
+
+      document.getElementById('currentUserName').textContent = currentProfile.full_name || 'مستخدم';
+      const isManager = currentProfile.role === 'manager';
+      document.getElementById('currentUserRole').textContent = isManager ? 'مدير' : 'موظف';
+      document.getElementById('employeesTabBtn').classList.toggle('hidden', !isManager);
+      document.getElementById('filterEmployee').classList.toggle('hidden', !isManager);
+
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('appSection').classList.remove('hidden');
+
+      await loadVisits();
+    }
+
+    // مسح النموذج
+    document.getElementById('clearFormBtn').addEventListener('click', () => {
+      document.getElementById('visitForm').reset();
+      setTodayDate();
+      document.getElementById('visitStatus').textContent = '';
+    });
+
+    // حفظ زيارة
+    document.getElementById('visitForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statusEl = document.getElementById('visitStatus');
+      const saveBtn = document.getElementById('saveVisitBtn');
+      statusEl.textContent = '';
+      statusEl.className = 'status-msg';
+
+      const clientName = document.getElementById('clientName').value.trim();
+      const clientPhone = normalizePhone(document.getElementById('clientPhone').value);
+      const region = document.getElementById('region').value.trim();
+      const visitDate = document.getElementById('visitDate').value;
+      const activityType = document.getElementById('activityType').value.trim();
+      const visitResult = document.getElementById('visitResult').value;
+      const photoFile = document.getElementById('visitPhoto').files[0];
+
+      if (!clientName || !clientPhone || !visitDate || !activityType || !visitResult) {
+        statusEl.textContent = 'يرجى استكمال جميع الحقول المطلوبة';
+        statusEl.classList.add('status-err');
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'جاري الحفظ...';
+
+      let photoUrl = null;
+
+      try {
+        if (photoFile) {
+          const ext = photoFile.name.split('.').pop() || 'jpg';
+          const filePath = `${currentUser.id}/${Date.now()}.${ext}`;
+          const { error: uploadError } = await sb.storage
+            .from(PHOTO_BUCKET)
+            .upload(filePath, photoFile, { upsert: false });
+
+          if (uploadError) throw uploadError;
+
+          const { data: pubData } = sb.storage.from(PHOTO_BUCKET).getPublicUrl(filePath);
+          photoUrl = pubData.publicUrl;
+        }
+
+        const payload = {
+          user_id: currentUser.id,
+          employee_name: currentProfile.full_name || currentUser.email,
+          client_name: clientName,
+          client_phone: clientPhone,
+          region: region || null,
+          visit_date: visitDate,
+          activity_type: activityType,
+          visit_result: visitResult,
+          photo_url: photoUrl
+        };
+
+        const { error: insertError } = await sb.from('visits').insert([payload]);
+        if (insertError) throw insertError;
+
+        document.getElementById('visitForm').reset();
+        setTodayDate();
+        statusEl.textContent = 'تم حفظ الزيارة بنجاح';
+        statusEl.classList.add('status-ok');
+
+        await loadVisits();
+      } catch (err) {
+        statusEl.textContent = `تعذر حفظ الزيارة: ${err.message || err}`;
+        statusEl.classList.add('status-err');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'حفظ الزيارة';
+      }
+    });
+
+    // تحميل الزيارات
+    async function loadVisits() {
+      const { data, error } = await sb
+        .from('visits')
+        .select('*')
+        .order('visit_date', { ascending: false })
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        document.getElementById('visitsContainer').innerHTML =
+          `<div class="status-msg status-err">تعذر تحميل الزيارات: ${escapeHTML(error.message)}</div>`;
+        return;
+      }
+
+      allVisits = data || [];
+      populateEmployeeFilter();
+      renderVisits();
+    }
+
+    function populateEmployeeFilter() {
+      const select = document.getElementById('filterEmployee');
+      const currentVal = select.value;
+      const names = [...new Set(allVisits.map(v => v.employee_name).filter(Boolean))];
+      select.innerHTML = '<option value="">كل الموظفين</option>' +
+        names.map(n => `<option value="${escapeHTML(n)}">${escapeHTML(n)}</option>`).join('');
+      select.value = currentVal;
+    }
+
+    function getFilteredVisits() {
+      const q = document.getElementById('filterSearch').value.trim().toLowerCase();
+      const resFilter = document.getElementById('filterResult').value;
+      const empFilter = document.getElementById('filterEmployee').value;
+
+      return allVisits.filter(v => {
+        if (resFilter && v.visit_result !== resFilter) return false;
+        if (empFilter && v.employee_name !== empFilter) return false;
+        if (q) {
+          const hay = `${v.client_name || ''} ${v.client_phone || ''} ${v.activity_type || ''} ${v.region || ''}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+    }
+
+    // عرض الكارت بالترتيب المطلوب فقط:
+    // 1. اسم العميل
+    // 2. تاريخ الزيارة
+    // 3. رقم العميل
+    // 4. نوع النشاط
+    // 5. نتيجة الزيارة
+    // 6. الصورة
+    function renderVisits() {
+      const filtered = getFilteredVisits();
+      document.getElementById('visitsCount').textContent = filtered.length;
+      const container = document.getElementById('visitsContainer');
+
+      if (!filtered.length) {
+        container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:16px;">لا توجد زيارات مطابقة</p>';
+        return;
+      }
+
+      const isManager = currentProfile?.role === 'manager';
+
+      container.innerHTML = filtered.map(v => {
+        const canDelete = isManager || v.user_id === currentUser?.id;
+
+        return `
+          <div class="visit-card">
+            <div class="visit-item"><span class="visit-label">اسم العميل:</span> ${escapeHTML(v.client_name || 'غير محدد')}</div>
+            <div class="visit-item"><span class="visit-label">تاريخ الزيارة:</span> ${escapeHTML(v.visit_date || 'غير محدد')}</div>
+            <div class="visit-item"><span class="visit-label">رقم العميل:</span> ${escapeHTML(v.client_phone || 'غير مسجل')}</div>
+            <div class="visit-item"><span class="visit-label">نوع النشاط:</span> ${escapeHTML(v.activity_type || 'غير محدد')}</div>
+            <div class="visit-item"><span class="visit-label">نتيجة الزيارة:</span> ${escapeHTML(v.visit_result || 'غير محددة')}</div>
+            ${v.photo_url ? `<img src="${escapeHTML(v.photo_url)}" alt="صورة الزيارة" class="visit-photo">` : ''}
+            ${canDelete ? `
+              <div class="visit-actions">
+                <button type="button" class="btn-danger" onclick="deleteVisit('${v.id}')">حذف</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function deleteVisit(id) {
+      if (!confirm('هل أنت متأكد من حذف هذه الزيارة؟')) return;
+      const { error } = await sb.from('visits').delete().eq('id', id);
+      if (!error) {
+        await loadVisits();
+      }
+    }
+
+    ['filterSearch', 'filterResult', 'filterEmployee'].forEach(id => {
+      document.getElementById(id).addEventListener('input', renderVisits);
+      document.getElementById(id).addEventListener('change', renderVisits);
+    });
+
+    // تصدير Excel
+    document.getElementById('exportExcelBtn').addEventListener('click', () => {
+      const rows = getFilteredVisits().map(v => ({
+        'اسم العميل': v.client_name || '',
+        'تاريخ الزيارة': v.visit_date || '',
+        'رقم العميل': v.client_phone || '',
+        'نوع النشاط': v.activity_type || '',
+        'نتيجة الزيارة': v.visit_result || '',
+        'المحافظة / المنطقة': v.region || '',
+        'الموظف': v.employee_name || '',
+        'رابط الصورة': v.photo_url || ''
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'الزيارات');
+      XLSX.writeFile(wb, `visits_${new Date().toISOString().split('T')[0]}.xlsx`);
+    });
+
+    // حاسبة الأقساط
+    document.getElementById('calcBtn').addEventListener('click', () => {
+      const amount = parseFloat(document.getElementById('loanAmount').value);
+      const months = parseInt(document.getElementById('loanMonths').value, 10);
+      const rate = parseFloat(document.getElementById('annualRate').value) || 0;
+      const resBox = document.getElementById('calcResult');
+
+      if (!amount || !months || amount <= 0 || months <= 0) {
+        resBox.textContent = 'أدخل قيمة تمويل ومدة صحيحة بالأشهر';
+        resBox.classList.remove('hidden');
+        return;
+      }
+
+      const monthlyRate = (rate / 100) / 12;
+      const installment = monthlyRate > 0
+        ? (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months))
+        : amount / months;
+
+      const totalPayment = installment * months;
+      resBox.innerHTML = `
+        <div>القسط الشهري التقريبي: ${installment.toFixed(2)} جنيه</div>
+        <div>إجمالي السداد: ${totalPayment.toFixed(2)} جنيه</div>
+      `;
+      resBox.classList.remove('hidden');
+    });
+
+    // إنشاء حساب موظف
+    document.getElementById('createEmployeeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statusEl = document.getElementById('empStatus');
+      statusEl.textContent = '';
+      statusEl.className = 'status-msg';
+
+      const fullName = document.getElementById('empName').value.trim();
+      const phone = normalizePhone(document.getElementById('empPhone').value);
+      const password = document.getElementById('empPassword').value;
+
+      const { error } = await sb.rpc('admin_create_employee', {
+        p_full_name: fullName,
+        p_phone: phone,
+        p_password: password
+      });
+
+      if (error) {
+        statusEl.textContent = `تعذر إنشاء الحساب: ${error.message}`;
+        statusEl.classList.add('status-err');
+        return;
+      }
+
+      document.getElementById('createEmployeeForm').reset();
+      statusEl.textContent = 'تم إنشاء حساب الموظف بنجاح';
+      statusEl.classList.add('status-ok');
+    });
+
+    // التحقق من الجلسة الحالية عند الفتح
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session?.user) {
+        await initSession(session.user);
+      }
+    })();
+  </script>
 </body>
 </html>
