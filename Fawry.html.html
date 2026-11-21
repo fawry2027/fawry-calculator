@@ -24,7 +24,6 @@
       --muted: #64748b;
       --border: #cbd5e1;
       --danger: #dc2626;
-      --danger-bg: #fef2f2;
     }
 
     body {
@@ -451,6 +450,7 @@
   </div>
 
   <script>
+    // ضع رابط مشروعك ومفتاح anon public هنا من Supabase > Project Settings > Data API
     const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
     const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
     const PHOTO_BUCKET = 'visit-photos';
@@ -481,7 +481,6 @@
 
     setTodayDate();
 
-    // التبويبات
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -494,11 +493,15 @@
       });
     });
 
-    // تسجيل الدخول
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const statusEl = document.getElementById('loginStatus');
       statusEl.textContent = '';
+
+      if (SUPABASE_URL.includes('YOUR_PROJECT_ID') || SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) {
+        statusEl.textContent = 'يرجى وضع SUPABASE_URL و SUPABASE_ANON_KEY الخاصين بمشروعك في الكود أولاً';
+        return;
+      }
 
       const cleanPhone = normalizePhone(document.getElementById('loginPhone').value);
       const password = document.getElementById('loginPassword').value;
@@ -519,7 +522,6 @@
       await initSession(data.user);
     });
 
-    // تسجيل الخروج
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await sb.auth.signOut();
       currentUser = null;
@@ -554,14 +556,12 @@
       await loadVisits();
     }
 
-    // مسح النموذج
     document.getElementById('clearFormBtn').addEventListener('click', () => {
       document.getElementById('visitForm').reset();
       setTodayDate();
       document.getElementById('visitStatus').textContent = '';
     });
 
-    // حفظ زيارة
     document.getElementById('visitForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const statusEl = document.getElementById('visitStatus');
@@ -632,7 +632,6 @@
       }
     });
 
-    // تحميل الزيارات
     async function loadVisits() {
       const { data, error } = await sb
         .from('visits')
@@ -676,13 +675,6 @@
       });
     }
 
-    // عرض الكارت بالترتيب المطلوب فقط:
-    // 1. اسم العميل
-    // 2. تاريخ الزيارة
-    // 3. رقم العميل
-    // 4. نوع النشاط
-    // 5. نتيجة الزيارة
-    // 6. الصورة
     function renderVisits() {
       const filtered = getFilteredVisits();
       document.getElementById('visitsCount').textContent = filtered.length;
@@ -729,7 +721,6 @@
       document.getElementById(id).addEventListener('change', renderVisits);
     });
 
-    // تصدير Excel
     document.getElementById('exportExcelBtn').addEventListener('click', () => {
       const rows = getFilteredVisits().map(v => ({
         'اسم العميل': v.client_name || '',
@@ -748,7 +739,6 @@
       XLSX.writeFile(wb, `visits_${new Date().toISOString().split('T')[0]}.xlsx`);
     });
 
-    // حاسبة الأقساط
     document.getElementById('calcBtn').addEventListener('click', () => {
       const amount = parseFloat(document.getElementById('loanAmount').value);
       const months = parseInt(document.getElementById('loanMonths').value, 10);
@@ -774,7 +764,6 @@
       resBox.classList.remove('hidden');
     });
 
-    // إنشاء حساب موظف
     document.getElementById('createEmployeeForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const statusEl = document.getElementById('empStatus');
@@ -802,7 +791,6 @@
       statusEl.classList.add('status-ok');
     });
 
-    // التحقق من الجلسة الحالية عند الفتح
     (async () => {
       const { data: { session } } = await sb.auth.getSession();
       if (session?.user) {
