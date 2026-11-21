@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
-        /* إعادة ضبط شاملة وتأسيس الخطوط المتوافقة مع iOS و Android */
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
@@ -28,7 +27,6 @@
             line-height: 1.5;
         }
 
-        /* الحاوية الرئيسية */
         .app-wrapper {
             width: 100%;
             max-width: 540px;
@@ -41,7 +39,6 @@
             margin: 0 auto;
         }
 
-        /* شريط المستخدم العلوي والتبويبات */
         .topbar {
             background-color: #ffffff;
             border: 1px solid #e2e8f0;
@@ -121,7 +118,6 @@
             box-shadow: 0 4px 12px rgba(6, 95, 70, 0.2);
         }
 
-        /* البطاقة الرئيسية */
         .calculator-card {
             background-color: #ffffff;
             border-radius: 24px;
@@ -131,7 +127,6 @@
             margin-bottom: 16px;
         }
 
-        /* رأس البطاقة */
         .card-header {
             background: linear-gradient(135deg, #065f46 0%, #047857 100%);
             color: #ffffff;
@@ -176,12 +171,10 @@
             font-weight: 500;
         }
 
-        /* جسم البطاقة */
         .card-body {
             padding: 22px 20px 24px;
         }
 
-        /* شريط العنوان الداخلي وزر إعادة الضبط */
         .section-top-bar {
             display: flex;
             align-items: center;
@@ -229,7 +222,6 @@
             border-color: #a7f3d0;
         }
 
-        /* مجموعة حقل المبلغ */
         .form-group {
             margin-bottom: 18px;
         }
@@ -259,7 +251,6 @@
             direction: ltr;
         }
 
-        /* مربع إدخال المبلغ */
         .amount-input-box {
             position: relative;
             display: flex;
@@ -306,7 +297,6 @@
             pointer-events: none;
         }
 
-        /* حقول النماذج العامة */
         .field-input, .field-select {
             width: 100%;
             padding: 11px 14px;
@@ -376,7 +366,6 @@
             color: #be123c;
         }
 
-        /* فلاتر سجل الزيارات والكروت */
         .filters-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -442,7 +431,6 @@
             color: #ffffff;
         }
 
-        /* رسالة التحقق والخطأ (مخفية افتراضياً تماماً) */
         .error-banner {
             display: none;
             margin-top: 10px;
@@ -461,7 +449,6 @@
             display: flex;
         }
 
-        /* شريط التمرير Range Slider */
         .slider-container {
             margin-top: 18px;
         }
@@ -505,7 +492,6 @@
             cursor: pointer;
         }
 
-        /* العلامات السريعة أسفل الشريط */
         .quick-marks {
             display: flex;
             justify-content: space-between;
@@ -531,7 +517,6 @@
             background-color: #ecfdf5;
         }
 
-        /* أزرار مدة السداد (3 أعمدة متساوية) */
         .duration-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -582,7 +567,6 @@
             color: #047857;
         }
 
-        /* صندوق نتيجة القسط الشهري */
         .result-box {
             margin-top: 24px;
             background-color: #ecfdf5;
@@ -681,7 +665,6 @@
         <!-- تبويب حاسبة القسط الشهري (الأصلية دون تغيير) -->
         <div id="calcTab" class="calc-wrapper">
             <main class="calculator-card">
-                <!-- رأس البطاقة -->
                 <header class="card-header">
                     <div class="top-signature">
                         <span>تصميم وإعداد:</span>
@@ -691,9 +674,7 @@
                     <p>حساب فوري بنظام الفائدة المتناقصة</p>
                 </header>
 
-                <!-- محتوى الحاسبة -->
                 <div class="card-body">
-                    <!-- شريط بيانات التمويل وزر إعادة الضبط -->
                     <div class="section-top-bar">
                         <h2 class="section-title">
                             <span class="section-title-dot"></span>
@@ -702,7 +683,6 @@
                         <button type="button" id="resetBtn" class="reset-btn">إعادة ضبط</button>
                     </div>
 
-                    <!-- إدخال مبلغ التمويل -->
                     <div class="form-group">
                         <div class="label-row">
                             <label for="amountInput" class="input-label" style="margin-bottom:0;">مبلغ التمويل</label>
@@ -714,13 +694,11 @@
                             <span class="currency-badge">ج.م</span>
                         </div>
 
-                        <!-- رسالة الخطأ (تظهر فقط عند تجاوز الحدود) -->
                         <div id="validationError" class="error-banner" role="alert">
                             <span>⚠️</span>
                             <span id="validationText">يرجى إدخال مبلغ يتراوح بين 350,000 و 2,000,000 جنيه مصري.</span>
                         </div>
 
-                        <!-- شريط التمرير -->
                         <div class="slider-container">
                             <input type="range" id="amountSlider" class="custom-slider" min="350000" max="2000000" step="10000" value="500000" aria-label="شريط تحديد مبلغ التمويل">
                             <div class="quick-marks">
@@ -732,7 +710,6 @@
                         </div>
                     </div>
 
-                    <!-- اختيار مدة السداد -->
                     <div class="form-group" style="margin-bottom: 0;">
                         <label class="input-label">مدة السداد</label>
                         <div class="duration-grid" id="durationGroup">
@@ -751,7 +728,6 @@
                         </div>
                     </div>
 
-                    <!-- نتيجة القسط الشهري -->
                     <div class="result-box">
                         <div class="result-label">القسط الشهري</div>
                         <div class="result-value-row">
@@ -916,11 +892,11 @@
 
             function getAnnualInterestRate(amount) {
                 if (amount >= 350000 && amount <= 500000) {
-                    return 0.42; // 42% متناقصة
+                    return 0.42;
                 } else if (amount > 500000 && amount <= 1000000) {
-                    return 0.41; // 41% متناقصة
+                    return 0.41;
                 } else {
-                    return 0.40; // 40% متناقصة
+                    return 0.40;
                 }
             }
 
@@ -1022,7 +998,9 @@
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1dWRkeGFxa21ibG90cXZ4YXJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyNjQyNDgsImV4cCI6MjExMDg0MDI0OH0.aBjKy59KwghDczH3jnAreE355u_F-NpHsum6TKq99Xs';
             const PHOTO_BUCKET = 'visit-photos';
 
-            const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const sb = (window.supabase && typeof window.supabase.createClient === 'function')
+                ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+                : null;
 
             let currentUser = null;
             let currentProfile = null;
@@ -1050,7 +1028,6 @@
 
             setTodayDate();
 
-            // التبديل بين التبويبات
             document.querySelectorAll('.nav-tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1063,12 +1040,16 @@
                 });
             });
 
-            // تسجيل الدخول
             document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const statusEl = document.getElementById('loginStatus');
                 const loginBtn = document.getElementById('loginBtn');
                 statusEl.textContent = '';
+
+                if (!sb) {
+                    statusEl.textContent = 'تعذر تحميل مكتبة الاتصال، تحقق من الإنترنت وحدّث الصفحة';
+                    return;
+                }
 
                 const cleanPhone = normalizePhone(document.getElementById('loginPhone').value);
                 const password = document.getElementById('loginPassword').value;
@@ -1091,15 +1072,18 @@
                     }
 
                     await initSession(data.user);
+                } catch (err) {
+                    statusEl.textContent = 'حدث خطأ أثناء الاتصال بالخادم';
                 } finally {
                     loginBtn.disabled = false;
                     loginBtn.textContent = 'دخول';
                 }
             });
 
-            // تسجيل الخروج
             document.getElementById('logoutBtn').addEventListener('click', async () => {
-                await sb.auth.signOut();
+                if (sb) {
+                    await sb.auth.signOut();
+                }
                 currentUser = null;
                 currentProfile = null;
                 document.getElementById('appSection').classList.add('hidden');
@@ -1108,11 +1092,16 @@
 
             async function initSession(user) {
                 currentUser = user;
-                const { data: profile } = await sb
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', user.id)
-                    .single();
+                let profile = null;
+
+                if (sb) {
+                    const res = await sb
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', user.id)
+                        .single();
+                    profile = res.data;
+                }
 
                 currentProfile = profile || {
                     id: user.id,
@@ -1132,20 +1121,24 @@
                 await loadVisits();
             }
 
-            // مسح نموذج الزيارة
             document.getElementById('clearVisitBtn').addEventListener('click', () => {
                 document.getElementById('visitForm').reset();
                 setTodayDate();
                 document.getElementById('visitStatus').textContent = '';
             });
 
-            // حفظ زيارة جديدة
             document.getElementById('visitForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const statusEl = document.getElementById('visitStatus');
                 const saveBtn = document.getElementById('saveVisitBtn');
                 statusEl.textContent = '';
                 statusEl.className = 'status-text';
+
+                if (!sb || !currentUser) {
+                    statusEl.textContent = 'يرجى تسجيل الدخول أولاً';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
 
                 const clientName = document.getElementById('clientName').value.trim();
                 const visitDate = document.getElementById('visitDate').value;
@@ -1208,8 +1201,8 @@
                 }
             });
 
-            // تحميل الزيارات
             async function loadVisits() {
+                if (!sb) return;
                 const { data, error } = await sb
                     .from('visits')
                     .select('*')
@@ -1252,13 +1245,6 @@
                 });
             }
 
-            // عرض الكارت بالترتيب المحدد بالضبط:
-            // 1. اسم العميل
-            // 2. تاريخ الزيارة
-            // 3. رقم العميل
-            // 4. نوع النشاط
-            // 5. نتيجة الزيارة
-            // 6. الصورة
             function renderVisits() {
                 const filtered = getFilteredVisits();
                 document.getElementById('visitsCount').textContent = filtered.length;
@@ -1293,7 +1279,7 @@
             }
 
             window.deleteVisit = async function(id) {
-                if (!confirm('هل أنت متأكد من حذف هذه الزيارة؟')) return;
+                if (!sb || !confirm('هل أنت متأكد من حذف هذه الزيارة؟')) return;
                 const { error } = await sb.from('visits').delete().eq('id', id);
                 if (!error) {
                     await loadVisits();
@@ -1305,8 +1291,8 @@
                 document.getElementById(id).addEventListener('change', renderVisits);
             });
 
-            // تصدير Excel
             document.getElementById('exportExcelBtn').addEventListener('click', () => {
+                if (!window.XLSX) return;
                 const rows = getFilteredVisits().map(v => ({
                     'اسم العميل': v.client_name || '',
                     'تاريخ الزيارة': v.visit_date || '',
@@ -1322,12 +1308,13 @@
                 XLSX.writeFile(wb, `visits_${new Date().toISOString().split('T')[0]}.xlsx`);
             });
 
-            // إنشاء حساب موظف جديد
             document.getElementById('createEmployeeForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const statusEl = document.getElementById('empStatus');
                 statusEl.textContent = '';
                 statusEl.className = 'status-text';
+
+                if (!sb) return;
 
                 const fullName = document.getElementById('empName').value.trim();
                 const phone = normalizePhone(document.getElementById('empPhone').value);
@@ -1350,10 +1337,12 @@
                 statusEl.classList.add('status-ok');
             });
 
-            // التحقق من الجلسة الحالية عند الفتح
-            const { data: { session } } = await sb.auth.getSession();
-            if (session?.user) {
-                await initSession(session.user);
+            if (sb && sb.auth) {
+                sb.auth.getSession().then(({ data }) => {
+                    if (data && data.session && data.session.user) {
+                        initSession(data.session.user);
+                    }
+                }).catch(() => {});
             }
         });
     </script>
