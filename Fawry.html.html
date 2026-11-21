@@ -972,9 +972,17 @@
             const SUPABASE_URL = 'https://xuuddxaqkmblotqvxard.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1dWRkeGFxa21ibG90cXZ4YXJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyNjQyNDgsImV4cCI6MjExMDg0MDI0OH0.aBjKy59KwghDczH3jnAreE355u_F-NpHsum6TKq99Xs';
             const PHOTO_BUCKET = 'visit-photos';
+            const CACHED_SESSION_KEY = 'fawry_saved_session_v1';
 
             const sb = (window.supabase && typeof window.supabase.createClient === 'function')
-                ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+                ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: {
+                        storage: window.localStorage,
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true
+                    }
+                })
                 : null;
 
             let currentUser = null;
@@ -1032,6 +1040,29 @@
                 });
             });
 
+            function saveLocalSession(session, profile) {
+                try {
+                    if (session) {
+                        window.localStorage.setItem(CACHED_SESSION_KEY, JSON.stringify({ session, profile }));
+                    }
+                } catch (_) {}
+            }
+
+            function getLocalSession() {
+                try {
+                    const raw = window.localStorage.getItem(CACHED_SESSION_KEY);
+                    return raw ? JSON.parse(raw) : null;
+                } catch (_) {
+                    return null;
+                }
+            }
+
+            function clearLocalSession() {
+                try {
+                    window.localStorage.removeItem(CACHED_SESSION_KEY);
+                } catch (_) {}
+            }
+
             document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const statusEl = document.getElementById('loginStatus');
@@ -1069,7 +1100,7 @@
                         return;
                     }
 
-                    await initSession(data.user);
+                    await initSession(data.user, data.session);
                 } catch (err) {
                     statusEl.textContent = 'حدث خطأ أثناء الاتصال بالخادم';
                 } finally {
@@ -1079,6 +1110,7 @@
             });
 
             document.getElementById('logoutBtn').addEventListener('click', async () => {
+                clearLocalSession();
                 if (sb) {
                     await sb.auth.signOut();
                 }
@@ -1090,31 +1122,30 @@
 
             function applyRoleView(isManager) {
                 document.getElementById('currentUserRole').textContent = isManager ? 'مراقب زيارات' : 'موظف';
-                document.getElementById('navTabs').classList.toggle('hidden', isManager);
+                document.getElementById('navTabs').classList.remove('hidden');
                 document.getElementById('visitEntryCard').classList.toggle('hidden', isManager);
                 document.getElementById('managerHeader').classList.toggle('hidden', !isManager);
                 document.getElementById('exportExcelBtnManager').classList.toggle('hidden', !isManager);
                 document.getElementById('filterEmployee').classList.toggle('hidden', !isManager);
-
-                if (isManager) {
-                    document.getElementById('calcTab').classList.add('hidden');
-                    document.getElementById('visitsTab').classList.remove('hidden');
-                } else {
-                    switchTab('calcTab');
-                }
+                switchTab('calcTab');
             }
 
-            async function initSession(user) {
+            async function initSession(user, session = null, fallbackProfile = null) {
+                if (!user) return;
                 currentUser = user;
-                let profile = null;
+                let profile = fallbackProfile || null;
 
                 if (sb) {
-                    const res = await sb
-                        .from('profiles')
-                        .select('*')
-                        .eq('id', user.id)
-                        .single();
-                    profile = res.data;
+                    try {
+                        const res = await sb
+                            .from('profiles')
+                            .select('*')
+                            .eq('id', user.id)
+                            .single();
+                        if (res.data) {
+                            profile = res.data;
+                        }
+                    } catch (_) {}
                 }
 
                 currentProfile = profile || {
@@ -1122,6 +1153,10 @@
                     full_name: user.email,
                     role: 'employee'
                 };
+
+                if (session) {
+                    saveLocalSession(session, currentProfile);
+                }
 
                 document.getElementById('currentUserName').textContent = currentProfile.full_name || 'مستخدم';
                 const isManager = currentProfile.role === 'manager';
@@ -1337,13 +1372,31 @@
             document.getElementById('exportExcelBtnEmployee').addEventListener('click', exportVisitsToExcel);
             document.getElementById('exportExcelBtnManager').addEventListener('click', exportVisitsToExcel);
 
-            if (sb && sb.auth) {
-                sb.auth.getSession().then(({ data }) => {
-                    if (data && data.session && data.session.user) {
-                        initSession(data.session.user);
-                    }
-                }).catch(() => {});
+            async function restoreSession() {
+                const cached = getLocalSession();
+                if (cached?.session?.user) {
+                    await initSession(cached.session.user, cached.session, cached.profile);
+                }
+
+                if (sb && sb.auth) {
+                    try {
+                        const { data } = await sb.auth.getSession();
+                        if (data?.session?.user) {
+                            await initSession(data.session.user, data.session, cached?.profile || null);
+                        } else if (cached?.session?.access_token && cached?.session?.refresh_token) {
+                            const { data: setData } = await sb.auth.setSession({
+                                access_token: cached.session.access_token,
+                                refresh_token: cached.session.refresh_token
+                            });
+                            if (setData?.session?.user) {
+                                await initSession(setData.session.user, setData.session, cached?.profile || null);
+                            }
+                        }
+                    } catch (_) {}
+                }
             }
+
+            restoreSession();
         });
     </script>
 </body>
