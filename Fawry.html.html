@@ -93,7 +93,7 @@
 
         .nav-tabs {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 8px;
             margin-bottom: 14px;
         }
@@ -654,10 +654,9 @@
             <button type="button" id="logoutBtn" class="logout-btn">تسجيل خروج</button>
         </div>
 
-        <div class="nav-tabs">
+        <div id="navTabs" class="nav-tabs">
             <button type="button" class="nav-tab-btn active" data-tab="calcTab">▦ حاسبة القسط</button>
             <button type="button" class="nav-tab-btn" data-tab="visitsTab">📍 الزيارات</button>
-            <button type="button" id="employeesTabBtn" class="nav-tab-btn hidden" data-tab="employeesTab">👥 الموظفون</button>
         </div>
 
         <div id="calcTab" class="calc-wrapper">
@@ -737,7 +736,7 @@
         </div>
 
         <div id="visitsTab" class="hidden">
-            <div class="calculator-card">
+            <div id="visitEntryCard" class="calculator-card">
                 <header class="card-header">
                     <div class="top-signature">
                         <span>تصميم وإعداد:</span>
@@ -750,7 +749,7 @@
                 <div class="card-body">
                     <div class="actions-row">
                         <button type="button" id="clearVisitBtn" class="reset-btn">مسح البيانات</button>
-                        <button type="button" id="exportExcelBtn" class="reset-btn">تصدير Excel</button>
+                        <button type="button" id="exportExcelBtnEmployee" class="reset-btn">تصدير Excel</button>
                     </div>
 
                     <form id="visitForm">
@@ -798,12 +797,22 @@
             </div>
 
             <div class="calculator-card">
+                <div id="managerHeader" class="card-header hidden">
+                    <div class="top-signature">
+                        <span>تصميم وإعداد:</span>
+                        <span class="top-signature-name">Galal Ali</span>
+                    </div>
+                    <h1>متابعة زيارات الموظفين</h1>
+                    <p>عرض وفلترة وتصدير سجل الزيارات</p>
+                </div>
+
                 <div class="card-body">
                     <div class="section-top-bar">
                         <h2 class="section-title">
                             <span class="section-title-dot"></span>
                             سجل الزيارات (<span id="visitsCount">0</span>)
                         </h2>
+                        <button type="button" id="exportExcelBtnManager" class="reset-btn hidden">تصدير Excel</button>
                     </div>
 
                     <div class="filters-grid">
@@ -822,33 +831,6 @@
                     </div>
 
                     <div id="visitsContainer" class="visits-list"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="employeesTab" class="hidden calc-wrapper">
-            <div class="calculator-card">
-                <header class="card-header">
-                    <h1>إدارة الموظفين</h1>
-                    <p>إنشاء حساب جديد لموظف</p>
-                </header>
-                <div class="card-body">
-                    <form id="createEmployeeForm">
-                        <div class="form-group">
-                            <label for="empName" class="input-label">اسم الموظف</label>
-                            <input type="text" id="empName" class="field-input" placeholder="الاسم الكامل" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="empPhone" class="input-label">رقم الموبايل (11 رقماً)</label>
-                            <input type="tel" id="empPhone" class="field-input" placeholder="01xxxxxxxxx" maxlength="11" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="empPassword" class="input-label">كلمة المرور</label>
-                            <input type="password" id="empPassword" class="field-input" placeholder="6 أحرف أو أرقام فأكثر" minlength="6" required>
-                        </div>
-                        <button type="submit" class="primary-action-btn">إنشاء حساب الموظف</button>
-                        <div id="empStatus" class="status-text"></div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -1035,15 +1017,18 @@
 
             setTodayDate();
 
+            function switchTab(targetTab) {
+                document.querySelectorAll('.nav-tab-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.tab === targetTab);
+                });
+                ['calcTab', 'visitsTab'].forEach(id => {
+                    document.getElementById(id).classList.toggle('hidden', id !== targetTab);
+                });
+            }
+
             document.querySelectorAll('.nav-tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-
-                    const targetTab = btn.dataset.tab;
-                    ['calcTab', 'visitsTab', 'employeesTab'].forEach(id => {
-                        document.getElementById(id).classList.toggle('hidden', id !== targetTab);
-                    });
+                    switchTab(btn.dataset.tab);
                 });
             });
 
@@ -1103,6 +1088,22 @@
                 document.getElementById('loginSection').classList.remove('hidden');
             });
 
+            function applyRoleView(isManager) {
+                document.getElementById('currentUserRole').textContent = isManager ? 'مراقب زيارات' : 'موظف';
+                document.getElementById('navTabs').classList.toggle('hidden', isManager);
+                document.getElementById('visitEntryCard').classList.toggle('hidden', isManager);
+                document.getElementById('managerHeader').classList.toggle('hidden', !isManager);
+                document.getElementById('exportExcelBtnManager').classList.toggle('hidden', !isManager);
+                document.getElementById('filterEmployee').classList.toggle('hidden', !isManager);
+
+                if (isManager) {
+                    document.getElementById('calcTab').classList.add('hidden');
+                    document.getElementById('visitsTab').classList.remove('hidden');
+                } else {
+                    switchTab('calcTab');
+                }
+            }
+
             async function initSession(user) {
                 currentUser = user;
                 let profile = null;
@@ -1124,9 +1125,7 @@
 
                 document.getElementById('currentUserName').textContent = currentProfile.full_name || 'مستخدم';
                 const isManager = currentProfile.role === 'manager';
-                document.getElementById('currentUserRole').textContent = isManager ? 'مدير' : 'موظف';
-                document.getElementById('employeesTabBtn').classList.toggle('hidden', !isManager);
-                document.getElementById('filterEmployee').classList.toggle('hidden', !isManager);
+                applyRoleView(isManager);
 
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('appSection').classList.remove('hidden');
@@ -1142,6 +1141,8 @@
 
             document.getElementById('visitForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                if (currentProfile?.role === 'manager') return;
+
                 const statusEl = document.getElementById('visitStatus');
                 const saveBtn = document.getElementById('saveVisitBtn');
                 statusEl.textContent = '';
@@ -1258,7 +1259,7 @@
                     if (resFilter && v.visit_result !== resFilter) return false;
                     if (empFilter && v.employee_name !== empFilter) return false;
                     if (q) {
-                        const hay = `${v.client_name || ''} ${v.client_phone || ''} ${v.activity_type || ''}`.toLowerCase();
+                        const hay = `${v.client_name || ''} ${v.client_phone || ''} ${v.activity_type || ''} ${v.employee_name || ''}`.toLowerCase();
                         if (!hay.includes(q)) return false;
                     }
                     return true;
@@ -1282,6 +1283,7 @@
 
                     return `
                         <div class="visit-card">
+                            ${isManager ? `<div class="visit-row"><span class="visit-key">الموظف:</span> ${escapeHTML(v.employee_name || 'غير محدد')}</div>` : ''}
                             <div class="visit-row"><span class="visit-key">اسم العميل:</span> ${escapeHTML(v.client_name || 'غير محدد')}</div>
                             <div class="visit-row"><span class="visit-key">تاريخ الزيارة:</span> ${escapeHTML(v.visit_date || 'غير محدد')}</div>
                             <div class="visit-row"><span class="visit-key">رقم العميل:</span> ${escapeHTML(v.client_phone || 'غير مسجل')}</div>
@@ -1311,51 +1313,29 @@
                 document.getElementById(id).addEventListener('change', renderVisits);
             });
 
-            document.getElementById('exportExcelBtn').addEventListener('click', () => {
+            function exportVisitsToExcel() {
                 if (!window.XLSX) return;
-                const rows = getFilteredVisits().map(v => ({
-                    'اسم العميل': v.client_name || '',
-                    'تاريخ الزيارة': v.visit_date || '',
-                    'رقم العميل': v.client_phone || '',
-                    'نوع النشاط': v.activity_type || '',
-                    'نتيجة الزيارة': v.visit_result || '',
-                    'رابط الصورة': v.photo_url || ''
-                }));
+                const isManager = currentProfile?.role === 'manager';
+                const rows = getFilteredVisits().map(v => {
+                    const row = {};
+                    if (isManager) row['الموظف'] = v.employee_name || '';
+                    row['اسم العميل'] = v.client_name || '';
+                    row['تاريخ الزيارة'] = v.visit_date || '';
+                    row['رقم العميل'] = v.client_phone || '';
+                    row['نوع النشاط'] = v.activity_type || '';
+                    row['نتيجة الزيارة'] = v.visit_result || '';
+                    row['رابط الصورة'] = v.photo_url || '';
+                    return row;
+                });
 
                 const ws = XLSX.utils.json_to_sheet(rows);
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, 'الزيارات');
                 XLSX.writeFile(wb, `visits_${new Date().toISOString().split('T')[0]}.xlsx`);
-            });
+            }
 
-            document.getElementById('createEmployeeForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const statusEl = document.getElementById('empStatus');
-                statusEl.textContent = '';
-                statusEl.className = 'status-text';
-
-                if (!sb) return;
-
-                const fullName = document.getElementById('empName').value.trim();
-                const phone = normalizePhone(document.getElementById('empPhone').value);
-                const password = document.getElementById('empPassword').value;
-
-                const { error } = await sb.rpc('admin_create_employee', {
-                    p_full_name: fullName,
-                    p_phone: phone,
-                    p_password: password
-                });
-
-                if (error) {
-                    statusEl.textContent = `تعذر إنشاء الحساب: ${error.message}`;
-                    statusEl.classList.add('status-err');
-                    return;
-                }
-
-                document.getElementById('createEmployeeForm').reset();
-                statusEl.textContent = 'تم إنشاء حساب الموظف بنجاح';
-                statusEl.classList.add('status-ok');
-            });
+            document.getElementById('exportExcelBtnEmployee').addEventListener('click', exportVisitsToExcel);
+            document.getElementById('exportExcelBtnManager').addEventListener('click', exportVisitsToExcel);
 
             if (sb && sb.auth) {
                 sb.auth.getSession().then(({ data }) => {
