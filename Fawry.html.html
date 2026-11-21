@@ -460,7 +460,7 @@ body {
 
 .visit-tools { display: grid; gap: 10px; margin: 14px 0 12px; }
 .visit-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-.visit-filter-actions, .visit-export-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.visit-filter-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .visit-filter-reset, .visit-export-btn {
     border: 1px solid #047857;
     color: #047857;
@@ -778,11 +778,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 });
 
 async function startApp() {
-  const { data: profile } = await sb
-    .from('profiles')
-    .select('*')
-    .eq('id', currentUser.id)
-    .single();
+  const { data: rpcRows } = await sb.rpc('get_my_profile');
+  const profile = Array.isArray(rpcRows) ? rpcRows[0] : rpcRows;
 
   currentProfile = profile || {
     id: currentUser.id,
