@@ -618,7 +618,6 @@
 </head>
 <body>
 
-    <!-- شاشة تسجيل الدخول -->
     <div id="loginSection" class="calc-wrapper">
         <main class="calculator-card">
             <header class="card-header">
@@ -646,7 +645,6 @@
         </main>
     </div>
 
-    <!-- التطبيق بعد تسجيل الدخول -->
     <div id="appSection" class="app-wrapper hidden">
         <div class="topbar">
             <div class="user-info">
@@ -662,7 +660,6 @@
             <button type="button" id="employeesTabBtn" class="nav-tab-btn hidden" data-tab="employeesTab">👥 الموظفون</button>
         </div>
 
-        <!-- تبويب حاسبة القسط الشهري (الأصلية دون تغيير) -->
         <div id="calcTab" class="calc-wrapper">
             <main class="calculator-card">
                 <header class="card-header">
@@ -739,7 +736,6 @@
             </main>
         </div>
 
-        <!-- تبويب الزيارات -->
         <div id="visitsTab" class="hidden">
             <div class="calculator-card">
                 <header class="card-header">
@@ -830,7 +826,6 @@
             </div>
         </div>
 
-        <!-- تبويب إدارة الموظفين (للمدير فقط) -->
         <div id="employeesTab" class="hidden calc-wrapper">
             <div class="calculator-card">
                 <header class="card-header">
@@ -861,7 +856,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // ================= 1. كود الحاسبة الأصلي =================
             const MIN_AMOUNT = 350000;
             const MAX_AMOUNT = 2000000;
             const DEFAULT_AMOUNT = 500000;
@@ -993,7 +987,6 @@
 
             calculateAndRender();
 
-            // ================= 2. نظام الدخول والزيارات (Supabase) =================
             const SUPABASE_URL = 'https://xuuddxaqkmblotqvxard.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1dWRkeGFxa21ibG90cXZ4YXJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyNjQyNDgsImV4cCI6MjExMDg0MDI0OH0.aBjKy59KwghDczH3jnAreE355u_F-NpHsum6TKq99Xs';
             const PHOTO_BUCKET = 'visit-photos';
@@ -1063,7 +1056,7 @@
                 loginBtn.textContent = 'جاري الدخول...';
 
                 try {
-                    const email = `${cleanPhone}@team.local`;
+                    const email = `${cleanPhone}@fawry.com`;
                     const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
                     if (error) {
