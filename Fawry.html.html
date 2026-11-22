@@ -280,6 +280,24 @@
             border-color: #a7f3d0;
         }
 
+        .edit-pass-btn {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            border-radius: 9px;
+            padding: 6px 11px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .edit-pass-btn:hover {
+            background-color: #1d4ed8;
+            color: #ffffff;
+        }
+
         .form-group {
             margin-bottom: 18px;
         }
@@ -502,7 +520,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.86rem;
-            min-width: 480px;
+            min-width: 540px;
         }
 
         .emp-table th, .emp-table td {
@@ -1004,7 +1022,7 @@
                         <span class="top-signature-name">Galal Ali</span>
                     </div>
                     <h1>قاعدة بيانات الموظفين</h1>
-                    <p>عرض اليوزر والباسوورد لكل الموظفين المضافين</p>
+                    <p>عرض وتعديل اليوزر والباسوورد لكل الموظفين المضافين</p>
                 </header>
                 <div class="card-body">
                     <div class="section-top-bar">
@@ -1071,7 +1089,7 @@
 
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
                 const swCode = `
-                    const CACHE_NAME = 'fawry-visits-calc-v2';
+                    const CACHE_NAME = 'fawry-visits-calc-v3';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
@@ -1795,6 +1813,7 @@
                         <td>
                             <div style="display:flex; gap:6px; flex-wrap:wrap;">
                                 <button type="button" class="reset-btn" onclick="copyEmpCred('${escapeHTML(emp.phone || '')}', '${escapeHTML(emp.password || '')}')">نسخ</button>
+                                <button type="button" class="edit-pass-btn" onclick="changeEmpPassword('${emp.user_id}', '${escapeHTML(emp.full_name || '')}', '${escapeHTML(emp.phone || '')}')">تغيير</button>
                                 <button type="button" class="delete-visit-btn" onclick="deleteEmpAccount('${emp.user_id}')">حذف</button>
                             </div>
                         </td>
@@ -1813,6 +1832,36 @@
                     dbStatus.textContent = text;
                     dbStatus.className = 'status-text status-ok';
                 }
+            };
+
+            window.changeEmpPassword = async function(userId, fullName, phone) {
+                if (!sb || !userId) return;
+                const dbStatus = document.getElementById('empDbStatus');
+                const newPass = window.prompt(`أدخل كلمة المرور الجديدة للموظف (${fullName || phone}) — 6 أحرف أو أرقام فأكثر:`);
+
+                if (newPass === null) return;
+                const trimmedPass = newPass.trim();
+
+                if (trimmedPass.length < 6) {
+                    dbStatus.textContent = 'كلمة المرور يجب أن تكون 6 أحرف أو أرقام فأكثر';
+                    dbStatus.className = 'status-text status-err';
+                    return;
+                }
+
+                const { error } = await sb.rpc('admin_update_employee_password', {
+                    p_user_id: userId,
+                    p_new_password: trimmedPass
+                });
+
+                if (error) {
+                    dbStatus.textContent = `تعذر تغيير كلمة المرور: ${error.message}`;
+                    dbStatus.className = 'status-text status-err';
+                    return;
+                }
+
+                dbStatus.textContent = `تم تحديث كلمة مرور (${fullName || phone}) بنجاح دون المساس ببيانات الزيارات`;
+                dbStatus.className = 'status-text status-ok';
+                await loadEmployeesDb();
             };
 
             window.deleteEmpAccount = async function(userId) {
