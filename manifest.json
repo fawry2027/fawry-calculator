@@ -1,0 +1,26 @@
+{
+  "name": "متابعة عملائي",
+  "short_name": "متابعة عملائي",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f1f5f9",
+  "theme_color": "#065f46",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "./image_9208f7b4.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "./image_9208f7b4.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
