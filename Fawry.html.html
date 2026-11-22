@@ -489,6 +489,7 @@
             display: flex;
             justify-content: flex-end;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .delete-visit-btn {
@@ -1089,7 +1090,7 @@
 
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
                 const swCode = `
-                    const CACHE_NAME = 'fawry-visits-calc-v3';
+                    const CACHE_NAME = 'fawry-visits-calc-v4';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
@@ -1650,6 +1651,7 @@
 
                 container.innerHTML = filtered.map(v => {
                     const canDelete = isManager || v.user_id === currentUser?.id;
+                    const cleanTel = normalizePhone(v.client_phone || '');
 
                     return `
                         <div class="visit-card">
@@ -1660,11 +1662,10 @@
                             <div class="visit-row"><span class="visit-key">نوع النشاط:</span> ${escapeHTML(v.activity_type || 'غير محدد')}</div>
                             <div class="visit-row"><span class="visit-key">نتيجة الزيارة:</span> ${escapeHTML(v.visit_result || 'غير محددة')}</div>
                             ${v.photo_url ? `<img src="${escapeHTML(v.photo_url)}" alt="صورة الزيارة" class="visit-photo">` : ''}
-                            ${canDelete ? `
-                                <div class="visit-card-actions">
-                                    <button type="button" class="delete-visit-btn" onclick="deleteVisit('${v.id}')">حذف</button>
-                                </div>
-                            ` : ''}
+                            <div class="visit-card-actions">
+                                ${cleanTel ? `<a href="tel:${escapeHTML(cleanTel)}" class="reset-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;">📞 اتصال</a>` : ''}
+                                ${canDelete ? `<button type="button" class="delete-visit-btn" onclick="deleteVisit('${v.id}')">حذف</button>` : ''}
+                            </div>
                         </div>
                     `;
                 }).join('');
