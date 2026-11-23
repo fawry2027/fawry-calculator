@@ -10,11 +10,11 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta property="og:title" content="فوري للتمويل | طلب تمويل مشروعات">
     <meta property="og:description" content="قدّم على تمويل مشروعك بسهولة وسرعة — سجّل بياناتك وسيتواصل معك مسؤول التمويل فوراً.">
-    <meta property="og:image" content="https://glalelgohary-max.github.io/fawry-calculator/image_9208f7b4.jpg">
+    <meta property="og:image" content="image_9208f7b4.jpg">
     <title>فوري للتمويل | طلب تمويل مشروعات</title>
-    <link rel="manifest" href="/fawry-calculator/manifest.json">
-    <link id="appleIconLink" rel="apple-touch-icon" href="/fawry-calculator/image_9208f7b4.jpg">
-    <link rel="icon" type="image/jpeg" href="/fawry-calculator/image_9208f7b4.jpg">
+    <link rel="manifest" href="manifest.json">
+    <link id="appleIconLink" rel="apple-touch-icon" href="image_9208f7b4.jpg">
+    <link rel="icon" type="image/jpeg" href="image_9208f7b4.jpg">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
@@ -834,7 +834,7 @@
 <body>
 
     <div id="splashScreen" class="splash-screen">
-        <img src="/fawry-calculator/image_9208f7b4.jpg" alt="فوري للتمويل" class="splash-logo">
+        <img src="image_9208f7b4.jpg" alt="فوري للتمويل" class="splash-logo">
         <div class="splash-title">فوري للتمويل</div>
         <div class="splash-spinner"></div>
     </div>
@@ -1057,7 +1057,6 @@
                     <p>انشر الرابط على السوشيال ميديا لتلقي طلبات العملاء مباشرة</p>
                 </header>
                 <div class="card-body">
-                    <!-- صندوق رابط الموظف الحالي -->
                     <div id="employeePersonalLinkBox">
                         <div class="ref-link-box">
                             <div style="font-weight: 800; color: #065f46; font-size: 0.95rem;">رابط التقديم المختصر الخاص بك:</div>
@@ -1073,7 +1072,6 @@
                         </p>
                     </div>
 
-                    <!-- قائمة روابط الموظفين للمدير -->
                     <div id="managerAllLinksBox" class="hidden">
                         <div class="section-top-bar">
                             <h2 class="section-title">
@@ -1279,7 +1277,7 @@
         (function setupPwa() {
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
                 const swCode = `
-                    const CACHE_NAME = 'fawry-finance-v4';
+                    const CACHE_NAME = 'fawry-finance-v5';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
@@ -1359,7 +1357,6 @@
                 return `${base}?ref=${empId}`;
             }
 
-            // التحقق هل الرابط مفتوح من عميل للتقديم (?r=01xxxxxxxxx أو ?ref=uuid)
             const urlParams = new URLSearchParams(window.location.search);
             const referralPhoneParam = normalizePhone(urlParams.get('r') || '');
             const referralEmpIdParam = urlParams.get('ref') || '';
@@ -1436,7 +1433,6 @@
                     btn.textContent = 'جاري إرسال طلبك...';
 
                     try {
-                        // تأكيد جلب معرف الموظف من رقم موبايله قبل الإرسال إن لم يكن قد حُمّل
                         if (!targetEmployeeId && referralPhoneParam) {
                             const { data: empRow } = await sb
                                 .from('profiles')
@@ -1482,7 +1478,6 @@
                 return;
             }
 
-            // إعداد تثبيت PWA
             let deferredInstallPrompt = null;
             const installAppBtn = document.getElementById('installAppBtn');
             const installHintText = document.getElementById('installHintText');
@@ -1516,7 +1511,6 @@
                 installHintBox.classList.add('hidden');
             });
 
-            // حاسبة القسط الشهري
             const MIN_AMOUNT = 350000;
             const MAX_AMOUNT = 2000000;
             const DEFAULT_AMOUNT = 500000;
@@ -1647,7 +1641,6 @@
 
             calculateAndRender();
 
-            // إدارة الجلسات والبيانات
             let currentUser = null;
             let currentProfile = null;
             let allVisits = [];
@@ -1931,7 +1924,6 @@
                 hideSplash();
             }
 
-            // حفظ وعرض الزيارات
             document.getElementById('clearVisitBtn').addEventListener('click', () => {
                 document.getElementById('visitForm').reset();
                 setTodayDate();
@@ -2136,7 +2128,6 @@
             document.getElementById('exportExcelBtnEmployee').addEventListener('click', exportVisitsToExcel);
             document.getElementById('exportExcelBtnManager').addEventListener('click', exportVisitsToExcel);
 
-            // تحميل وعرض طلبات العملاء (تقديمات)
             async function loadClientRequests() {
                 if (!sb || !currentUser) return;
                 const { data, error } = await sb
@@ -2252,7 +2243,6 @@
                 XLSX.writeFile(wb, `client_requests_${new Date().toISOString().split('T')[0]}.xlsx`);
             });
 
-            // إضافة وإدارة الموظفين
             document.getElementById('createEmployeeForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 if (currentProfile?.role !== 'manager') return;
