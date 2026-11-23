@@ -9,9 +9,9 @@
     <meta name="apple-mobile-web-app-title" content="متابعة عملائي">
     <meta name="mobile-web-app-capable" content="yes">
     <title>متابعة عملائي | جلال علي</title>
-    <link rel="manifest" href="./manifest.json">
-    <link id="appleIconLink" rel="apple-touch-icon" href="./image_9208f7b4.jpg">
-    <link rel="icon" type="image/jpeg" href="./image_9208f7b4.jpg">
+    <link rel="manifest" href="/fawry-calculator/manifest.json">
+    <link id="appleIconLink" rel="apple-touch-icon" href="/fawry-calculator/image_9208f7b4.jpg">
+    <link rel="icon" type="image/jpeg" href="/fawry-calculator/image_9208f7b4.jpg">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
@@ -87,7 +87,7 @@
 
         .app-wrapper {
             width: 100%;
-            max-width: 620px;
+            max-width: 640px;
             margin: 0 auto;
         }
 
@@ -151,7 +151,7 @@
 
         .nav-tabs {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
             gap: 8px;
             margin-bottom: 14px;
         }
@@ -162,7 +162,7 @@
             border: 1px solid #cbd5e1;
             border-radius: 14px;
             padding: 11px 10px;
-            font-size: 0.86rem;
+            font-size: 0.85rem;
             font-weight: 800;
             font-family: inherit;
             cursor: pointer;
@@ -174,6 +174,37 @@
             color: #ffffff;
             border-color: #065f46;
             box-shadow: 0 4px 12px rgba(6, 95, 70, 0.2);
+        }
+
+        .sub-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .sub-tab-btn {
+            background-color: #ffffff;
+            color: #334155;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 12px 10px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .sub-tab-btn.active {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border-color: #059669;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.14);
         }
 
         .calculator-card {
@@ -278,6 +309,27 @@
             background-color: #ecfdf5;
             color: #065f46;
             border-color: #a7f3d0;
+        }
+
+        .whatsapp-btn {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            border-radius: 10px;
+            padding: 7px 12px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #059669;
+            color: #ffffff;
         }
 
         .edit-pass-btn {
@@ -507,6 +559,29 @@
         .delete-visit-btn:hover {
             background-color: #be123c;
             color: #ffffff;
+        }
+
+        .ref-link-box {
+            background-color: #f8fafc;
+            border: 1.5px dashed #059669;
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .ref-url-display {
+            width: 100%;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.8rem;
+            font-family: monospace;
+            direction: ltr;
+            text-align: left;
+            color: #0f172a;
+            margin: 8px 0 12px;
+            word-break: break-all;
         }
 
         .emp-table-wrap {
@@ -742,6 +817,14 @@
             color: #059669;
         }
 
+        .success-card-box {
+            text-align: center;
+            padding: 24px 16px;
+            background-color: #ecfdf5;
+            border: 2px solid #a7f3d0;
+            border-radius: 20px;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -756,11 +839,67 @@
 <body>
 
     <div id="splashScreen" class="splash-screen">
-        <img src="./image_9208f7b4.jpg" alt="متابعة عملائي" class="splash-logo">
+        <img src="/fawry-calculator/image_9208f7b4.jpg" alt="متابعة عملائي" class="splash-logo">
         <div class="splash-title">متابعة عملائي</div>
         <div class="splash-spinner"></div>
     </div>
 
+    <!-- واجهة تقديم العميل من رابط السوشيال ميديا -->
+    <div id="publicLeadSection" class="calc-wrapper hidden">
+        <main class="calculator-card">
+            <header class="card-header">
+                <div class="top-signature">
+                    <span>فوري للتمويل</span>
+                    <span>•</span>
+                    <span class="top-signature-name">متابعة عملائي</span>
+                </div>
+                <h1>طلب تمويل مشروعات</h1>
+                <p id="publicAdvisorBadge">سجّل بياناتك وسيتواصل معك مسؤول التمويل فوراً</p>
+            </header>
+            <div class="card-body">
+                <div id="publicLeadFormWrap">
+                    <form id="publicLeadForm">
+                        <div class="form-group">
+                            <label for="leadName" class="input-label">الاسم بالكامل</label>
+                            <input type="text" id="leadName" class="field-input" placeholder="اكتب اسمك الثلاثي" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leadPhone" class="input-label">رقم الموبايل (11 رقماً)</label>
+                            <input type="tel" id="leadPhone" class="field-input" placeholder="01xxxxxxxxx" maxlength="11" minlength="11" inputmode="numeric" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leadActivity" class="input-label">نوع النشاط التجاري / المشروع</label>
+                            <input type="text" id="leadActivity" class="field-input" placeholder="مثال: سوبر ماركت، ملابس، صيدلية، ورشة..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leadCity" class="input-label">المدينة / المركز</label>
+                            <input type="text" id="leadCity" class="field-input" placeholder="مثال: المنيا، ملوي، سمالوط، سوهاج..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leadAmount" class="input-label">المبلغ المطلوب (جنيه مصري)</label>
+                            <input type="text" id="leadAmount" class="field-input" placeholder="مثال: 500,000" inputmode="numeric" required>
+                        </div>
+
+                        <button type="submit" id="submitLeadBtn" class="primary-action-btn">إرسال طلب التمويل</button>
+                        <div id="leadStatus" class="status-text"></div>
+                    </form>
+                </div>
+
+                <div id="publicLeadSuccessWrap" class="success-card-box hidden">
+                    <div style="font-size: 2.5rem; margin-bottom: 8px;">✅</div>
+                    <h2 style="color: #065f46; font-size: 1.25rem; margin-bottom: 8px;">تم استلام طلبك بنجاح!</h2>
+                    <p style="color: #047857; font-size: 0.92rem; margin-bottom: 16px;">شكراً لتواصلك معنا، تم تسجيل بياناتك لدى مسؤول التمويل المختص وسيتم التواصل معك في أقرب وقت.</p>
+                    <button type="button" id="sendAnotherLeadBtn" class="reset-btn">تقديم طلب جديد</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- واجهة تسجيل الدخول -->
     <div id="loginSection" class="calc-wrapper">
         <main class="calculator-card">
             <header class="card-header">
@@ -792,6 +931,7 @@
         </main>
     </div>
 
+    <!-- واجهة التطبيق الرئيسية -->
     <div id="appSection" class="app-wrapper hidden">
         <div class="topbar">
             <div class="user-info">
@@ -803,11 +943,13 @@
 
         <div id="navTabs" class="nav-tabs">
             <button type="button" id="tabBtnVisits" class="nav-tab-btn active" data-tab="visitsTab">📍 الزيارات</button>
+            <button type="button" id="tabBtnRequests" class="nav-tab-btn" data-tab="requestsTab">📥 طلبات العملاء</button>
             <button type="button" id="tabBtnCalc" class="nav-tab-btn" data-tab="calcTab">▦ حاسبة القسط</button>
             <button type="button" id="tabBtnAddEmp" class="nav-tab-btn hidden" data-tab="addEmpTab">➕ إضافة موظف</button>
             <button type="button" id="tabBtnEmpDb" class="nav-tab-btn hidden" data-tab="empDbTab">📋 قاعدة الموظفين</button>
         </div>
 
+        <!-- تبويب الزيارات -->
         <div id="visitsTab">
             <div id="visitEntryCard" class="calculator-card">
                 <header class="card-header">
@@ -908,6 +1050,88 @@
             </div>
         </div>
 
+        <!-- تبويب طلبات العملاء -->
+        <div id="requestsTab" class="hidden">
+            <div class="sub-tabs">
+                <button type="button" id="subBtnShareLink" class="sub-tab-btn active">🔗 رابط التقديم</button>
+                <button type="button" id="subBtnSubmissions" class="sub-tab-btn">📋 تقديمات (<span id="requestsBadgeCount">0</span>)</button>
+            </div>
+
+            <!-- الاختيار الأول: رابط التقديم للسوشيال ميديا -->
+            <div id="shareLinkSubView" class="calculator-card">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>تصميم وإعداد:</span>
+                        <span class="top-signature-name">Galal Ali</span>
+                    </div>
+                    <h1>رابط التقديم الخاص</h1>
+                    <p>انشر الرابط على السوشيال ميديا لتلقي طلبات العملاء مباشرة</p>
+                </header>
+                <div class="card-body">
+                    <!-- صندوق رابط الموظف الحالي -->
+                    <div id="employeePersonalLinkBox">
+                        <div class="ref-link-box">
+                            <div style="font-weight: 800; color: #065f46; font-size: 0.95rem;">رابط التقديم الخاص بك:</div>
+                            <div id="myReferralUrlDisplay" class="ref-url-display"></div>
+                            <div class="actions-row" style="margin-bottom: 0;">
+                                <button type="button" id="copyMyRefLinkBtn" class="primary-action-btn" style="flex:1;">📋 نسخ الرابط للنشر</button>
+                                <a id="shareWhatsappRefBtn" href="#" target="_blank" class="whatsapp-btn" style="padding: 12px 16px;">واتساب</a>
+                            </div>
+                        </div>
+                        <div id="copyRefStatus" class="status-text status-ok"></div>
+                        <p style="font-size: 0.85rem; color: #475569; margin-top: 8px;">
+                            أي عميل يدخل على هذا الرابط ويملأ بياناته (الاسم، الموبايل، النشاط، المدينة، المبلغ المطلوب) سيصل طلبه فوراً إلى قسم <strong>تقديمات</strong> لديك ولدى المدير.
+                        </p>
+                    </div>
+
+                    <!-- قائمة روابط الموظفين للمدير -->
+                    <div id="managerAllLinksBox" class="hidden">
+                        <div class="section-top-bar">
+                            <h2 class="section-title">
+                                <span class="section-title-dot"></span>
+                                روابط التقديم الخاصة بالموظفين
+                            </h2>
+                        </div>
+                        <div id="managerLinksContainer" class="visits-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الاختيار الثاني: تقديمات العملاء -->
+            <div id="submissionsSubView" class="calculator-card hidden">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>تصميم وإعداد:</span>
+                        <span class="top-signature-name">Galal Ali</span>
+                    </div>
+                    <h1>تقديمات العملاء</h1>
+                    <p id="submissionsSubtitle">العملاء المتقدمون عبر روابط السوشيال ميديا</p>
+                </header>
+                <div class="card-body">
+                    <div class="section-top-bar">
+                        <h2 class="section-title">
+                            <span class="section-title-dot"></span>
+                            إجمالي الطلبات (<span id="requestsCount">0</span>)
+                        </h2>
+                        <div class="actions-row" style="margin-bottom:0;">
+                            <button type="button" id="refreshRequestsBtn" class="reset-btn">تحديث</button>
+                            <button type="button" id="exportRequestsExcelBtn" class="reset-btn">تصدير Excel</button>
+                        </div>
+                    </div>
+
+                    <div class="filters-grid">
+                        <input type="text" id="reqFilterSearch" class="field-input" placeholder="بحث بالاسم أو الرقم أو المدينة أو النشاط...">
+                        <select id="reqFilterEmployee" class="field-select hidden">
+                            <option value="">كل الموظفين</option>
+                        </select>
+                    </div>
+
+                    <div id="requestsContainer" class="visits-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب حاسبة القسط -->
         <div id="calcTab" class="hidden calc-wrapper">
             <main class="calculator-card">
                 <header class="card-header">
@@ -984,6 +1208,7 @@
             </main>
         </div>
 
+        <!-- تبويب إضافة موظف -->
         <div id="addEmpTab" class="hidden calc-wrapper">
             <div class="calculator-card">
                 <header class="card-header">
@@ -1015,6 +1240,7 @@
             </div>
         </div>
 
+        <!-- تبويب قاعدة الموظفين -->
         <div id="empDbTab" class="hidden">
             <div class="calculator-card">
                 <header class="card-header">
@@ -1068,7 +1294,7 @@
         (function setupPwa() {
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
                 const swCode = `
-                    const CACHE_NAME = 'fawry-visits-calc-v6';
+                    const CACHE_NAME = 'motabaa-omlaei-v3';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
@@ -1098,6 +1324,167 @@
             }
             setTimeout(hideSplash, 700);
 
+            const SUPABASE_URL = 'https://xuuddxaqkmblotqvxard.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1dWRkeGFxa21ibG90cXZ4YXJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyNjQyNDgsImV4cCI6MjExMDg0MDI0OH0.aBjKy59KwghDczH3jnAreE355u_F-NpHsum6TKq99Xs';
+            const PHOTO_BUCKET = 'visit-photos';
+            const CACHED_SESSION_KEY = 'fawry_saved_session_v1';
+
+            const sb = (window.supabase && typeof window.supabase.createClient === 'function')
+                ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: {
+                        storage: window.localStorage,
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true
+                    }
+                })
+                : null;
+
+            function escapeHTML(str = '') {
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
+            function normalizePhone(phone = '') {
+                const arabicDigits = '٠١٢٣٤٥٦٧٨٩';
+                const converted = String(phone).replace(/[٠-٩]/g, d => arabicDigits.indexOf(d));
+                return converted.replace(/[^0-9]/g, '');
+            }
+
+            function normalizeDigits(val = '') {
+                const arabicDigits = '٠١٢٣٤٥٦٧٨٩';
+                return String(val).replace(/[٠-٩]/g, d => arabicDigits.indexOf(d)).replace(/[^\d]/g, '');
+            }
+
+            function getBaseAppUrl() {
+                return `${window.location.origin}${window.location.pathname}`;
+            }
+
+            function buildReferralUrl(empId, empName = '') {
+                const url = new URL(getBaseAppUrl());
+                url.searchParams.set('ref', empId);
+                if (empName) {
+                    url.searchParams.set('adv', empName);
+                }
+                return url.toString();
+            }
+
+            // التحقق هل الرابط مفتوح من عميل للتقديم (?ref=...)
+            const urlParams = new URLSearchParams(window.location.search);
+            const referralEmpId = urlParams.get('ref');
+            const referralAdvNameFromUrl = urlParams.get('adv') || '';
+
+            if (referralEmpId) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('appSection').classList.add('hidden');
+                document.getElementById('publicLeadSection').classList.remove('hidden');
+
+                let resolvedAdvisorName = referralAdvNameFromUrl;
+                if (resolvedAdvisorName) {
+                    document.getElementById('publicAdvisorBadge').textContent = `مسؤول التمويل: ${resolvedAdvisorName}`;
+                }
+
+                // محاولة جلب اسم الموظف الأحدث من قاعدة البيانات
+                if (sb) {
+                    sb.from('profiles')
+                        .select('full_name')
+                        .eq('id', referralEmpId)
+                        .single()
+                        .then(({ data }) => {
+                            if (data?.full_name) {
+                                resolvedAdvisorName = data.full_name;
+                                document.getElementById('publicAdvisorBadge').textContent = `مسؤول التمويل: ${resolvedAdvisorName}`;
+                            }
+                        })
+                        .catch(() => {});
+                }
+
+                const leadPhoneInput = document.getElementById('leadPhone');
+                leadPhoneInput.addEventListener('input', (e) => {
+                    e.target.value = normalizePhone(e.target.value).slice(0, 11);
+                });
+
+                const leadAmountInput = document.getElementById('leadAmount');
+                leadAmountInput.addEventListener('input', (e) => {
+                    const digits = normalizeDigits(e.target.value);
+                    e.target.value = digits ? parseInt(digits, 10).toLocaleString('en-US') : '';
+                });
+
+                document.getElementById('publicLeadForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const statusEl = document.getElementById('leadStatus');
+                    const btn = document.getElementById('submitLeadBtn');
+                    statusEl.textContent = '';
+                    statusEl.className = 'status-text';
+
+                    const clientName = document.getElementById('leadName').value.trim();
+                    const clientPhone = normalizePhone(leadPhoneInput.value);
+                    const activityType = document.getElementById('leadActivity').value.trim();
+                    const city = document.getElementById('leadCity').value.trim();
+                    const rawAmount = normalizeDigits(leadAmountInput.value);
+                    const requestedAmount = rawAmount ? parseInt(rawAmount, 10) : 0;
+
+                    if (!clientName || !activityType || !city || requestedAmount <= 0) {
+                        statusEl.textContent = 'يرجى استكمال جميع البيانات بشكل صحيح';
+                        statusEl.classList.add('status-err');
+                        return;
+                    }
+
+                    if (clientPhone.length !== 11) {
+                        statusEl.textContent = 'رقم الموبايل يجب أن يكون 11 رقماً بالضبط';
+                        statusEl.classList.add('status-err');
+                        leadPhoneInput.focus();
+                        return;
+                    }
+
+                    if (!sb) {
+                        statusEl.textContent = 'تعذر الاتصال بالخادم، تحقق من الإنترنت';
+                        statusEl.classList.add('status-err');
+                        return;
+                    }
+
+                    btn.disabled = true;
+                    btn.textContent = 'جاري إرسال طلبك...';
+
+                    try {
+                        const { error } = await sb.from('client_requests').insert([{
+                            employee_id: referralEmpId,
+                            employee_name: resolvedAdvisorName || 'موظف',
+                            client_name: clientName,
+                            client_phone: clientPhone,
+                            activity_type: activityType,
+                            city: city,
+                            requested_amount: requestedAmount
+                        }]);
+
+                        if (error) throw error;
+
+                        document.getElementById('publicLeadForm').reset();
+                        document.getElementById('publicLeadFormWrap').classList.add('hidden');
+                        document.getElementById('publicLeadSuccessWrap').classList.remove('hidden');
+                    } catch (err) {
+                        statusEl.textContent = `تعذر إرسال الطلب: ${err.message || err}`;
+                        statusEl.classList.add('status-err');
+                    } finally {
+                        btn.disabled = false;
+                        btn.textContent = 'إرسال طلب التمويل';
+                    }
+                });
+
+                document.getElementById('sendAnotherLeadBtn').addEventListener('click', () => {
+                    document.getElementById('publicLeadSuccessWrap').classList.add('hidden');
+                    document.getElementById('publicLeadFormWrap').classList.remove('hidden');
+                });
+
+                hideSplash();
+                return;
+            }
+
+            // إعداد تثبيت PWA
             let deferredInstallPrompt = null;
             const installAppBtn = document.getElementById('installAppBtn');
             const installHintText = document.getElementById('installHintText');
@@ -1131,6 +1518,7 @@
                 installHintBox.classList.add('hidden');
             });
 
+            // حاسبة القسط الشهري
             const MIN_AMOUNT = 350000;
             const MAX_AMOUNT = 2000000;
             const DEFAULT_AMOUNT = 500000;
@@ -1195,8 +1583,7 @@
             }
 
             amountInput.addEventListener('input', (e) => {
-                const normalized = e.target.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
-                const rawDigits = normalized.replace(/[^\d]/g, '');
+                const rawDigits = normalizeDigits(e.target.value);
 
                 if (rawDigits === '') {
                     currentAmount = NaN;
@@ -1262,26 +1649,12 @@
 
             calculateAndRender();
 
-            const SUPABASE_URL = 'https://xuuddxaqkmblotqvxard.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1dWRkeGFxa21ibG90cXZ4YXJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyNjQyNDgsImV4cCI6MjExMDg0MDI0OH0.aBjKy59KwghDczH3jnAreE355u_F-NpHsum6TKq99Xs';
-            const PHOTO_BUCKET = 'visit-photos';
-            const CACHED_SESSION_KEY = 'fawry_saved_session_v1';
-
-            const sb = (window.supabase && typeof window.supabase.createClient === 'function')
-                ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                    auth: {
-                        storage: window.localStorage,
-                        persistSession: true,
-                        autoRefreshToken: true,
-                        detectSessionInUrl: true
-                    }
-                })
-                : null;
-
+            // إدارة الجلسات والبيانات
             let currentUser = null;
             let currentProfile = null;
             let allVisits = [];
             let allEmployees = [];
+            let allRequests = [];
 
             const clientPhoneInput = document.getElementById('clientPhone');
             clientPhoneInput.addEventListener('input', (e) => {
@@ -1292,21 +1665,6 @@
             empPhoneInput.addEventListener('input', (e) => {
                 e.target.value = normalizePhone(e.target.value).slice(0, 11);
             });
-
-            function escapeHTML(str = '') {
-                return String(str)
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;');
-            }
-
-            function normalizePhone(phone = '') {
-                const arabicDigits = '٠١٢٣٤٥٦٧٨٩';
-                const converted = String(phone).replace(/[٠-٩]/g, d => arabicDigits.indexOf(d));
-                return converted.replace(/[^0-9]/g, '');
-            }
 
             function buildLoginEmail(inputValue = '') {
                 const trimmed = String(inputValue).trim();
@@ -1326,6 +1684,7 @@
 
             const tabMap = {
                 visitsTab: 'tabBtnVisits',
+                requestsTab: 'tabBtnRequests',
                 calcTab: 'tabBtnCalc',
                 addEmpTab: 'tabBtnAddEmp',
                 empDbTab: 'tabBtnEmpDb'
@@ -1336,15 +1695,39 @@
                     document.getElementById(btnId).classList.toggle('active', tabId === targetTab);
                     document.getElementById(tabId).classList.toggle('hidden', tabId !== targetTab);
                 });
+                if (targetTab === 'requestsTab') {
+                    loadClientRequests();
+                }
                 if (targetTab === 'empDbTab' && currentProfile?.role === 'manager') {
                     loadEmployeesDb();
                 }
             }
 
             document.getElementById('tabBtnVisits').addEventListener('click', () => switchTab('visitsTab'));
+            document.getElementById('tabBtnRequests').addEventListener('click', () => switchTab('requestsTab'));
             document.getElementById('tabBtnCalc').addEventListener('click', () => switchTab('calcTab'));
             document.getElementById('tabBtnAddEmp').addEventListener('click', () => switchTab('addEmpTab'));
             document.getElementById('tabBtnEmpDb').addEventListener('click', () => switchTab('empDbTab'));
+
+            // التبديل بين الاختيارين داخل طلبات العملاء
+            const subBtnShareLink = document.getElementById('subBtnShareLink');
+            const subBtnSubmissions = document.getElementById('subBtnSubmissions');
+            const shareLinkSubView = document.getElementById('shareLinkSubView');
+            const submissionsSubView = document.getElementById('submissionsSubView');
+
+            function switchRequestSubTab(view) {
+                const isLinkView = view === 'link';
+                subBtnShareLink.classList.toggle('active', isLinkView);
+                subBtnSubmissions.classList.toggle('active', !isLinkView);
+                shareLinkSubView.classList.toggle('hidden', !isLinkView);
+                submissionsSubView.classList.toggle('hidden', isLinkView);
+                if (!isLinkView) {
+                    loadClientRequests();
+                }
+            }
+
+            subBtnShareLink.addEventListener('click', () => switchRequestSubTab('link'));
+            subBtnSubmissions.addEventListener('click', () => switchRequestSubTab('submissions'));
 
             function saveLocalSession(session, profile) {
                 try {
@@ -1426,10 +1809,70 @@
                 document.getElementById('loginSection').classList.remove('hidden');
             });
 
+            function setupReferralLinksSection(isManager) {
+                const empPersonalBox = document.getElementById('employeePersonalLinkBox');
+                const managerLinksBox = document.getElementById('managerAllLinksBox');
+
+                if (!isManager && currentUser) {
+                    empPersonalBox.classList.remove('hidden');
+                    managerLinksBox.classList.add('hidden');
+
+                    const myUrl = buildReferralUrl(currentUser.id, currentProfile?.full_name || '');
+                    document.getElementById('myReferralUrlDisplay').textContent = myUrl;
+                    const waText = encodeURIComponent(`قدّم على تمويل مشروعك بسهولة من خلال الرابط التالي:\n${myUrl}`);
+                    document.getElementById('shareWhatsappRefBtn').href = `https://wa.me/?text=${waText}`;
+                } else {
+                    empPersonalBox.classList.add('hidden');
+                    managerLinksBox.classList.remove('hidden');
+                    renderManagerEmployeeLinks();
+                }
+            }
+
+            document.getElementById('copyMyRefLinkBtn').addEventListener('click', async () => {
+                const urlText = document.getElementById('myReferralUrlDisplay').textContent;
+                const statusEl = document.getElementById('copyRefStatus');
+                try {
+                    await navigator.clipboard.writeText(urlText);
+                    statusEl.textContent = 'تم نسخ الرابط الخاص بك بنجاح! يمكنك لصقه الآن على فيسبوك أو واتساب.';
+                } catch (_) {
+                    statusEl.textContent = 'انسخ الرابط من المربع أعلاه للمشاركة.';
+                }
+            });
+
+            function renderManagerEmployeeLinks() {
+                const container = document.getElementById('managerLinksContainer');
+                if (!allEmployees.length) {
+                    container.innerHTML = '<p style="color:#64748b; text-align:center; padding:12px;">لا يوجد موظفون مضافون بعد</p>';
+                    return;
+                }
+                container.innerHTML = allEmployees.map(emp => {
+                    const link = buildReferralUrl(emp.user_id, emp.full_name || '');
+                    const waShare = `https://wa.me/?text=${encodeURIComponent(`رابط التقديم الخاص بـ ${emp.full_name}:\n${link}`)}`;
+                    return `
+                        <div class="visit-card">
+                            <div class="visit-row"><span class="visit-key">الموظف:</span> ${escapeHTML(emp.full_name || '')} (${escapeHTML(emp.phone || '')})</div>
+                            <div class="ref-url-display">${escapeHTML(link)}</div>
+                            <div class="visit-card-actions" style="justify-content: flex-start;">
+                                <button type="button" class="reset-btn" onclick="copyTextDirect('${escapeHTML(link)}')">📋 نسخ الرابط</button>
+                                <a href="${waShare}" target="_blank" class="whatsapp-btn">مشاركة واتساب</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            window.copyTextDirect = async function(text) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    alert('تم نسخ الرابط بنجاح');
+                } catch (_) {}
+            };
+
             function applyRoleView(isManager) {
                 document.getElementById('currentUserRole').textContent = isManager ? 'مراقب زيارات' : 'موظف';
                 document.getElementById('navTabs').classList.remove('hidden');
                 document.getElementById('tabBtnVisits').classList.remove('hidden');
+                document.getElementById('tabBtnRequests').classList.remove('hidden');
                 document.getElementById('tabBtnCalc').classList.remove('hidden');
                 document.getElementById('tabBtnAddEmp').classList.toggle('hidden', !isManager);
                 document.getElementById('tabBtnEmpDb').classList.toggle('hidden', !isManager);
@@ -1437,6 +1880,12 @@
                 document.getElementById('managerHeader').classList.toggle('hidden', !isManager);
                 document.getElementById('exportExcelBtnManager').classList.toggle('hidden', !isManager);
                 document.getElementById('filterEmployee').classList.toggle('hidden', !isManager);
+                document.getElementById('reqFilterEmployee').classList.toggle('hidden', !isManager);
+                document.getElementById('submissionsSubtitle').textContent = isManager
+                    ? 'جميع طلبات العملاء المجمّعة من روابط كل الموظفين'
+                    : 'العملاء المتقدمون عبر رابط التقديم الخاص بك';
+
+                setupReferralLinksSection(isManager);
                 switchTab('visitsTab');
             }
 
@@ -1475,13 +1924,15 @@
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('appSection').classList.remove('hidden');
 
-                await loadVisits();
-                if (isManager) {
-                    await loadEmployeesDb();
-                }
+                await Promise.all([
+                    loadVisits(),
+                    loadClientRequests(),
+                    isManager ? loadEmployeesDb() : Promise.resolve()
+                ]);
                 hideSplash();
             }
 
+            // حفظ وعرض الزيارات
             document.getElementById('clearVisitBtn').addEventListener('click', () => {
                 document.getElementById('visitForm').reset();
                 setTodayDate();
@@ -1686,6 +2137,123 @@
             document.getElementById('exportExcelBtnEmployee').addEventListener('click', exportVisitsToExcel);
             document.getElementById('exportExcelBtnManager').addEventListener('click', exportVisitsToExcel);
 
+            // تحميل وعرض طلبات العملاء (تقديمات)
+            async function loadClientRequests() {
+                if (!sb || !currentUser) return;
+                const { data, error } = await sb
+                    .from('client_requests')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    document.getElementById('requestsContainer').innerHTML =
+                        `<div class="status-text status-err">تعذر تحميل الطلبات: ${escapeHTML(error.message)}</div>`;
+                    return;
+                }
+
+                allRequests = data || [];
+                document.getElementById('requestsBadgeCount').textContent = allRequests.length;
+                populateReqEmployeeFilter();
+                renderClientRequests();
+            }
+
+            function populateReqEmployeeFilter() {
+                const select = document.getElementById('reqFilterEmployee');
+                const currentVal = select.value;
+                const names = [...new Set(allRequests.map(r => r.employee_name).filter(Boolean))];
+                select.innerHTML = '<option value="">كل الموظفين</option>' +
+                    names.map(n => `<option value="${escapeHTML(n)}">${escapeHTML(n)}</option>`).join('');
+                select.value = currentVal;
+            }
+
+            function getFilteredRequests() {
+                const q = document.getElementById('reqFilterSearch').value.trim().toLowerCase();
+                const empFilter = document.getElementById('reqFilterEmployee').value;
+
+                return allRequests.filter(r => {
+                    if (empFilter && r.employee_name !== empFilter) return false;
+                    if (q) {
+                        const hay = `${r.client_name || ''} ${r.client_phone || ''} ${r.activity_type || ''} ${r.city || ''} ${r.employee_name || ''}`.toLowerCase();
+                        if (!hay.includes(q)) return false;
+                    }
+                    return true;
+                });
+            }
+
+            function renderClientRequests() {
+                const filtered = getFilteredRequests();
+                document.getElementById('requestsCount').textContent = filtered.length;
+                const container = document.getElementById('requestsContainer');
+
+                if (!filtered.length) {
+                    container.innerHTML = '<p style="color:#64748b; text-align:center; padding:16px;">لا توجد تقديمات عملاء بعد</p>';
+                    return;
+                }
+
+                const isManager = currentProfile?.role === 'manager';
+
+                container.innerHTML = filtered.map(r => {
+                    const cleanTel = normalizePhone(r.client_phone || '');
+                    const waTel = cleanTel.startsWith('0') ? `2${cleanTel}` : cleanTel;
+                    const createdDate = r.created_at ? r.created_at.split('T')[0] : '';
+                    const formattedAmt = Number(r.requested_amount || 0).toLocaleString('en-US');
+
+                    return `
+                        <div class="visit-card">
+                            ${isManager ? `<div class="visit-row"><span class="visit-key">الموظف التابع له:</span> ${escapeHTML(r.employee_name || 'غير محدد')}</div>` : ''}
+                            <div class="visit-row"><span class="visit-key">اسم العميل:</span> ${escapeHTML(r.client_name || '')}</div>
+                            <div class="visit-row"><span class="visit-key">رقم الموبايل:</span> ${escapeHTML(r.client_phone || '')}</div>
+                            <div class="visit-row"><span class="visit-key">نوع النشاط:</span> ${escapeHTML(r.activity_type || '')}</div>
+                            <div class="visit-row"><span class="visit-key">المدينة:</span> ${escapeHTML(r.city || '')}</div>
+                            <div class="visit-row"><span class="visit-key">المبلغ المطلوب:</span> <strong>${formattedAmt} ج.م</strong></div>
+                            ${createdDate ? `<div class="visit-row"><span class="visit-key">تاريخ التقديم:</span> ${escapeHTML(createdDate)}</div>` : ''}
+                            <div class="visit-card-actions">
+                                ${cleanTel ? `<a href="tel:${escapeHTML(cleanTel)}" class="reset-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;">📞 اتصال</a>` : ''}
+                                ${waTel ? `<a href="https://wa.me/${escapeHTML(waTel)}" target="_blank" class="whatsapp-btn">واتساب</a>` : ''}
+                                <button type="button" class="delete-visit-btn" onclick="deleteClientRequest('${r.id}')">حذف</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            window.deleteClientRequest = async function(id) {
+                if (!sb || !confirm('هل أنت متأكد من حذف هذا الطلب؟')) return;
+                const { error } = await sb.from('client_requests').delete().eq('id', id);
+                if (!error) {
+                    await loadClientRequests();
+                }
+            };
+
+            ['reqFilterSearch', 'reqFilterEmployee'].forEach(id => {
+                document.getElementById(id).addEventListener('input', renderClientRequests);
+                document.getElementById(id).addEventListener('change', renderClientRequests);
+            });
+
+            document.getElementById('refreshRequestsBtn').addEventListener('click', loadClientRequests);
+
+            document.getElementById('exportRequestsExcelBtn').addEventListener('click', () => {
+                if (!window.XLSX) return;
+                const isManager = currentProfile?.role === 'manager';
+                const rows = getFilteredRequests().map(r => {
+                    const row = {};
+                    if (isManager) row['الموظف'] = r.employee_name || '';
+                    row['اسم العميل'] = r.client_name || '';
+                    row['رقم الموبايل'] = r.client_phone || '';
+                    row['نوع النشاط'] = r.activity_type || '';
+                    row['المدينة'] = r.city || '';
+                    row['المبلغ المطلوب'] = Number(r.requested_amount || 0);
+                    row['تاريخ التقديم'] = r.created_at ? r.created_at.split('T')[0] : '';
+                    return row;
+                });
+
+                const ws = XLSX.utils.json_to_sheet(rows);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'تقديمات العملاء');
+                XLSX.writeFile(wb, `client_requests_${new Date().toISOString().split('T')[0]}.xlsx`);
+            });
+
+            // إضافة وإدارة الموظفين
             document.getElementById('createEmployeeForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 if (currentProfile?.role !== 'manager') return;
@@ -1763,6 +2331,7 @@
 
                 allEmployees = data || [];
                 renderEmployeesDb();
+                renderManagerEmployeeLinks();
             }
 
             function getFilteredEmployees() {
