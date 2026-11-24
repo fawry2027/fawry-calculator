@@ -244,90 +244,301 @@
         .selected-images-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-top: 10px;
+            gap: 14px;
+            margin-top: 12px;
         }
 
-        .selected-img-item {
+        .selected-img-card {
+            background-color: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 12px;
+        }
+
+        .selected-img-large-preview {
+            display: block;
+            width: 100%;
+            max-height: 360px;
+            object-fit: contain;
+            border-radius: 12px;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 10px;
+        }
+
+        .selected-img-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 8px;
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 8px 12px;
-            font-size: 0.84rem;
-            font-weight: 700;
             flex-wrap: wrap;
+        }
+
+        .selected-img-meta {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #0f172a;
         }
 
         .scanner-modal {
             position: fixed;
             inset: 0;
             z-index: 10000;
-            background-color: rgba(15, 23, 42, 0.72);
+            background-color: #121212;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #ffffff;
             overflow-y: auto;
         }
 
-        .scanner-box {
-            width: 100%;
-            max-width: 520px;
-            background-color: #ffffff;
-            border-radius: 22px;
-            padding: 18px;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-            max-height: 92vh;
-            overflow-y: auto;
-        }
-
-        .scanner-preview-wrap {
-            background-color: #0f172a;
-            border-radius: 14px;
-            padding: 10px;
+        .scanner-top-bar {
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin: 12px 0;
-            min-height: 200px;
-            max-height: 300px;
-            overflow: hidden;
-        }
-
-        .scanner-preview-wrap canvas {
-            max-width: 100%;
-            max-height: 280px;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-
-        .scanner-tools-row {
-            display: flex;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background-color: #1c1c1e;
+            border-bottom: 1px solid #2c2c2e;
             gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 12px;
         }
 
-        .scanner-slider-row {
+        .crop-mode-pills {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .crop-mode-pill {
+            background-color: #2c2c2e;
+            color: #e5e7eb;
+            border: 1px solid #3f3f46;
+            border-radius: 999px;
+            padding: 5px 12px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .crop-mode-pill.active {
+            background-color: #10b981;
+            color: #ffffff;
+            border-color: #10b981;
+        }
+
+        .scanner-stage-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            gap: 10px;
+            min-height: 260px;
+        }
+
+        .scanner-canvas-box {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            max-height: 52vh;
+            line-height: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        #scannerCanvas {
+            display: block;
+            max-width: 100%;
+            max-height: 52vh;
+            width: auto;
+            height: auto;
+        }
+
+        .manual-crop-box {
+            position: absolute;
+            border: 2px solid #10b981;
+            background-color: rgba(16, 185, 129, 0.14);
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+            cursor: move;
+            touch-action: none;
+        }
+
+        .manual-crop-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #10b981;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            right: -8px;
+            bottom: -8px;
+            cursor: nwse-resize;
+            touch-action: none;
+        }
+
+        .page-pager-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            background-color: #242426;
+            border: 1px solid #3a3a3c;
+            border-radius: 10px;
+            padding: 6px 14px;
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .pager-arrow-btn {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: pointer;
+            padding: 2px 6px;
+        }
+
+        .pager-arrow-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .scanner-bottom-panel {
+            background-color: #18181a;
+            border-top: 1px solid #2c2c2e;
+            padding: 10px 14px 14px;
+        }
+
+        .apply-all-row {
+            display: flex;
+            justify-content: flex-end;
             margin-bottom: 10px;
         }
 
-        .scanner-slider-row label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
+        .apply-all-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
             font-weight: 700;
-            color: #334155;
-            margin-bottom: 4px;
+            color: #e5e7eb;
+            cursor: pointer;
         }
 
-        .scanner-slider-row input[type="range"] {
-            width: 100%;
-            accent-color: #059669;
+        .filters-strip {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(84px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .filter-preset-card {
+            background-color: #242426;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            text-align: center;
+            font-family: inherit;
+            color: #ffffff;
+        }
+
+        .filter-preset-card.active {
+            border-color: #10b981;
+        }
+
+        .filter-preset-thumb {
+            height: 46px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 800;
+            background-color: #ffffff;
+            color: #0f172a;
+        }
+
+        .filter-preset-thumb.omnifix {
+            filter: contrast(155%) brightness(106%);
+        }
+
+        .filter-preset-thumb.noshadow {
+            filter: grayscale(100%) contrast(175%) brightness(115%);
+        }
+
+        .filter-preset-thumb.lighten {
+            filter: brightness(124%) contrast(115%);
+        }
+
+        .filter-preset-label {
+            padding: 4px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            background-color: #2c2c2e;
+            color: #ffffff;
+        }
+
+        .filter-preset-card.active .filter-preset-label {
+            background-color: #10b981;
+            color: #ffffff;
+        }
+
+        .scanner-dock-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #2c2c2e;
+        }
+
+        .dock-tools-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex: 1;
+            gap: 6px;
+        }
+
+        .dock-tool-btn {
+            background: none;
+            border: none;
+            color: #e5e7eb;
+            font-family: inherit;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .dock-tool-btn.active {
+            color: #10b981;
+            background-color: rgba(16, 185, 129, 0.14);
+        }
+
+        .dock-check-btn {
+            width: 48px;
+            height: 40px;
+            border-radius: 10px;
+            border: none;
+            background-color: #10b981;
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .pdf-result-box {
@@ -1355,7 +1566,7 @@
                         <span>فوري للتمويل • أدوات المستندات</span>
                     </div>
                     <h1>تحويل صور إلى PDF وضغط ملفات</h1>
-                    <p>تعديل الصور بأسلوب CamScanner ودمجها في PDF أو ضغط ملفات PDF</p>
+                    <p>معاينة كبيرة وتعديل الصور بقص تلقائي أو يدوي ودمجها في PDF أو ضغط ملفات PDF</p>
                 </header>
 
                 <div class="card-body">
@@ -1365,7 +1576,7 @@
                         <button type="button" id="btnModeCompressPdf" class="sub-tab-btn">🗜️ ضغط ملفات PDF</button>
                     </div>
 
-                    <!-- الزر الأول: تحويل مجموعة صور إلى ملف واحد PDF مع تعديل الصور -->
+                    <!-- الزر الأول: تحويل مجموعة صور إلى ملف واحد PDF -->
                     <div id="imagesToPdfPanel">
                         <div class="form-group">
                             <label for="pdfImagesInput" class="input-label">اختر مجموعة صور (يمكن تحديد أكثر من صورة)</label>
@@ -1423,41 +1634,92 @@
             </div>
         </div>
 
-        <!-- نافذة تعديل الصورة بأسلوب CamScanner -->
+        <!-- نافذة تعديل الصور ومعاينة وقص تلقائي/يدوي وتنقل -->
         <div id="scannerModal" class="scanner-modal hidden">
-            <div class="scanner-box">
-                <div class="section-top-bar" style="margin-bottom: 10px; padding-bottom: 10px;">
-                    <h3 class="section-title">📷 تعديل الصورة (CamScanner)</h3>
+            <div>
+                <div class="scanner-top-bar">
+                    <div class="crop-mode-pills">
+                        <button type="button" id="modeAutoCropBtn" class="crop-mode-pill active">✂️ قص تلقائي</button>
+                        <button type="button" id="modeManualCropBtn" class="crop-mode-pill">✋ قص يدوي</button>
+                    </div>
                     <button type="button" id="closeScannerBtn" class="delete-visit-btn">إغلاق</button>
                 </div>
 
-                <div class="scanner-tools-row">
-                    <button type="button" id="scannerDocFilterBtn" class="reset-btn">📄 وضع مستند (سكانر)</button>
-                    <button type="button" id="scannerRotateBtn" class="reset-btn">↻ تدوير 90°</button>
-                    <button type="button" id="scannerResetBtn" class="reset-btn">إعادة ضبط</button>
-                </div>
+                <div class="scanner-stage-wrap">
+                    <div id="scannerCanvasBox" class="scanner-canvas-box">
+                        <canvas id="scannerCanvas"></canvas>
+                        <div id="manualCropBox" class="manual-crop-box hidden">
+                            <div id="manualCropHandle" class="manual-crop-handle"></div>
+                        </div>
+                    </div>
 
-                <div class="scanner-slider-row">
-                    <label>
-                        <span>السطوع</span>
-                        <span id="brightnessVal">100%</span>
+                    <div class="page-pager-bar">
+                        <button type="button" id="prevPageBtn" class="pager-arrow-btn">◀</button>
+                        <span id="pageIndicatorText">1/1</span>
+                        <button type="button" id="nextPageBtn" class="pager-arrow-btn">▶</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scanner-bottom-panel">
+                <div class="apply-all-row">
+                    <label class="apply-all-label">
+                        <input type="checkbox" id="applyToAllPagesCheck">
+                        <span>تطبيق على كل الصور (Apply to All Pages)</span>
                     </label>
-                    <input type="range" id="scannerBrightness" min="60" max="150" value="100">
                 </div>
 
-                <div class="scanner-slider-row">
-                    <label>
-                        <span>التباين (وضوح النص والورق)</span>
-                        <span id="contrastVal">100%</span>
-                    </label>
-                    <input type="range" id="scannerContrast" min="70" max="200" value="100">
+                <div class="filters-strip" id="scannerFiltersStrip">
+                    <button type="button" class="filter-preset-card active" data-filter="original">
+                        <div class="filter-preset-thumb">
+                            <span>CamScanner</span>
+                            <span>Original</span>
+                        </div>
+                        <div class="filter-preset-label">Original</div>
+                    </button>
+
+                    <button type="button" class="filter-preset-card" data-filter="omnifix">
+                        <div class="filter-preset-thumb omnifix">
+                            <span>CamScanner</span>
+                            <span>OmniFix</span>
+                        </div>
+                        <div class="filter-preset-label">OmniFix</div>
+                    </button>
+
+                    <button type="button" class="filter-preset-card" data-filter="noshadow">
+                        <div class="filter-preset-thumb noshadow">
+                            <span>CamScanner</span>
+                            <span>No Shadow</span>
+                        </div>
+                        <div class="filter-preset-label">No Shadow</div>
+                    </button>
+
+                    <button type="button" class="filter-preset-card" data-filter="lighten">
+                        <div class="filter-preset-thumb lighten">
+                            <span>CamScanner</span>
+                            <span>Lighten</span>
+                        </div>
+                        <div class="filter-preset-label">Lighten</div>
+                    </button>
                 </div>
 
-                <div class="scanner-preview-wrap">
-                    <canvas id="scannerCanvas"></canvas>
+                <div class="scanner-dock-bar">
+                    <div class="dock-tools-group">
+                        <button type="button" id="dockRotateLeftBtn" class="dock-tool-btn">
+                            <span>↺</span>
+                            <span>Left</span>
+                        </button>
+                        <button type="button" id="dockCropBtn" class="dock-tool-btn">
+                            <span>✂</span>
+                            <span>Crop</span>
+                        </button>
+                        <button type="button" id="dockAutoEnhanceBtn" class="dock-tool-btn">
+                            <span>✨</span>
+                            <span>Auto Crop</span>
+                        </button>
+                    </div>
+                    <button type="button" id="applyScannerEditBtn" class="dock-check-btn" title="حفظ التعديلات">✓</button>
                 </div>
-
-                <button type="button" id="applyScannerEditBtn" class="primary-action-btn">حفظ التعديلات على الصورة</button>
             </div>
         </div>
 
@@ -1545,7 +1807,7 @@
         (function setupPwa() {
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
                 const swCode = `
-                    const CACHE_NAME = 'fawry-vercel-v5';
+                    const CACHE_NAME = 'fawry-vercel-v6';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
@@ -1939,7 +2201,7 @@
 
             calculateAndRender();
 
-            /* منطق بند: تحويل صور إلى PDF (مع تعديل CamScanner) وضغط ملفات PDF */
+            /* منطق بند: تحويل صور إلى PDF وضغط ملفات */
             let selectedPdfImages = [];
             let selectedCompressionLevel = 'strong';
             let lastMergedBlobUrl = null;
@@ -1972,14 +2234,17 @@
                     selectedImagesList.innerHTML = '';
                     return;
                 }
-                selectedImagesList.innerHTML = selectedPdfImages.map((file, idx) => `
-                    <div class="selected-img-item">
-                        <span>${idx + 1}. ${escapeHTML(file.name)} (${formatBytes(file.size)})</span>
-                        <div style="display:flex; gap:4px; flex-wrap:wrap;">
-                            <button type="button" class="edit-pass-btn" onclick="openScannerForImage(${idx})">📷 تعديل</button>
-                            ${idx > 0 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, -1)">↑</button>` : ''}
-                            ${idx < selectedPdfImages.length - 1 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, 1)">↓</button>` : ''}
-                            <button type="button" class="delete-visit-btn" onclick="removePdfImage(${idx})">حذف</button>
+                selectedImagesList.innerHTML = selectedPdfImages.map((item, idx) => `
+                    <div class="selected-img-card">
+                        <img src="${escapeHTML(item.previewUrl)}" alt="${escapeHTML(item.file.name)}" class="selected-img-large-preview">
+                        <div class="selected-img-footer">
+                            <span class="selected-img-meta">${idx + 1}. ${escapeHTML(item.file.name)} (${formatBytes(item.file.size)})</span>
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button type="button" class="edit-pass-btn" onclick="openScannerForImage(${idx})">تعديل 📷</button>
+                                ${idx > 0 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, -1)">↑</button>` : ''}
+                                ${idx < selectedPdfImages.length - 1 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, 1)">↓</button>` : ''}
+                                <button type="button" class="delete-visit-btn" onclick="removePdfImage(${idx})">حذف</button>
+                            </div>
                         </div>
                     </div>
                 `).join('');
@@ -1995,6 +2260,10 @@
             };
 
             window.removePdfImage = function(index) {
+                const removed = selectedPdfImages[index];
+                if (removed?.previewUrl) {
+                    URL.revokeObjectURL(removed.previewUrl);
+                }
                 selectedPdfImages.splice(index, 1);
                 renderSelectedImagesList();
             };
@@ -2002,13 +2271,20 @@
             pdfImagesInput.addEventListener('change', (e) => {
                 const files = Array.from(e.target.files || []);
                 if (!files.length) return;
-                selectedPdfImages = [...selectedPdfImages, ...files];
+                const wrapped = files.map(file => ({
+                    file,
+                    previewUrl: URL.createObjectURL(file)
+                }));
+                selectedPdfImages = [...selectedPdfImages, ...wrapped];
                 pdfImagesInput.value = '';
                 renderSelectedImagesList();
                 document.getElementById('imagesToPdfStatus').textContent = '';
             });
 
             document.getElementById('clearImagesBtn').addEventListener('click', () => {
+                selectedPdfImages.forEach(item => {
+                    if (item?.previewUrl) URL.revokeObjectURL(item.previewUrl);
+                });
                 selectedPdfImages = [];
                 pdfImagesInput.value = '';
                 renderSelectedImagesList();
@@ -2016,153 +2292,365 @@
                 document.getElementById('mergedPdfResultBox').classList.add('hidden');
             });
 
-            /* محرر الصور بأسلوب CamScanner */
+            /* محرر الصور بمعاينة كبيرة + قص تلقائي/يدوي + تنقل */
             const scannerModal = document.getElementById('scannerModal');
             const scannerCanvas = document.getElementById('scannerCanvas');
-            const scannerBrightness = document.getElementById('scannerBrightness');
-            const scannerContrast = document.getElementById('scannerContrast');
-            const brightnessVal = document.getElementById('brightnessVal');
-            const contrastVal = document.getElementById('contrastVal');
+            const manualCropBox = document.getElementById('manualCropBox');
+            const manualCropHandle = document.getElementById('manualCropHandle');
+            const modeAutoCropBtn = document.getElementById('modeAutoCropBtn');
+            const modeManualCropBtn = document.getElementById('modeManualCropBtn');
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            const pageIndicatorText = document.getElementById('pageIndicatorText');
+            const applyToAllPagesCheck = document.getElementById('applyToAllPagesCheck');
 
-            let editingImageIndex = null;
-            let editingSourceImage = null;
-            let scannerRotationDeg = 0;
-            let scannerDocMode = false;
+            let activePageIdx = 0;
+            let activeImgElement = null;
+            let cropMode = 'auto'; // 'auto' | 'manual'
+            let activeFilterPreset = 'original'; // 'original' | 'omnifix' | 'noshadow' | 'lighten'
+            let rotationLeftDeg = 0; // 0, -90, -180, -270
+            let autoCropRect = { x: 0, y: 0, w: 1, h: 1 };
+            let manualCropRect = { x: 0.08, y: 0.08, w: 0.84, h: 0.84 };
+            let manualBoxVisible = false;
 
-            function drawScannerPreview() {
-                if (!editingSourceImage) return;
-                const b = Number(scannerBrightness.value) || 100;
-                const c = Number(scannerContrast.value) || 100;
-                brightnessVal.textContent = `${b}%`;
-                contrastVal.textContent = `${c}%`;
+            function getCssFilterString(preset) {
+                if (preset === 'omnifix') return 'contrast(155%) brightness(106%)';
+                if (preset === 'noshadow') return 'grayscale(100%) contrast(175%) brightness(115%)';
+                if (preset === 'lighten') return 'brightness(124%) contrast(115%)';
+                return 'none';
+            }
 
-                const rad = (scannerRotationDeg * Math.PI) / 180;
-                const srcW = editingSourceImage.naturalWidth || editingSourceImage.width;
-                const srcH = editingSourceImage.naturalHeight || editingSourceImage.height;
-                const swapDims = Math.abs(scannerRotationDeg % 180) === 90;
-                const outW = swapDims ? srcH : srcW;
-                const outH = swapDims ? srcW : srcH;
+            function computeAutoCropNormalized(img) {
+                const srcW = img.naturalWidth || img.width;
+                const srcH = img.naturalHeight || img.height;
+                if (!srcW || !srcH) return { x: 0, y: 0, w: 1, h: 1 };
 
-                const maxPreviewSide = 1200;
-                const scale = Math.min(1, maxPreviewSide / Math.max(outW, outH));
-                scannerCanvas.width = Math.max(1, Math.round(outW * scale));
-                scannerCanvas.height = Math.max(1, Math.round(outH * scale));
+                const sampleMax = 360;
+                const s = Math.min(1, sampleMax / Math.max(srcW, srcH));
+                const sw = Math.max(1, Math.round(srcW * s));
+                const sh = Math.max(1, Math.round(srcH * s));
+
+                const c = document.createElement('canvas');
+                c.width = sw;
+                c.height = sh;
+                const ctx = c.getContext('2d');
+                ctx.drawImage(img, 0, 0, sw, sh);
+
+                try {
+                    const data = ctx.getImageData(0, 0, sw, sh).data;
+                    let minX = sw, minY = sh, maxX = 0, maxY = 0;
+                    const threshold = 238;
+
+                    for (let y = 0; y < sh; y++) {
+                        for (let x = 0; x < sw; x++) {
+                            const idx = (y * sw + x) * 4;
+                            const r = data[idx];
+                            const g = data[idx + 1];
+                            const b = data[idx + 2];
+                            if (r < threshold || g < threshold || b < threshold) {
+                                if (x < minX) minX = x;
+                                if (x > maxX) maxX = x;
+                                if (y < minY) minY = y;
+                                if (y > maxY) maxY = y;
+                            }
+                        }
+                    }
+
+                    if (maxX > minX && maxY > minY) {
+                        const padX = Math.max(2, Math.round((maxX - minX) * 0.02));
+                        const padY = Math.max(2, Math.round((maxY - minY) * 0.02));
+                        const nx = Math.max(0, (minX - padX) / sw);
+                        const ny = Math.max(0, (minY - padY) / sh);
+                        const nw = Math.min(1 - nx, (maxX - minX + padX * 2) / sw);
+                        const nh = Math.min(1 - ny, (maxY - minY + padY * 2) / sh);
+                        if (nw > 0.25 && nh > 0.25) {
+                            return { x: nx, y: ny, w: nw, h: nh };
+                        }
+                    }
+                } catch (_) {}
+
+                return { x: 0.03, y: 0.03, w: 0.94, h: 0.94 };
+            }
+
+            function syncManualCropOverlay() {
+                if (cropMode !== 'manual' || !manualBoxVisible) {
+                    manualCropBox.classList.add('hidden');
+                    return;
+                }
+                manualCropBox.classList.remove('hidden');
+                const rect = scannerCanvas.getBoundingClientRect();
+                if (!rect.width || !rect.height) return;
+
+                manualCropBox.style.left = `${manualCropRect.x * rect.width}px`;
+                manualCropBox.style.top = `${manualCropRect.y * rect.height}px`;
+                manualCropBox.style.width = `${manualCropRect.w * rect.width}px`;
+                manualCropBox.style.height = `${manualCropRect.h * rect.height}px`;
+            }
+
+            function renderScannerPage() {
+                if (!activeImgElement) return;
+                const total = selectedPdfImages.length;
+                pageIndicatorText.textContent = `${activePageIdx + 1}/${total}`;
+                prevPageBtn.disabled = activePageIdx <= 0;
+                nextPageBtn.disabled = activePageIdx >= total - 1;
+
+                const srcW = activeImgElement.naturalWidth || activeImgElement.width;
+                const srcH = activeImgElement.naturalHeight || activeImgElement.height;
+                const rad = (rotationLeftDeg * Math.PI) / 180;
+                const swapDims = Math.abs(rotationLeftDeg % 180) === 90;
+                const rotW = swapDims ? srcH : srcW;
+                const rotH = swapDims ? srcW : srcH;
+
+                const maxPreviewSide = 1100;
+                const scale = Math.min(1, maxPreviewSide / Math.max(rotW, rotH));
+                scannerCanvas.width = Math.max(1, Math.round(rotW * scale));
+                scannerCanvas.height = Math.max(1, Math.round(rotH * scale));
 
                 const ctx = scannerCanvas.getContext('2d');
                 ctx.save();
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(0, 0, scannerCanvas.width, scannerCanvas.height);
-
-                const filterStr = scannerDocMode
-                    ? `grayscale(100%) brightness(${b + 12}%) contrast(${Math.max(c, 155)}%)`
-                    : `brightness(${b}%) contrast(${c}%)`;
-                ctx.filter = filterStr;
-
+                ctx.filter = getCssFilterString(activeFilterPreset);
                 ctx.translate(scannerCanvas.width / 2, scannerCanvas.height / 2);
                 ctx.rotate(rad);
-                const drawW = Math.round(srcW * scale);
-                const drawH = Math.round(srcH * scale);
-                ctx.drawImage(editingSourceImage, -drawW / 2, -drawH / 2, drawW, drawH);
+                ctx.drawImage(
+                    activeImgElement,
+                    -(srcW * scale) / 2,
+                    -(srcH * scale) / 2,
+                    srcW * scale,
+                    srcH * scale
+                );
                 ctx.restore();
+
+                setTimeout(syncManualCropOverlay, 20);
+            }
+
+            async function loadScannerPageAt(index) {
+                if (index < 0 || index >= selectedPdfImages.length) return;
+                activePageIdx = index;
+                rotationLeftDeg = 0;
+                activeFilterPreset = 'original';
+                manualBoxVisible = false;
+
+                document.querySelectorAll('.filter-preset-card').forEach(card => {
+                    card.classList.toggle('active', card.getAttribute('data-filter') === 'original');
+                });
+
+                const item = selectedPdfImages[activePageIdx];
+                const dataUrl = await fileToDataUrl(item.file);
+                activeImgElement = await loadHtmlImage(dataUrl);
+                autoCropRect = computeAutoCropNormalized(activeImgElement);
+                manualCropRect = { ...autoCropRect };
+                renderScannerPage();
             }
 
             window.openScannerForImage = async function(index) {
-                const file = selectedPdfImages[index];
-                if (!file) return;
-                editingImageIndex = index;
-                scannerRotationDeg = 0;
-                scannerDocMode = false;
-                scannerBrightness.value = 100;
-                scannerContrast.value = 100;
-                document.getElementById('scannerDocFilterBtn').classList.remove('active');
-
-                const dataUrl = await fileToDataUrl(file);
-                editingSourceImage = await loadHtmlImage(dataUrl);
-                drawScannerPreview();
+                if (!selectedPdfImages.length) return;
+                applyToAllPagesCheck.checked = false;
+                cropMode = 'auto';
+                modeAutoCropBtn.classList.add('active');
+                modeManualCropBtn.classList.remove('active');
                 scannerModal.classList.remove('hidden');
+                await loadScannerPageAt(index);
             };
 
             document.getElementById('closeScannerBtn').addEventListener('click', () => {
                 scannerModal.classList.add('hidden');
-                editingImageIndex = null;
-                editingSourceImage = null;
+                activeImgElement = null;
             });
 
-            document.getElementById('scannerDocFilterBtn').addEventListener('click', (e) => {
-                scannerDocMode = !scannerDocMode;
-                e.currentTarget.classList.toggle('active', scannerDocMode);
-                if (scannerDocMode) {
-                    scannerBrightness.value = 108;
-                    scannerContrast.value = 160;
-                } else {
-                    scannerBrightness.value = 100;
-                    scannerContrast.value = 100;
+            prevPageBtn.addEventListener('click', () => {
+                if (activePageIdx > 0) {
+                    loadScannerPageAt(activePageIdx - 1);
                 }
-                drawScannerPreview();
             });
 
-            document.getElementById('scannerRotateBtn').addEventListener('click', () => {
-                scannerRotationDeg = (scannerRotationDeg + 90) % 360;
-                drawScannerPreview();
+            nextPageBtn.addEventListener('click', () => {
+                if (activePageIdx < selectedPdfImages.length - 1) {
+                    loadScannerPageAt(activePageIdx + 1);
+                }
             });
 
-            document.getElementById('scannerResetBtn').addEventListener('click', () => {
-                scannerRotationDeg = 0;
-                scannerDocMode = false;
-                document.getElementById('scannerDocFilterBtn').classList.remove('active');
-                scannerBrightness.value = 100;
-                scannerContrast.value = 100;
-                drawScannerPreview();
+            modeAutoCropBtn.addEventListener('click', () => {
+                cropMode = 'auto';
+                manualBoxVisible = false;
+                modeAutoCropBtn.classList.add('active');
+                modeManualCropBtn.classList.remove('active');
+                document.getElementById('dockCropBtn').classList.remove('active');
+                syncManualCropOverlay();
             });
 
-            scannerBrightness.addEventListener('input', drawScannerPreview);
-            scannerContrast.addEventListener('input', drawScannerPreview);
+            modeManualCropBtn.addEventListener('click', () => {
+                cropMode = 'manual';
+                manualBoxVisible = true;
+                modeManualCropBtn.classList.add('active');
+                modeAutoCropBtn.classList.remove('active');
+                document.getElementById('dockCropBtn').classList.add('active');
+                syncManualCropOverlay();
+            });
+
+            document.getElementById('dockCropBtn').addEventListener('click', () => {
+                cropMode = 'manual';
+                manualBoxVisible = !manualBoxVisible;
+                modeManualCropBtn.classList.toggle('active', manualBoxVisible);
+                modeAutoCropBtn.classList.toggle('active', !manualBoxVisible);
+                document.getElementById('dockCropBtn').classList.toggle('active', manualBoxVisible);
+                syncManualCropOverlay();
+            });
+
+            document.getElementById('dockAutoEnhanceBtn').addEventListener('click', () => {
+                cropMode = 'auto';
+                manualBoxVisible = false;
+                modeAutoCropBtn.classList.add('active');
+                modeManualCropBtn.classList.remove('active');
+                document.getElementById('dockCropBtn').classList.remove('active');
+                activeFilterPreset = 'omnifix';
+                document.querySelectorAll('.filter-preset-card').forEach(card => {
+                    card.classList.toggle('active', card.getAttribute('data-filter') === 'omnifix');
+                });
+                syncManualCropOverlay();
+                renderScannerPage();
+            });
+
+            document.getElementById('dockRotateLeftBtn').addEventListener('click', () => {
+                rotationLeftDeg = (rotationLeftDeg - 90) % 360;
+                renderScannerPage();
+            });
+
+            document.querySelectorAll('.filter-preset-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    activeFilterPreset = card.getAttribute('data-filter') || 'original';
+                    document.querySelectorAll('.filter-preset-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    renderScannerPage();
+                });
+            });
+
+            /* تحريك وتغيير حجم إطار القص اليدوي */
+            let dragState = null;
+
+            manualCropBox.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                const rect = scannerCanvas.getBoundingClientRect();
+                const isResize = e.target === manualCropHandle;
+                dragState = {
+                    type: isResize ? 'resize' : 'move',
+                    startX: e.clientX,
+                    startY: e.clientY,
+                    width: rect.width,
+                    height: rect.height,
+                    orig: { ...manualCropRect }
+                };
+                manualCropBox.setPointerCapture(e.pointerId);
+            });
+
+            manualCropBox.addEventListener('pointermove', (e) => {
+                if (!dragState) return;
+                const dx = (e.clientX - dragState.startX) / dragState.width;
+                const dy = (e.clientY - dragState.startY) / dragState.height;
+
+                if (dragState.type === 'move') {
+                    const nx = Math.min(Math.max(0, dragState.orig.x + dx), 1 - dragState.orig.w);
+                    const ny = Math.min(Math.max(0, dragState.orig.y + dy), 1 - dragState.orig.h);
+                    manualCropRect.x = nx;
+                    manualCropRect.y = ny;
+                } else if (dragState.type === 'resize') {
+                    const nw = Math.min(Math.max(0.15, dragState.orig.w + dx), 1 - dragState.orig.x);
+                    const nh = Math.min(Math.max(0.15, dragState.orig.h + dy), 1 - dragState.orig.y);
+                    manualCropRect.w = nw;
+                    manualCropRect.h = nh;
+                }
+                syncManualCropOverlay();
+            });
+
+            manualCropBox.addEventListener('pointerup', () => {
+                dragState = null;
+            });
+
+            window.addEventListener('resize', syncManualCropOverlay);
+
+            async function renderFinalEditedFile(item, useManualCrop, manualRect, preset, rotDeg) {
+                const dataUrl = await fileToDataUrl(item.file);
+                const img = await loadHtmlImage(dataUrl);
+                const srcW = img.naturalWidth || img.width;
+                const srcH = img.naturalHeight || img.height;
+                const rad = (rotDeg * Math.PI) / 180;
+                const swapDims = Math.abs(rotDeg % 180) === 90;
+                const rotW = swapDims ? srcH : srcW;
+                const rotH = swapDims ? srcW : srcH;
+
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = rotW;
+                tempCanvas.height = rotH;
+                const tCtx = tempCanvas.getContext('2d');
+                tCtx.fillStyle = '#ffffff';
+                tCtx.fillRect(0, 0, rotW, rotH);
+                tCtx.filter = getCssFilterString(preset);
+                tCtx.translate(rotW / 2, rotH / 2);
+                tCtx.rotate(rad);
+                tCtx.drawImage(img, -srcW / 2, -srcH / 2, srcW, srcH);
+
+                const cropNorm = useManualCrop
+                    ? manualRect
+                    : (cropMode === 'auto' ? computeAutoCropNormalized(img) : { x: 0, y: 0, w: 1, h: 1 });
+
+                const cx = Math.max(0, Math.round(cropNorm.x * rotW));
+                const cy = Math.max(0, Math.round(cropNorm.y * rotH));
+                const cw = Math.max(10, Math.min(rotW - cx, Math.round(cropNorm.w * rotW)));
+                const ch = Math.max(10, Math.min(rotH - cy, Math.round(cropNorm.h * rotH)));
+
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = cw;
+                finalCanvas.height = ch;
+                const fCtx = finalCanvas.getContext('2d');
+                fCtx.fillStyle = '#ffffff';
+                fCtx.fillRect(0, 0, cw, ch);
+                fCtx.drawImage(tempCanvas, cx, cy, cw, ch, 0, 0, cw, ch);
+
+                const blob = await new Promise(resolve => finalCanvas.toBlob(resolve, 'image/jpeg', 0.9));
+                const baseName = item.file.name.replace(/\.[^.]+$/, '');
+                const newFile = new File([blob], `${baseName}-scanned.jpg`, { type: 'image/jpeg' });
+
+                if (item.previewUrl) {
+                    URL.revokeObjectURL(item.previewUrl);
+                }
+
+                return {
+                    file: newFile,
+                    previewUrl: URL.createObjectURL(newFile)
+                };
+            }
 
             document.getElementById('applyScannerEditBtn').addEventListener('click', async () => {
-                if (editingImageIndex === null || !editingSourceImage) return;
+                if (!selectedPdfImages.length) return;
+                const applyAll = applyToAllPagesCheck.checked;
+                const useManual = cropMode === 'manual' && manualBoxVisible;
 
-                const b = Number(scannerBrightness.value) || 100;
-                const c = Number(scannerContrast.value) || 100;
-                const rad = (scannerRotationDeg * Math.PI) / 180;
-                const srcW = editingSourceImage.naturalWidth || editingSourceImage.width;
-                const srcH = editingSourceImage.naturalHeight || editingSourceImage.height;
-                const swapDims = Math.abs(scannerRotationDeg % 180) === 90;
-                let outW = swapDims ? srcH : srcW;
-                let outH = swapDims ? srcW : srcH;
-
-                const maxSide = 2200;
-                const ratio = Math.min(1, maxSide / Math.max(outW, outH));
-                outW = Math.round(outW * ratio);
-                outH = Math.round(outH * ratio);
-
-                const fullCanvas = document.createElement('canvas');
-                fullCanvas.width = outW;
-                fullCanvas.height = outH;
-                const ctx = fullCanvas.getContext('2d');
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, outW, outH);
-
-                ctx.filter = scannerDocMode
-                    ? `grayscale(100%) brightness(${b + 12}%) contrast(${Math.max(c, 155)}%)`
-                    : `brightness(${b}%) contrast(${c}%)`;
-
-                ctx.translate(outW / 2, outH / 2);
-                ctx.rotate(rad);
-                const drawW = Math.round(srcW * ratio);
-                const drawH = Math.round(srcH * ratio);
-                ctx.drawImage(editingSourceImage, -drawW / 2, -drawH / 2, drawW, drawH);
-
-                const editedBlob = await new Promise(resolve => fullCanvas.toBlob(resolve, 'image/jpeg', 0.9));
-                const origFile = selectedPdfImages[editingImageIndex];
-                const cleanBase = origFile.name.replace(/\.[^.]+$/, '');
-                selectedPdfImages[editingImageIndex] = new File([editedBlob], `${cleanBase}-edited.jpg`, {
-                    type: 'image/jpeg'
-                });
+                if (applyAll) {
+                    const updated = [];
+                    for (let i = 0; i < selectedPdfImages.length; i++) {
+                        updated.push(await renderFinalEditedFile(
+                            selectedPdfImages[i],
+                            useManual,
+                            manualCropRect,
+                            activeFilterPreset,
+                            rotationLeftDeg
+                        ));
+                    }
+                    selectedPdfImages = updated;
+                } else {
+                    selectedPdfImages[activePageIdx] = await renderFinalEditedFile(
+                        selectedPdfImages[activePageIdx],
+                        useManual,
+                        manualCropRect,
+                        activeFilterPreset,
+                        rotationLeftDeg
+                    );
+                }
 
                 renderSelectedImagesList();
                 scannerModal.classList.add('hidden');
-                editingImageIndex = null;
-                editingSourceImage = null;
+                activeImgElement = null;
             });
 
             function fileToDataUrl(file) {
@@ -2237,7 +2725,7 @@
                         statusEl.textContent = `جاري معالجة الصورة ${i + 1} من ${selectedPdfImages.length}...`;
                         statusEl.className = 'status-text status-ok';
 
-                        const imgFile = selectedPdfImages[i];
+                        const imgFile = selectedPdfImages[i].file;
                         const { bytes, width, height } = await convertImageFileToJpegBytes(imgFile, 0.88, 2200);
                         const embeddedImg = await pdfDoc.embedJpg(bytes);
 
@@ -2270,7 +2758,7 @@
                     statusEl.className = 'status-text status-ok';
                 } catch (err) {
                     statusEl.textContent = `حدث خطأ أثناء التحويل: ${err.message || err}`;
-                    statusEl.className = 'status-text status-err';
+                    statusEl.classList.add('status-err');
                 } finally {
                     btn.disabled = false;
                     btn.textContent = 'تحويل الصور إلى ملف واحد PDF';
@@ -2382,7 +2870,7 @@
                     triggerAutoDownload(lastCompressedBlobUrl, outName);
                 } catch (err) {
                     statusEl.textContent = `تعذر ضغط الملف: ${err.message || err}`;
-                    statusEl.className = 'status-text status-err';
+                    statusEl.classList.add('status-err');
                 } finally {
                     btn.disabled = false;
                     btn.textContent = 'ضغط وتحميل ملف PDF تلقائياً';
