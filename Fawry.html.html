@@ -259,6 +259,75 @@
             padding: 8px 12px;
             font-size: 0.84rem;
             font-weight: 700;
+            flex-wrap: wrap;
+        }
+
+        .scanner-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background-color: rgba(15, 23, 42, 0.72);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            overflow-y: auto;
+        }
+
+        .scanner-box {
+            width: 100%;
+            max-width: 520px;
+            background-color: #ffffff;
+            border-radius: 22px;
+            padding: 18px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+            max-height: 92vh;
+            overflow-y: auto;
+        }
+
+        .scanner-preview-wrap {
+            background-color: #0f172a;
+            border-radius: 14px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 12px 0;
+            min-height: 200px;
+            max-height: 300px;
+            overflow: hidden;
+        }
+
+        .scanner-preview-wrap canvas {
+            max-width: 100%;
+            max-height: 280px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .scanner-tools-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .scanner-slider-row {
+            margin-bottom: 10px;
+        }
+
+        .scanner-slider-row label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 4px;
+        }
+
+        .scanner-slider-row input[type="range"] {
+            width: 100%;
+            accent-color: #059669;
         }
 
         .pdf-result-box {
@@ -1286,7 +1355,7 @@
                         <span>فوري للتمويل • أدوات المستندات</span>
                     </div>
                     <h1>تحويل صور إلى PDF وضغط ملفات</h1>
-                    <p>دمج مجموعة صور في ملف PDF واحد أو ضغط ملفات PDF بمستويين</p>
+                    <p>تعديل الصور بأسلوب CamScanner ودمجها في PDF أو ضغط ملفات PDF</p>
                 </header>
 
                 <div class="card-body">
@@ -1296,7 +1365,7 @@
                         <button type="button" id="btnModeCompressPdf" class="sub-tab-btn">🗜️ ضغط ملفات PDF</button>
                     </div>
 
-                    <!-- الزر الأول: تحويل مجموعة صور إلى ملف واحد PDF -->
+                    <!-- الزر الأول: تحويل مجموعة صور إلى ملف واحد PDF مع تعديل الصور -->
                     <div id="imagesToPdfPanel">
                         <div class="form-group">
                             <label for="pdfImagesInput" class="input-label">اختر مجموعة صور (يمكن تحديد أكثر من صورة)</label>
@@ -1323,7 +1392,7 @@
                         </div>
                     </div>
 
-                    <!-- الزر الثاني: ضغط ملفات PDF (ضغط متوسط وضغط قوي) -->
+                    <!-- الزر الثاني: ضغط ملفات PDF (ضغط قوي وضغط قوي جداً + تحميل تلقائي) -->
                     <div id="compressPdfPanel" class="hidden">
                         <div class="form-group">
                             <label for="compressPdfInput" class="input-label">اختر ملف PDF المراد ضغطه</label>
@@ -1333,16 +1402,16 @@
                         <div class="form-group">
                             <label class="input-label">اختر مستوى الضغط</label>
                             <div class="level-grid" id="compressionLevelGroup">
-                                <button type="button" id="btnLevelMedium" class="level-btn active" data-level="medium">
-                                    ⚖️ ضغط متوسط
-                                </button>
-                                <button type="button" id="btnLevelStrong" class="level-btn" data-level="strong">
+                                <button type="button" id="btnLevelStrong" class="level-btn active" data-level="strong">
                                     🔥 ضغط قوي
+                                </button>
+                                <button type="button" id="btnLevelUltra" class="level-btn" data-level="ultra">
+                                    ⚡ ضغط قوي جداً (حجم صغير جداً)
                                 </button>
                             </div>
                         </div>
 
-                        <button type="button" id="compressPdfActionBtn" class="primary-action-btn">بدء ضغط ملف PDF</button>
+                        <button type="button" id="compressPdfActionBtn" class="primary-action-btn">ضغط وتحميل ملف PDF تلقائياً</button>
                         <div id="compressPdfStatus" class="status-text"></div>
 
                         <div id="compressedPdfResultBox" class="pdf-result-box hidden">
@@ -1351,6 +1420,44 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- نافذة تعديل الصورة بأسلوب CamScanner -->
+        <div id="scannerModal" class="scanner-modal hidden">
+            <div class="scanner-box">
+                <div class="section-top-bar" style="margin-bottom: 10px; padding-bottom: 10px;">
+                    <h3 class="section-title">📷 تعديل الصورة (CamScanner)</h3>
+                    <button type="button" id="closeScannerBtn" class="delete-visit-btn">إغلاق</button>
+                </div>
+
+                <div class="scanner-tools-row">
+                    <button type="button" id="scannerDocFilterBtn" class="reset-btn">📄 وضع مستند (سكانر)</button>
+                    <button type="button" id="scannerRotateBtn" class="reset-btn">↻ تدوير 90°</button>
+                    <button type="button" id="scannerResetBtn" class="reset-btn">إعادة ضبط</button>
+                </div>
+
+                <div class="scanner-slider-row">
+                    <label>
+                        <span>السطوع</span>
+                        <span id="brightnessVal">100%</span>
+                    </label>
+                    <input type="range" id="scannerBrightness" min="60" max="150" value="100">
+                </div>
+
+                <div class="scanner-slider-row">
+                    <label>
+                        <span>التباين (وضوح النص والورق)</span>
+                        <span id="contrastVal">100%</span>
+                    </label>
+                    <input type="range" id="scannerContrast" min="70" max="200" value="100">
+                </div>
+
+                <div class="scanner-preview-wrap">
+                    <canvas id="scannerCanvas"></canvas>
+                </div>
+
+                <button type="button" id="applyScannerEditBtn" class="primary-action-btn">حفظ التعديلات على الصورة</button>
             </div>
         </div>
 
@@ -1438,7 +1545,7 @@
         (function setupPwa() {
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
                 const swCode = `
-                    const CACHE_NAME = 'fawry-vercel-v4';
+                    const CACHE_NAME = 'fawry-vercel-v5';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
@@ -1520,6 +1627,18 @@
             function sanitizePdfFileName(name = '', fallback = 'document') {
                 const clean = String(name || '').trim().replace(/[\\/:*?"<>|]/g, '-').replace(/\.pdf$/i, '');
                 return `${clean || fallback}.pdf`;
+            }
+
+            function triggerAutoDownload(url, fileName) {
+                const tempLink = document.createElement('a');
+                tempLink.href = url;
+                tempLink.download = fileName;
+                tempLink.style.display = 'none';
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                setTimeout(() => {
+                    document.body.removeChild(tempLink);
+                }, 300);
             }
 
             function getShortBaseUrl() {
@@ -1820,9 +1939,9 @@
 
             calculateAndRender();
 
-            /* منطق بند: تحويل صور إلى PDF وضغط ملفات */
+            /* منطق بند: تحويل صور إلى PDF (مع تعديل CamScanner) وضغط ملفات PDF */
             let selectedPdfImages = [];
-            let selectedCompressionLevel = 'medium';
+            let selectedCompressionLevel = 'strong';
             let lastMergedBlobUrl = null;
             let lastCompressedBlobUrl = null;
 
@@ -1856,7 +1975,8 @@
                 selectedImagesList.innerHTML = selectedPdfImages.map((file, idx) => `
                     <div class="selected-img-item">
                         <span>${idx + 1}. ${escapeHTML(file.name)} (${formatBytes(file.size)})</span>
-                        <div style="display:flex; gap:4px;">
+                        <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                            <button type="button" class="edit-pass-btn" onclick="openScannerForImage(${idx})">📷 تعديل</button>
                             ${idx > 0 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, -1)">↑</button>` : ''}
                             ${idx < selectedPdfImages.length - 1 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, 1)">↓</button>` : ''}
                             <button type="button" class="delete-visit-btn" onclick="removePdfImage(${idx})">حذف</button>
@@ -1894,6 +2014,155 @@
                 renderSelectedImagesList();
                 document.getElementById('imagesToPdfStatus').textContent = '';
                 document.getElementById('mergedPdfResultBox').classList.add('hidden');
+            });
+
+            /* محرر الصور بأسلوب CamScanner */
+            const scannerModal = document.getElementById('scannerModal');
+            const scannerCanvas = document.getElementById('scannerCanvas');
+            const scannerBrightness = document.getElementById('scannerBrightness');
+            const scannerContrast = document.getElementById('scannerContrast');
+            const brightnessVal = document.getElementById('brightnessVal');
+            const contrastVal = document.getElementById('contrastVal');
+
+            let editingImageIndex = null;
+            let editingSourceImage = null;
+            let scannerRotationDeg = 0;
+            let scannerDocMode = false;
+
+            function drawScannerPreview() {
+                if (!editingSourceImage) return;
+                const b = Number(scannerBrightness.value) || 100;
+                const c = Number(scannerContrast.value) || 100;
+                brightnessVal.textContent = `${b}%`;
+                contrastVal.textContent = `${c}%`;
+
+                const rad = (scannerRotationDeg * Math.PI) / 180;
+                const srcW = editingSourceImage.naturalWidth || editingSourceImage.width;
+                const srcH = editingSourceImage.naturalHeight || editingSourceImage.height;
+                const swapDims = Math.abs(scannerRotationDeg % 180) === 90;
+                const outW = swapDims ? srcH : srcW;
+                const outH = swapDims ? srcW : srcH;
+
+                const maxPreviewSide = 1200;
+                const scale = Math.min(1, maxPreviewSide / Math.max(outW, outH));
+                scannerCanvas.width = Math.max(1, Math.round(outW * scale));
+                scannerCanvas.height = Math.max(1, Math.round(outH * scale));
+
+                const ctx = scannerCanvas.getContext('2d');
+                ctx.save();
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, scannerCanvas.width, scannerCanvas.height);
+
+                const filterStr = scannerDocMode
+                    ? `grayscale(100%) brightness(${b + 12}%) contrast(${Math.max(c, 155)}%)`
+                    : `brightness(${b}%) contrast(${c}%)`;
+                ctx.filter = filterStr;
+
+                ctx.translate(scannerCanvas.width / 2, scannerCanvas.height / 2);
+                ctx.rotate(rad);
+                const drawW = Math.round(srcW * scale);
+                const drawH = Math.round(srcH * scale);
+                ctx.drawImage(editingSourceImage, -drawW / 2, -drawH / 2, drawW, drawH);
+                ctx.restore();
+            }
+
+            window.openScannerForImage = async function(index) {
+                const file = selectedPdfImages[index];
+                if (!file) return;
+                editingImageIndex = index;
+                scannerRotationDeg = 0;
+                scannerDocMode = false;
+                scannerBrightness.value = 100;
+                scannerContrast.value = 100;
+                document.getElementById('scannerDocFilterBtn').classList.remove('active');
+
+                const dataUrl = await fileToDataUrl(file);
+                editingSourceImage = await loadHtmlImage(dataUrl);
+                drawScannerPreview();
+                scannerModal.classList.remove('hidden');
+            };
+
+            document.getElementById('closeScannerBtn').addEventListener('click', () => {
+                scannerModal.classList.add('hidden');
+                editingImageIndex = null;
+                editingSourceImage = null;
+            });
+
+            document.getElementById('scannerDocFilterBtn').addEventListener('click', (e) => {
+                scannerDocMode = !scannerDocMode;
+                e.currentTarget.classList.toggle('active', scannerDocMode);
+                if (scannerDocMode) {
+                    scannerBrightness.value = 108;
+                    scannerContrast.value = 160;
+                } else {
+                    scannerBrightness.value = 100;
+                    scannerContrast.value = 100;
+                }
+                drawScannerPreview();
+            });
+
+            document.getElementById('scannerRotateBtn').addEventListener('click', () => {
+                scannerRotationDeg = (scannerRotationDeg + 90) % 360;
+                drawScannerPreview();
+            });
+
+            document.getElementById('scannerResetBtn').addEventListener('click', () => {
+                scannerRotationDeg = 0;
+                scannerDocMode = false;
+                document.getElementById('scannerDocFilterBtn').classList.remove('active');
+                scannerBrightness.value = 100;
+                scannerContrast.value = 100;
+                drawScannerPreview();
+            });
+
+            scannerBrightness.addEventListener('input', drawScannerPreview);
+            scannerContrast.addEventListener('input', drawScannerPreview);
+
+            document.getElementById('applyScannerEditBtn').addEventListener('click', async () => {
+                if (editingImageIndex === null || !editingSourceImage) return;
+
+                const b = Number(scannerBrightness.value) || 100;
+                const c = Number(scannerContrast.value) || 100;
+                const rad = (scannerRotationDeg * Math.PI) / 180;
+                const srcW = editingSourceImage.naturalWidth || editingSourceImage.width;
+                const srcH = editingSourceImage.naturalHeight || editingSourceImage.height;
+                const swapDims = Math.abs(scannerRotationDeg % 180) === 90;
+                let outW = swapDims ? srcH : srcW;
+                let outH = swapDims ? srcW : srcH;
+
+                const maxSide = 2200;
+                const ratio = Math.min(1, maxSide / Math.max(outW, outH));
+                outW = Math.round(outW * ratio);
+                outH = Math.round(outH * ratio);
+
+                const fullCanvas = document.createElement('canvas');
+                fullCanvas.width = outW;
+                fullCanvas.height = outH;
+                const ctx = fullCanvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, outW, outH);
+
+                ctx.filter = scannerDocMode
+                    ? `grayscale(100%) brightness(${b + 12}%) contrast(${Math.max(c, 155)}%)`
+                    : `brightness(${b}%) contrast(${c}%)`;
+
+                ctx.translate(outW / 2, outH / 2);
+                ctx.rotate(rad);
+                const drawW = Math.round(srcW * ratio);
+                const drawH = Math.round(srcH * ratio);
+                ctx.drawImage(editingSourceImage, -drawW / 2, -drawH / 2, drawW, drawH);
+
+                const editedBlob = await new Promise(resolve => fullCanvas.toBlob(resolve, 'image/jpeg', 0.9));
+                const origFile = selectedPdfImages[editingImageIndex];
+                const cleanBase = origFile.name.replace(/\.[^.]+$/, '');
+                selectedPdfImages[editingImageIndex] = new File([editedBlob], `${cleanBase}-edited.jpg`, {
+                    type: 'image/jpeg'
+                });
+
+                renderSelectedImagesList();
+                scannerModal.classList.add('hidden');
+                editingImageIndex = null;
+                editingSourceImage = null;
             });
 
             function fileToDataUrl(file) {
@@ -2012,7 +2281,7 @@
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    selectedCompressionLevel = btn.getAttribute('data-level') || 'medium';
+                    selectedCompressionLevel = btn.getAttribute('data-level') || 'strong';
                 });
             });
 
@@ -2038,10 +2307,10 @@
                     return;
                 }
 
-                const isStrong = selectedCompressionLevel === 'strong';
-                const renderScale = isStrong ? 1.0 : 1.45;
-                const jpegQuality = isStrong ? 0.45 : 0.72;
-                const levelLabel = isStrong ? 'ضغط قوي' : 'ضغط متوسط';
+                const isUltra = selectedCompressionLevel === 'ultra';
+                const renderScale = isUltra ? 0.72 : 1.05;
+                const jpegQuality = isUltra ? 0.25 : 0.48;
+                const levelLabel = isUltra ? 'ضغط قوي جداً' : 'ضغط قوي';
 
                 btn.disabled = true;
                 btn.textContent = 'جاري ضغط ملف PDF...';
@@ -2092,7 +2361,7 @@
                     lastCompressedBlobUrl = URL.createObjectURL(compressedBlob);
 
                     const baseName = pdfFile.name.replace(/\.pdf$/i, '');
-                    const outName = sanitizePdfFileName(`${baseName}-${isStrong ? 'ضغط-قوي' : 'ضغط-متوسط'}`);
+                    const outName = sanitizePdfFileName(`${baseName}-${isUltra ? 'ضغط-قوي-جدا' : 'ضغط-قوي'}`);
 
                     const downloadBtn = document.getElementById('downloadCompressedPdfBtn');
                     downloadBtn.href = lastCompressedBlobUrl;
@@ -2107,14 +2376,16 @@
                         `المستوى: ${levelLabel} | الأصلي: ${formatBytes(pdfFile.size)} ← المضغوط: ${formatBytes(compressedBlob.size)} (توفير ${savingPercent}%)`;
                     resultBox.classList.remove('hidden');
 
-                    statusEl.textContent = 'تم ضغط ملف PDF بنجاح';
+                    statusEl.textContent = 'تم ضغط ملف PDF وبدأ التحميل تلقائياً';
                     statusEl.className = 'status-text status-ok';
+
+                    triggerAutoDownload(lastCompressedBlobUrl, outName);
                 } catch (err) {
                     statusEl.textContent = `تعذر ضغط الملف: ${err.message || err}`;
                     statusEl.className = 'status-text status-err';
                 } finally {
                     btn.disabled = false;
-                    btn.textContent = 'بدء ضغط ملف PDF';
+                    btn.textContent = 'ضغط وتحميل ملف PDF تلقائياً';
                 }
             });
 
