@@ -977,18 +977,93 @@
 
         .install-banner {
             background-color: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            border-radius: 14px;
-            padding: 10px 14px;
-            margin-bottom: 12px;
+            border: 1.5px solid #a7f3d0;
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            color: #065f46;
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .store-buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .store-dl-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1.5px solid transparent;
+        }
+
+        .store-dl-btn.android {
+            background-color: #065f46;
+            color: #ffffff;
+        }
+
+        .store-dl-btn.android:hover {
+            background-color: #047857;
+        }
+
+        .store-dl-btn.ios {
+            background-color: #ffffff;
+            color: #0f172a;
+            border-color: #94a3b8;
+        }
+
+        .store-dl-btn.ios:hover {
+            background-color: #f8fafc;
+            border-color: #065f46;
+        }
+
+        .guide-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            background-color: rgba(15, 23, 42, 0.65);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            flex-wrap: wrap;
-            font-size: 0.82rem;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .guide-modal-card {
+            width: 100%;
+            max-width: 420px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .guide-modal-title {
+            font-size: 1.05rem;
+            font-weight: 800;
             color: #065f46;
-            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .guide-steps-list {
+            padding-right: 18px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            color: #1e293b;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .error-banner {
@@ -1181,6 +1256,9 @@
             .filters-grid {
                 grid-template-columns: 1fr;
             }
+            .store-buttons-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -1257,8 +1335,17 @@
             </header>
             <div class="card-body">
                 <div id="installHintBox" class="install-banner">
-                    <span id="installHintText">لتثبيت التطبيق على الموبايل: من قائمة المتصفح اختر "إضافة إلى الشاشة الرئيسية".</span>
-                    <button type="button" id="installAppBtn" class="reset-btn hidden">تثبيت التطبيق</button>
+                    <div>لم تقم بتثبيت التطبيق بعد؟ اختر نظام هاتفك لتحميل التطبيق:</div>
+                    <div class="store-buttons-grid">
+                        <button type="button" id="downloadAndroidBtn" class="store-dl-btn android">
+                            <span>🤖</span>
+                            <span>تحميل التطبيق للأندرويد</span>
+                        </button>
+                        <button type="button" id="downloadIosBtn" class="store-dl-btn ios">
+                            <span></span>
+                            <span>تحميل التطبيق للآيفون</span>
+                        </button>
+                    </div>
                 </div>
                 <form id="loginForm">
                     <div class="form-group">
@@ -1274,6 +1361,15 @@
                 </form>
             </div>
         </main>
+    </div>
+
+    <!-- نافذة شرح تثبيت التطبيق للأندرويد والآيفون -->
+    <div id="installGuideModal" class="guide-modal-backdrop hidden">
+        <div class="guide-modal-card">
+            <div id="guideModalTitle" class="guide-modal-title">طريقة تحميل التطبيق</div>
+            <ol id="guideModalSteps" class="guide-steps-list"></ol>
+            <button type="button" id="closeGuideModalBtn" class="primary-action-btn">تم الفهم</button>
+        </div>
     </div>
 
     <!-- واجهة التطبيق الرئيسية -->
@@ -1570,13 +1666,11 @@
                 </header>
 
                 <div class="card-body">
-                    <!-- الزرين الأساسيين داخل البند -->
                     <div class="sub-tabs">
                         <button type="button" id="btnModeImagesToPdf" class="sub-tab-btn active">🖼️ تحويل مجموعة صور إلى ملف واحد PDF</button>
                         <button type="button" id="btnModeCompressPdf" class="sub-tab-btn">🗜️ ضغط ملفات PDF</button>
                     </div>
 
-                    <!-- الزر الأول: تحويل مجموعة صور إلى ملف واحد PDF -->
                     <div id="imagesToPdfPanel">
                         <div class="form-group">
                             <label for="pdfImagesInput" class="input-label">اختر مجموعة صور (يمكن تحديد أكثر من صورة)</label>
@@ -1603,7 +1697,6 @@
                         </div>
                     </div>
 
-                    <!-- الزر الثاني: ضغط ملفات PDF (ضغط قوي وضغط قوي جداً + تحميل تلقائي) -->
                     <div id="compressPdfPanel" class="hidden">
                         <div class="form-group">
                             <label for="compressPdfInput" class="input-label">اختر ملف PDF المراد ضغطه</label>
@@ -1807,7 +1900,7 @@
         (function setupPwa() {
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
                 const swCode = `
-                    const CACHE_NAME = 'fawry-vercel-v6';
+                    const CACHE_NAME = 'fawry-vercel-v7';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
@@ -2038,37 +2131,76 @@
                 return;
             }
 
+            /* أزرار تحميل التطبيق للأندرويد والآيفون لغير المثبتين */
             let deferredInstallPrompt = null;
-            const installAppBtn = document.getElementById('installAppBtn');
-            const installHintText = document.getElementById('installHintText');
             const installHintBox = document.getElementById('installHintBox');
+            const downloadAndroidBtn = document.getElementById('downloadAndroidBtn');
+            const downloadIosBtn = document.getElementById('downloadIosBtn');
+            const installGuideModal = document.getElementById('installGuideModal');
+            const guideModalTitle = document.getElementById('guideModalTitle');
+            const guideModalSteps = document.getElementById('guideModalSteps');
+            const closeGuideModalBtn = document.getElementById('closeGuideModalBtn');
 
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-            const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
 
             if (isStandalone) {
                 installHintBox.classList.add('hidden');
-            } else if (isIos) {
-                installHintText.textContent = 'على الآيفون (Safari): اضغط زر المشاركة ثم اختر "إضافة إلى الشاشة الرئيسية".';
             }
 
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredInstallPrompt = e;
-                installAppBtn.classList.remove('hidden');
-                installHintText.textContent = 'ثبّت التطبيق على موبايلك بضغطة واحدة:';
             });
 
-            installAppBtn.addEventListener('click', async () => {
-                if (!deferredInstallPrompt) return;
-                deferredInstallPrompt.prompt();
-                await deferredInstallPrompt.userChoice;
-                deferredInstallPrompt = null;
-                installAppBtn.classList.add('hidden');
+            function openInstallGuide(platform) {
+                if (platform === 'android') {
+                    guideModalTitle.textContent = 'تحميل وتثبيت التطبيق على الأندرويد';
+                    guideModalSteps.innerHTML = `
+                        <li>افتح قائمة المتصفح (الثلاث نقاط <strong>⋮</strong> أعلى أو أسفل الشاشة).</li>
+                        <li>اختر <strong>"تثبيت التطبيق" (Install app)</strong> أو <strong>"إضافة إلى الشاشة الرئيسية"</strong>.</li>
+                        <li>اضغط <strong>تثبيت</strong> وسيظهر التطبيق على شاشة هاتفك فوراً.</li>
+                    `;
+                } else {
+                    guideModalTitle.textContent = 'تحميل وتثبيت التطبيق على الآيفون';
+                    guideModalSteps.innerHTML = `
+                        <li>تأكد من فتح الصفحة داخل متصفح <strong>Safari</strong>.</li>
+                        <li>اضغط على زر <strong>المشاركة (Share)</strong> في شريط السفاري.</li>
+                        <li>انزل للأسفل واختر <strong>"إضافة إلى الشاشة الرئيسية" (Add to Home Screen)</strong> ثم اضغط <strong>إضافة</strong>.</li>
+                    `;
+                }
+                installGuideModal.classList.remove('hidden');
+            }
+
+            downloadAndroidBtn.addEventListener('click', async () => {
+                if (deferredInstallPrompt) {
+                    deferredInstallPrompt.prompt();
+                    const choice = await deferredInstallPrompt.userChoice;
+                    deferredInstallPrompt = null;
+                    if (choice?.outcome === 'accepted') {
+                        installHintBox.classList.add('hidden');
+                        return;
+                    }
+                }
+                openInstallGuide('android');
+            });
+
+            downloadIosBtn.addEventListener('click', () => {
+                openInstallGuide('ios');
+            });
+
+            closeGuideModalBtn.addEventListener('click', () => {
+                installGuideModal.classList.add('hidden');
+            });
+
+            installGuideModal.addEventListener('click', (e) => {
+                if (e.target === installGuideModal) {
+                    installGuideModal.classList.add('hidden');
+                }
             });
 
             window.addEventListener('appinstalled', () => {
                 installHintBox.classList.add('hidden');
+                installGuideModal.classList.add('hidden');
             });
 
             const MIN_AMOUNT = 350000;
@@ -2201,7 +2333,6 @@
 
             calculateAndRender();
 
-            /* منطق بند: تحويل صور إلى PDF وضغط ملفات */
             let selectedPdfImages = [];
             let selectedCompressionLevel = 'strong';
             let lastMergedBlobUrl = null;
@@ -2292,7 +2423,6 @@
                 document.getElementById('mergedPdfResultBox').classList.add('hidden');
             });
 
-            /* محرر الصور بمعاينة كبيرة + قص تلقائي/يدوي + تنقل */
             const scannerModal = document.getElementById('scannerModal');
             const scannerCanvas = document.getElementById('scannerCanvas');
             const manualCropBox = document.getElementById('manualCropBox');
@@ -2306,9 +2436,9 @@
 
             let activePageIdx = 0;
             let activeImgElement = null;
-            let cropMode = 'auto'; // 'auto' | 'manual'
-            let activeFilterPreset = 'original'; // 'original' | 'omnifix' | 'noshadow' | 'lighten'
-            let rotationLeftDeg = 0; // 0, -90, -180, -270
+            let cropMode = 'auto';
+            let activeFilterPreset = 'original';
+            let rotationLeftDeg = 0;
             let autoCropRect = { x: 0, y: 0, w: 1, h: 1 };
             let manualCropRect = { x: 0.08, y: 0.08, w: 0.84, h: 0.84 };
             let manualBoxVisible = false;
@@ -2526,7 +2656,6 @@
                 });
             });
 
-            /* تحريك وتغيير حجم إطار القص اليدوي */
             let dragState = null;
 
             manualCropBox.addEventListener('pointerdown', (e) => {
