@@ -17,6 +17,8 @@
     <link rel="icon" type="image/jpeg" href="./image_9208f7b4.jpg">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -192,7 +194,7 @@
             border: 2px solid #cbd5e1;
             border-radius: 14px;
             padding: 12px 10px;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 800;
             font-family: inherit;
             cursor: pointer;
@@ -201,6 +203,7 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
+            text-align: center;
         }
 
         .sub-tab-btn.active {
@@ -208,6 +211,63 @@
             color: #065f46;
             border-color: #059669;
             box-shadow: 0 4px 12px rgba(5, 150, 105, 0.14);
+        }
+
+        .level-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .level-btn {
+            background-color: #f8fafc;
+            color: #334155;
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 12px 10px;
+            font-size: 0.88rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .level-btn.active {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border-color: #059669;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.14);
+        }
+
+        .selected-images-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .selected-img-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .pdf-result-box {
+            margin-top: 16px;
+            background-color: #ecfdf5;
+            border: 2px solid #a7f3d0;
+            border-radius: 18px;
+            padding: 16px;
+            text-align: center;
         }
 
         .calculator-card {
@@ -460,6 +520,11 @@
             font-family: inherit;
             cursor: pointer;
             transition: opacity 0.2s ease, transform 0.1s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .primary-action-btn:hover {
@@ -945,6 +1010,7 @@
             <button type="button" id="tabBtnVisits" class="nav-tab-btn active" data-tab="visitsTab">📍 الزيارات</button>
             <button type="button" id="tabBtnRequests" class="nav-tab-btn" data-tab="requestsTab">📥 طلبات العملاء</button>
             <button type="button" id="tabBtnCalc" class="nav-tab-btn" data-tab="calcTab">▦ حاسبة القسط</button>
+            <button type="button" id="tabBtnPdfTools" class="nav-tab-btn" data-tab="pdfToolsTab">📄 تحويل صور إلى PDF وضغط ملفات</button>
             <button type="button" id="tabBtnAddEmp" class="nav-tab-btn hidden" data-tab="addEmpTab">➕ إضافة موظف</button>
             <button type="button" id="tabBtnEmpDb" class="nav-tab-btn hidden" data-tab="empDbTab">📋 قاعدة الموظفين</button>
         </div>
@@ -1212,6 +1278,82 @@
             </main>
         </div>
 
+        <!-- تبويب تحويل صور إلى PDF وضغط ملفات -->
+        <div id="pdfToolsTab" class="hidden">
+            <div class="calculator-card">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>فوري للتمويل • أدوات المستندات</span>
+                    </div>
+                    <h1>تحويل صور إلى PDF وضغط ملفات</h1>
+                    <p>دمج مجموعة صور في ملف PDF واحد أو ضغط ملفات PDF بمستويين</p>
+                </header>
+
+                <div class="card-body">
+                    <!-- الزرين الأساسيين داخل البند -->
+                    <div class="sub-tabs">
+                        <button type="button" id="btnModeImagesToPdf" class="sub-tab-btn active">🖼️ تحويل مجموعة صور إلى ملف واحد PDF</button>
+                        <button type="button" id="btnModeCompressPdf" class="sub-tab-btn">🗜️ ضغط ملفات PDF</button>
+                    </div>
+
+                    <!-- الزر الأول: تحويل مجموعة صور إلى ملف واحد PDF -->
+                    <div id="imagesToPdfPanel">
+                        <div class="form-group">
+                            <label for="pdfImagesInput" class="input-label">اختر مجموعة صور (يمكن تحديد أكثر من صورة)</label>
+                            <input type="file" id="pdfImagesInput" class="field-input" accept="image/*" multiple>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mergedPdfName" class="input-label">اسم ملف PDF الناتج</label>
+                            <input type="text" id="mergedPdfName" class="field-input" value="مستندات-العميل" placeholder="اكتب اسم الملف">
+                        </div>
+
+                        <div id="selectedImagesList" class="selected-images-list"></div>
+
+                        <div class="actions-row" style="margin-top: 12px;">
+                            <button type="button" id="clearImagesBtn" class="reset-btn">مسح الصور</button>
+                        </div>
+
+                        <button type="button" id="convertImagesToPdfBtn" class="primary-action-btn">تحويل الصور إلى ملف واحد PDF</button>
+                        <div id="imagesToPdfStatus" class="status-text"></div>
+
+                        <div id="mergedPdfResultBox" class="pdf-result-box hidden">
+                            <div style="font-weight: 800; color: #065f46; margin-bottom: 8px;" id="mergedPdfSummary"></div>
+                            <a id="downloadMergedPdfBtn" href="#" download="merged.pdf" class="primary-action-btn">⬇️ تحميل ملف PDF المجمّع</a>
+                        </div>
+                    </div>
+
+                    <!-- الزر الثاني: ضغط ملفات PDF (ضغط متوسط وضغط قوي) -->
+                    <div id="compressPdfPanel" class="hidden">
+                        <div class="form-group">
+                            <label for="compressPdfInput" class="input-label">اختر ملف PDF المراد ضغطه</label>
+                            <input type="file" id="compressPdfInput" class="field-input" accept="application/pdf,.pdf">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="input-label">اختر مستوى الضغط</label>
+                            <div class="level-grid" id="compressionLevelGroup">
+                                <button type="button" id="btnLevelMedium" class="level-btn active" data-level="medium">
+                                    ⚖️ ضغط متوسط
+                                </button>
+                                <button type="button" id="btnLevelStrong" class="level-btn" data-level="strong">
+                                    🔥 ضغط قوي
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" id="compressPdfActionBtn" class="primary-action-btn">بدء ضغط ملف PDF</button>
+                        <div id="compressPdfStatus" class="status-text"></div>
+
+                        <div id="compressedPdfResultBox" class="pdf-result-box hidden">
+                            <div style="font-weight: 800; color: #065f46; margin-bottom: 8px;" id="compressedPdfSummary"></div>
+                            <a id="downloadCompressedPdfBtn" href="#" download="compressed.pdf" class="primary-action-btn">⬇️ تحميل ملف PDF المضغوط</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- تبويب إضافة موظف -->
         <div id="addEmpTab" class="hidden calc-wrapper">
             <div class="calculator-card">
@@ -1296,7 +1438,7 @@
         (function setupPwa() {
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
                 const swCode = `
-                    const CACHE_NAME = 'fawry-vercel-v3';
+                    const CACHE_NAME = 'fawry-vercel-v4';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
@@ -1316,6 +1458,11 @@
         })();
 
         document.addEventListener('DOMContentLoaded', () => {
+            if (window.pdfjsLib && window.pdfjsLib.GlobalWorkerOptions) {
+                window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+                    'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+            }
+
             const splashScreen = document.getElementById('splashScreen');
             function hideSplash() {
                 if (!splashScreen) return;
@@ -1360,6 +1507,19 @@
             function normalizeDigits(val = '') {
                 const arabicDigits = '٠١٢٣٤٥٦٧٨٩';
                 return String(val).replace(/[٠-٩]/g, d => arabicDigits.indexOf(d)).replace(/[^\d]/g, '');
+            }
+
+            function formatBytes(bytes = 0) {
+                if (!bytes || bytes <= 0) return '0 KB';
+                if (bytes < 1024 * 1024) {
+                    return `${(bytes / 1024).toFixed(1)} KB`;
+                }
+                return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+            }
+
+            function sanitizePdfFileName(name = '', fallback = 'document') {
+                const clean = String(name || '').trim().replace(/[\\/:*?"<>|]/g, '-').replace(/\.pdf$/i, '');
+                return `${clean || fallback}.pdf`;
             }
 
             function getShortBaseUrl() {
@@ -1660,6 +1820,304 @@
 
             calculateAndRender();
 
+            /* منطق بند: تحويل صور إلى PDF وضغط ملفات */
+            let selectedPdfImages = [];
+            let selectedCompressionLevel = 'medium';
+            let lastMergedBlobUrl = null;
+            let lastCompressedBlobUrl = null;
+
+            const btnModeImagesToPdf = document.getElementById('btnModeImagesToPdf');
+            const btnModeCompressPdf = document.getElementById('btnModeCompressPdf');
+            const imagesToPdfPanel = document.getElementById('imagesToPdfPanel');
+            const compressPdfPanel = document.getElementById('compressPdfPanel');
+
+            btnModeImagesToPdf.addEventListener('click', () => {
+                btnModeImagesToPdf.classList.add('active');
+                btnModeCompressPdf.classList.remove('active');
+                imagesToPdfPanel.classList.remove('hidden');
+                compressPdfPanel.classList.add('hidden');
+            });
+
+            btnModeCompressPdf.addEventListener('click', () => {
+                btnModeCompressPdf.classList.add('active');
+                btnModeImagesToPdf.classList.remove('active');
+                compressPdfPanel.classList.remove('hidden');
+                imagesToPdfPanel.classList.add('hidden');
+            });
+
+            const pdfImagesInput = document.getElementById('pdfImagesInput');
+            const selectedImagesList = document.getElementById('selectedImagesList');
+
+            function renderSelectedImagesList() {
+                if (!selectedPdfImages.length) {
+                    selectedImagesList.innerHTML = '';
+                    return;
+                }
+                selectedImagesList.innerHTML = selectedPdfImages.map((file, idx) => `
+                    <div class="selected-img-item">
+                        <span>${idx + 1}. ${escapeHTML(file.name)} (${formatBytes(file.size)})</span>
+                        <div style="display:flex; gap:4px;">
+                            ${idx > 0 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, -1)">↑</button>` : ''}
+                            ${idx < selectedPdfImages.length - 1 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, 1)">↓</button>` : ''}
+                            <button type="button" class="delete-visit-btn" onclick="removePdfImage(${idx})">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            window.movePdfImage = function(index, delta) {
+                const target = index + delta;
+                if (target < 0 || target >= selectedPdfImages.length) return;
+                const temp = selectedPdfImages[index];
+                selectedPdfImages[index] = selectedPdfImages[target];
+                selectedPdfImages[target] = temp;
+                renderSelectedImagesList();
+            };
+
+            window.removePdfImage = function(index) {
+                selectedPdfImages.splice(index, 1);
+                renderSelectedImagesList();
+            };
+
+            pdfImagesInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files || []);
+                if (!files.length) return;
+                selectedPdfImages = [...selectedPdfImages, ...files];
+                pdfImagesInput.value = '';
+                renderSelectedImagesList();
+                document.getElementById('imagesToPdfStatus').textContent = '';
+            });
+
+            document.getElementById('clearImagesBtn').addEventListener('click', () => {
+                selectedPdfImages = [];
+                pdfImagesInput.value = '';
+                renderSelectedImagesList();
+                document.getElementById('imagesToPdfStatus').textContent = '';
+                document.getElementById('mergedPdfResultBox').classList.add('hidden');
+            });
+
+            function fileToDataUrl(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            function loadHtmlImage(src) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = reject;
+                    img.src = src;
+                });
+            }
+
+            async function convertImageFileToJpegBytes(file, quality = 0.88, maxDim = 2000) {
+                const dataUrl = await fileToDataUrl(file);
+                const img = await loadHtmlImage(dataUrl);
+                let width = img.naturalWidth || img.width;
+                let height = img.naturalHeight || img.height;
+
+                if (width > maxDim || height > maxDim) {
+                    const ratio = Math.min(maxDim / width, maxDim / height);
+                    width = Math.round(width * ratio);
+                    height = Math.round(height * ratio);
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, width, height);
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const jpegBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
+                const arrayBuffer = await jpegBlob.arrayBuffer();
+                return { bytes: new Uint8Array(arrayBuffer), width, height };
+            }
+
+            document.getElementById('convertImagesToPdfBtn').addEventListener('click', async () => {
+                const statusEl = document.getElementById('imagesToPdfStatus');
+                const btn = document.getElementById('convertImagesToPdfBtn');
+                const resultBox = document.getElementById('mergedPdfResultBox');
+                statusEl.textContent = '';
+                statusEl.className = 'status-text';
+
+                if (!selectedPdfImages.length) {
+                    statusEl.textContent = 'يرجى اختيار صورة واحدة على الأقل أولاً';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                if (!window.PDFLib || !window.PDFLib.PDFDocument) {
+                    statusEl.textContent = 'تعذر تحميل مكتبة إنشاء ملفات PDF، تحقق من الإنترنت وحدّث الصفحة';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = 'جاري تحويل الصور إلى ملف PDF...';
+
+                try {
+                    const pdfDoc = await window.PDFLib.PDFDocument.create();
+
+                    for (let i = 0; i < selectedPdfImages.length; i++) {
+                        statusEl.textContent = `جاري معالجة الصورة ${i + 1} من ${selectedPdfImages.length}...`;
+                        statusEl.className = 'status-text status-ok';
+
+                        const imgFile = selectedPdfImages[i];
+                        const { bytes, width, height } = await convertImageFileToJpegBytes(imgFile, 0.88, 2200);
+                        const embeddedImg = await pdfDoc.embedJpg(bytes);
+
+                        const page = pdfDoc.addPage([width, height]);
+                        page.drawImage(embeddedImg, {
+                            x: 0,
+                            y: 0,
+                            width: width,
+                            height: height
+                        });
+                    }
+
+                    const pdfBytes = await pdfDoc.save();
+                    if (lastMergedBlobUrl) {
+                        URL.revokeObjectURL(lastMergedBlobUrl);
+                    }
+                    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                    lastMergedBlobUrl = URL.createObjectURL(blob);
+
+                    const fileName = sanitizePdfFileName(document.getElementById('mergedPdfName').value, 'مستندات-العميل');
+                    const downloadLink = document.getElementById('downloadMergedPdfBtn');
+                    downloadLink.href = lastMergedBlobUrl;
+                    downloadLink.download = fileName;
+
+                    document.getElementById('mergedPdfSummary').textContent =
+                        `تم دمج ${selectedPdfImages.length} صور في ملف PDF واحد (${fileName}) — الحجم: ${formatBytes(blob.size)}`;
+                    resultBox.classList.remove('hidden');
+
+                    statusEl.textContent = 'تم إنشاء ملف PDF بنجاح';
+                    statusEl.className = 'status-text status-ok';
+                } catch (err) {
+                    statusEl.textContent = `حدث خطأ أثناء التحويل: ${err.message || err}`;
+                    statusEl.className = 'status-text status-err';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'تحويل الصور إلى ملف واحد PDF';
+                }
+            });
+
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedCompressionLevel = btn.getAttribute('data-level') || 'medium';
+                });
+            });
+
+            document.getElementById('compressPdfActionBtn').addEventListener('click', async () => {
+                const statusEl = document.getElementById('compressPdfStatus');
+                const btn = document.getElementById('compressPdfActionBtn');
+                const resultBox = document.getElementById('compressedPdfResultBox');
+                const fileInput = document.getElementById('compressPdfInput');
+                const pdfFile = fileInput.files[0];
+
+                statusEl.textContent = '';
+                statusEl.className = 'status-text';
+
+                if (!pdfFile) {
+                    statusEl.textContent = 'يرجى اختيار ملف PDF أولاً';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                if (!window.PDFLib || !window.pdfjsLib) {
+                    statusEl.textContent = 'تعذر تحميل مكتبات ضغط PDF، تحقق من الإنترنت وحدّث الصفحة';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                const isStrong = selectedCompressionLevel === 'strong';
+                const renderScale = isStrong ? 1.0 : 1.45;
+                const jpegQuality = isStrong ? 0.45 : 0.72;
+                const levelLabel = isStrong ? 'ضغط قوي' : 'ضغط متوسط';
+
+                btn.disabled = true;
+                btn.textContent = 'جاري ضغط ملف PDF...';
+
+                try {
+                    const arrayBuffer = await pdfFile.arrayBuffer();
+                    const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
+                    const srcPdf = await loadingTask.promise;
+                    const outPdf = await window.PDFLib.PDFDocument.create();
+
+                    const totalPages = srcPdf.numPages;
+
+                    for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                        statusEl.textContent = `جاري ضغط الصفحة ${pageNum} من ${totalPages} (${levelLabel})...`;
+                        statusEl.className = 'status-text status-ok';
+
+                        const page = await srcPdf.getPage(pageNum);
+                        const viewport = page.getViewport({ scale: renderScale });
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = Math.round(viewport.width);
+                        canvas.height = Math.round(viewport.height);
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                        await page.render({ canvasContext: ctx, viewport }).promise;
+
+                        const jpegBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', jpegQuality));
+                        const jpegBytes = new Uint8Array(await jpegBlob.arrayBuffer());
+                        const embeddedImg = await outPdf.embedJpg(jpegBytes);
+
+                        const origViewport = page.getViewport({ scale: 1.0 });
+                        const outPage = outPdf.addPage([origViewport.width, origViewport.height]);
+                        outPage.drawImage(embeddedImg, {
+                            x: 0,
+                            y: 0,
+                            width: origViewport.width,
+                            height: origViewport.height
+                        });
+                    }
+
+                    const compressedBytes = await outPdf.save();
+                    if (lastCompressedBlobUrl) {
+                        URL.revokeObjectURL(lastCompressedBlobUrl);
+                    }
+                    const compressedBlob = new Blob([compressedBytes], { type: 'application/pdf' });
+                    lastCompressedBlobUrl = URL.createObjectURL(compressedBlob);
+
+                    const baseName = pdfFile.name.replace(/\.pdf$/i, '');
+                    const outName = sanitizePdfFileName(`${baseName}-${isStrong ? 'ضغط-قوي' : 'ضغط-متوسط'}`);
+
+                    const downloadBtn = document.getElementById('downloadCompressedPdfBtn');
+                    downloadBtn.href = lastCompressedBlobUrl;
+                    downloadBtn.download = outName;
+
+                    const diffBytes = pdfFile.size - compressedBlob.size;
+                    const savingPercent = pdfFile.size > 0
+                        ? ((diffBytes / pdfFile.size) * 100).toFixed(1)
+                        : '0.0';
+
+                    document.getElementById('compressedPdfSummary').textContent =
+                        `المستوى: ${levelLabel} | الأصلي: ${formatBytes(pdfFile.size)} ← المضغوط: ${formatBytes(compressedBlob.size)} (توفير ${savingPercent}%)`;
+                    resultBox.classList.remove('hidden');
+
+                    statusEl.textContent = 'تم ضغط ملف PDF بنجاح';
+                    statusEl.className = 'status-text status-ok';
+                } catch (err) {
+                    statusEl.textContent = `تعذر ضغط الملف: ${err.message || err}`;
+                    statusEl.className = 'status-text status-err';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'بدء ضغط ملف PDF';
+                }
+            });
+
             let currentUser = null;
             let currentProfile = null;
             let allVisits = [];
@@ -1696,6 +2154,7 @@
                 visitsTab: 'tabBtnVisits',
                 requestsTab: 'tabBtnRequests',
                 calcTab: 'tabBtnCalc',
+                pdfToolsTab: 'tabBtnPdfTools',
                 addEmpTab: 'tabBtnAddEmp',
                 empDbTab: 'tabBtnEmpDb'
             };
@@ -1716,6 +2175,7 @@
             document.getElementById('tabBtnVisits').addEventListener('click', () => switchTab('visitsTab'));
             document.getElementById('tabBtnRequests').addEventListener('click', () => switchTab('requestsTab'));
             document.getElementById('tabBtnCalc').addEventListener('click', () => switchTab('calcTab'));
+            document.getElementById('tabBtnPdfTools').addEventListener('click', () => switchTab('pdfToolsTab'));
             document.getElementById('tabBtnAddEmp').addEventListener('click', () => switchTab('addEmpTab'));
             document.getElementById('tabBtnEmpDb').addEventListener('click', () => switchTab('empDbTab'));
 
@@ -1885,6 +2345,7 @@
                 document.getElementById('tabBtnVisits').classList.remove('hidden');
                 document.getElementById('tabBtnRequests').classList.remove('hidden');
                 document.getElementById('tabBtnCalc').classList.remove('hidden');
+                document.getElementById('tabBtnPdfTools').classList.remove('hidden');
                 document.getElementById('tabBtnAddEmp').classList.toggle('hidden', !isManager);
                 document.getElementById('tabBtnEmpDb').classList.toggle('hidden', !isManager);
                 document.getElementById('visitEntryCard').classList.toggle('hidden', isManager);
