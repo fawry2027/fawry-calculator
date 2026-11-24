@@ -440,6 +440,14 @@
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
         }
 
+        .date-filter-label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+
         .primary-action-btn {
             width: 100%;
             background: linear-gradient(135deg, #065f46 0%, #047857 100%);
@@ -1017,7 +1025,10 @@
                             <span class="section-title-dot"></span>
                             سجل الزيارات (<span id="visitsCount">0</span>)
                         </h2>
-                        <button type="button" id="exportExcelBtnManager" class="reset-btn hidden">تصدير Excel</button>
+                        <div class="actions-row" style="margin-bottom:0;">
+                            <button type="button" id="clearVisitFiltersBtn" class="reset-btn">تفريغ الفلاتر</button>
+                            <button type="button" id="exportExcelBtnManager" class="reset-btn hidden">تصدير Excel</button>
+                        </div>
                     </div>
 
                     <div class="filters-grid">
@@ -1030,6 +1041,14 @@
                             <option value="غير مهتم حالياً">غير مهتم حالياً</option>
                             <option value="إعادة متابعة">إعادة متابعة</option>
                         </select>
+                        <div>
+                            <label for="filterDateFrom" class="date-filter-label">من تاريخ</label>
+                            <input type="date" id="filterDateFrom" class="field-input">
+                        </div>
+                        <div>
+                            <label for="filterDateTo" class="date-filter-label">إلى تاريخ</label>
+                            <input type="date" id="filterDateTo" class="field-input">
+                        </div>
                         <select id="filterEmployee" class="field-select hidden">
                             <option value="">كل الموظفين</option>
                         </select>
@@ -1277,7 +1296,7 @@
         (function setupPwa() {
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
                 const swCode = `
-                    const CACHE_NAME = 'fawry-vercel-v2';
+                    const CACHE_NAME = 'fawry-vercel-v3';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
@@ -2044,11 +2063,16 @@
             function getFilteredVisits() {
                 const q = document.getElementById('filterSearch').value.trim().toLowerCase();
                 const resFilter = document.getElementById('filterResult').value;
+                const dateFrom = document.getElementById('filterDateFrom').value;
+                const dateTo = document.getElementById('filterDateTo').value;
                 const empFilter = document.getElementById('filterEmployee').value;
 
                 return allVisits.filter(v => {
                     if (resFilter && v.visit_result !== resFilter) return false;
                     if (empFilter && v.employee_name !== empFilter) return false;
+                    const vDate = (v.visit_date || '').slice(0, 10);
+                    if (dateFrom && (!vDate || vDate < dateFrom)) return false;
+                    if (dateTo && (!vDate || vDate > dateTo)) return false;
                     if (q) {
                         const hay = `${v.client_name || ''} ${v.client_phone || ''} ${v.activity_type || ''} ${v.employee_name || ''}`.toLowerCase();
                         if (!hay.includes(q)) return false;
@@ -2101,9 +2125,18 @@
                 }
             };
 
-            ['filterSearch', 'filterResult', 'filterEmployee'].forEach(id => {
+            ['filterSearch', 'filterResult', 'filterDateFrom', 'filterDateTo', 'filterEmployee'].forEach(id => {
                 document.getElementById(id).addEventListener('input', renderVisits);
                 document.getElementById(id).addEventListener('change', renderVisits);
+            });
+
+            document.getElementById('clearVisitFiltersBtn').addEventListener('click', () => {
+                document.getElementById('filterSearch').value = '';
+                document.getElementById('filterResult').value = '';
+                document.getElementById('filterDateFrom').value = '';
+                document.getElementById('filterDateTo').value = '';
+                document.getElementById('filterEmployee').value = '';
+                renderVisits();
             });
 
             function exportVisitsToExcel() {
