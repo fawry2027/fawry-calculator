@@ -1900,7 +1900,7 @@
         (function setupPwa() {
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
                 const swCode = `
-                    const CACHE_NAME = 'fawry-vercel-v8';
+                    const CACHE_NAME = 'fawry-vercel-v9';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
                     });
@@ -1998,16 +1998,18 @@
 
             function getShortBaseUrl() {
                 const rawPath = window.location.pathname || '/';
-                const normalizedPath = rawPath.replace(/\/+$/, '/');
-                const cleanPath = normalizedPath.endsWith('/index.html')
-                    ? normalizedPath.slice(0, -'index.html'.length)
-                    : normalizedPath;
-                return `${window.location.origin}${cleanPath}`;
+                const withoutFile = rawPath.replace(/[^/]*\.html?$/i, '');
+                const cleanPath = withoutFile.endsWith('/') ? withoutFile : `${withoutFile}/`;
+                const fullUrl = `${window.location.origin}${cleanPath}`;
+                return fullUrl
+                    .replace(/glalelgohary[^/]*\/?/gi, '')
+                    .replace(/fawry-calculator\/?/gi, '')
+                    .replace(/Fawry\.html\.html/gi, '');
             }
 
             function buildShortReferralUrl(empPhone, empId) {
                 const cleanPhone = normalizePhone(empPhone || '');
-                const base = getShortBaseUrl();
+                const base = getShortBaseUrl().replace(/([^:])\/\/+/g, '$1/');
                 if (cleanPhone.length === 11) {
                     return `${base}?r=${cleanPhone}`;
                 }
