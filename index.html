@@ -12,7 +12,7 @@
     <meta property="og:description" content="قدّم على تمويل مشروعك بسهولة وسرعة — سجّل بياناتك وسيتواصل معك مسؤول التمويل فوراً.">
     <meta property="og:image" content="./image_9208f7b4.jpg">
     <title>فوري للتمويل | طلب تمويل مشروعات</title>
-    <link rel="manifest" href="./manifest.json">
+    <link id="appManifest" rel="manifest">
     <link id="appleIconLink" rel="apple-touch-icon" href="./image_9208f7b4.jpg">
     <link rel="icon" type="image/jpeg" href="./image_9208f7b4.jpg">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1275,7 +1275,7 @@
         <main class="calculator-card">
             <header class="card-header">
                 <div class="top-signature">
-                    <span>فوري للتمويل • تمويل المشروعات</span>
+                    <span>فوري للتمويل  تمويل المشروعات</span>
                 </div>
                 <h1>طلب تمويل مشروعات</h1>
                 <p id="publicAdvisorBadge">سجّل بياناتك وسيتواصل معك مسؤول التمويل فوراً</p>
@@ -1328,7 +1328,7 @@
         <main class="calculator-card">
             <header class="card-header">
                 <div class="top-signature">
-                    <span>فوري للتمويل • نظام المتابعة</span>
+                    <span>فوري للتمويل  نظام المتابعة</span>
                 </div>
                 <h1>تسجيل الدخول</h1>
                 <p>أدخل رقم الموبايل وكلمة المرور للوصول إلى التطبيق</p>
@@ -1338,11 +1338,11 @@
                     <div>لم تقم بتثبيت التطبيق بعد؟ اختر نظام هاتفك لتحميل التطبيق:</div>
                     <div class="store-buttons-grid">
                         <button type="button" id="downloadAndroidBtn" class="store-dl-btn android">
-                            <span>🤖</span>
+                            <span>⟂⋪</span>
                             <span>تحميل التطبيق للأندرويد</span>
                         </button>
                         <button type="button" id="downloadIosBtn" class="store-dl-btn ios">
-                            <span></span>
+                            <span>܁</span>
                             <span>تحميل التطبيق للآيفون</span>
                         </button>
                     </div>
@@ -1354,7 +1354,7 @@
                     </div>
                     <div class="form-group">
                         <label for="loginPassword" class="input-label">كلمة المرور</label>
-                        <input type="password" id="loginPassword" class="field-input" placeholder="••••••••" required autocomplete="current-password">
+                        <input type="password" id="loginPassword" class="field-input" placeholder="" required autocomplete="current-password">
                     </div>
                     <button type="submit" id="loginBtn" class="primary-action-btn">دخول</button>
                     <div id="loginStatus" class="status-text status-err"></div>
@@ -1383,12 +1383,12 @@
         </div>
 
         <div id="navTabs" class="nav-tabs">
-            <button type="button" id="tabBtnVisits" class="nav-tab-btn active" data-tab="visitsTab">📍 الزيارات</button>
-            <button type="button" id="tabBtnRequests" class="nav-tab-btn" data-tab="requestsTab">📥 طلبات العملاء</button>
+            <button type="button" id="tabBtnVisits" class="nav-tab-btn active" data-tab="visitsTab">⟃⌳ الزيارات</button>
+            <button type="button" id="tabBtnRequests" class="nav-tab-btn" data-tab="requestsTab">⟃⌛ طلبات العملاء</button>
             <button type="button" id="tabBtnCalc" class="nav-tab-btn" data-tab="calcTab">▦ حاسبة القسط</button>
-            <button type="button" id="tabBtnPdfTools" class="nav-tab-btn" data-tab="pdfToolsTab">📄 تحويل صور إلى PDF وضغط ملفات</button>
+            <button type="button" id="tabBtnPdfTools" class="nav-tab-btn" data-tab="pdfToolsTab">⟃⌼ تحويل صور إلى PDF وضغط ملفات</button>
             <button type="button" id="tabBtnAddEmp" class="nav-tab-btn hidden" data-tab="addEmpTab">➕ إضافة موظف</button>
-            <button type="button" id="tabBtnEmpDb" class="nav-tab-btn hidden" data-tab="empDbTab">📋 قاعدة الموظفين</button>
+            <button type="button" id="tabBtnEmpDb" class="nav-tab-btn hidden" data-tab="empDbTab">⟃⌵ قاعدة الموظفين</button>
         </div>
 
         <!-- تبويب الزيارات -->
@@ -1396,7 +1396,7 @@
             <div id="visitEntryCard" class="calculator-card">
                 <header class="card-header">
                     <div class="top-signature">
-                        <span>فوري للتمويل • نظام المتابعة</span>
+                        <span>فوري للتمويل  نظام المتابعة</span>
                     </div>
                     <h1>تسجيل ومتابعة الزيارات</h1>
                     <p>إدخال بيانات الزيارة والاطلاع على السجل</p>
@@ -1455,7 +1455,7 @@
             <div class="calculator-card">
                 <div id="managerHeader" class="card-header hidden">
                     <div class="top-signature">
-                        <span>فوري للتمويل • نظام المتابعة</span>
+                        <span>فوري للتمويل  نظام المتابعة</span>
                     </div>
                     <h1>متابعة زيارات الموظفين</h1>
                     <p>عرض وفلترة وتصدير سجل الزيارات</p>
@@ -1504,15 +1504,15 @@
         <!-- تبويب طلبات العملاء -->
         <div id="requestsTab" class="hidden">
             <div class="sub-tabs">
-                <button type="button" id="subBtnShareLink" class="sub-tab-btn active">🔗 رابط التقديم</button>
-                <button type="button" id="subBtnSubmissions" class="sub-tab-btn">📋 تقديمات (<span id="requestsBadgeCount">0</span>)</button>
+                <button type="button" id="subBtnShareLink" class="sub-tab-btn active">⟃⋩ رابط التقديم</button>
+                <button type="button" id="subBtnSubmissions" class="sub-tab-btn">⟃?⌵ تقديمات (<span id="requestsBadgeCount">0</span>)</button>
             </div>
 
             <!-- الاختيار الأول: رابط التقديم للسوشيال ميديا -->
             <div id="shareLinkSubView" class="calculator-card">
                 <header class="card-header">
                     <div class="top-signature">
-                        <span>فوري للتمويل • نظام المتابعة</span>
+                        <span>فوري للتمويل  نظام المتابعة</span>
                     </div>
                     <h1>رابط التقديم الخاص</h1>
                     <p>انشر الرابط على السوشيال ميديا لتلقي طلبات العملاء مباشرة</p>
@@ -1523,7 +1523,7 @@
                             <div style="font-weight: 800; color: #065f46; font-size: 0.95rem;">رابط التقديم المختصر الخاص بك:</div>
                             <div id="myReferralUrlDisplay" class="ref-url-display"></div>
                             <div class="actions-row" style="margin-bottom: 0;">
-                                <button type="button" id="copyMyRefLinkBtn" class="primary-action-btn" style="flex:1;">📋 نسخ الرابط للنشر</button>
+                                <button type="button" id="copyMyRefLinkBtn" class="primary-action-btn" style="flex:1;">⟃⌵ نسخ الرابط للنشر</button>
                                 <a id="shareWhatsappRefBtn" href="#" target="_blank" class="whatsapp-btn" style="padding: 12px 16px;">واتساب</a>
                             </div>
                         </div>
@@ -1549,7 +1549,7 @@
             <div id="submissionsSubView" class="calculator-card hidden">
                 <header class="card-header">
                     <div class="top-signature">
-                        <span>فوري للتمويل • نظام المتابعة</span>
+                        <span>فوري للتمويل  نظام المتابعة</span>
                     </div>
                     <h1>تقديمات العملاء</h1>
                     <p id="submissionsSubtitle">العملاء المتقدمون عبر روابط السوشيال ميديا</p>
@@ -1583,7 +1583,7 @@
             <main class="calculator-card">
                 <header class="card-header">
                     <div class="top-signature">
-                        <span>فوري للتمويل • حاسبة القسط</span>
+                        <span>فوري للتمويل  حاسبة القسط</span>
                     </div>
                     <h1>حاسبة القسط الشهري</h1>
                     <p>حساب فوري بنظام الفائدة المتناقصة</p>
@@ -1610,7 +1610,7 @@
                         </div>
 
                         <div id="validationError" class="error-banner" role="alert">
-                            <span>⚠️</span>
+                            <span>⚠Ǳ</span>
                             <span id="validationText">يرجى إدخال مبلغ يتراوح بين 350,000 و 2,000,000 جنيه مصري.</span>
                         </div>
 
@@ -1659,7 +1659,7 @@
             <div class="calculator-card">
                 <header class="card-header">
                     <div class="top-signature">
-                        <span>فوري للتمويل • أدوات المستندات</span>
+                        <span>فوري للتمويل  أدوات المستندات</span>
                     </div>
                     <h1>تحويل صور إلى PDF وضغط ملفات</h1>
                     <p>معاينة كبيرة وتعديل الصور بقص تلقائي أو يدوي ودمجها في PDF أو ضغط ملفات PDF</p>
@@ -1667,8 +1667,8 @@
 
                 <div class="card-body">
                     <div class="sub-tabs">
-                        <button type="button" id="btnModeImagesToPdf" class="sub-tab-btn active">🖼️ تحويل مجموعة صور إلى ملف واحد PDF</button>
-                        <button type="button" id="btnModeCompressPdf" class="sub-tab-btn">🗜️ ضغط ملفات PDF</button>
+                        <button type="button" id="btnModeImagesToPdf" class="sub-tab-btn active">⟃≄Ǳ تحويل مجموعة صور إلى ملف واحد PDF</button>
+                        <button type="button" id="btnModeCompressPdf" class="sub-tab-btn">⟃∤Ǳ ضغط ملفات PDF</button>
                     </div>
 
                     <div id="imagesToPdfPanel">
@@ -1693,7 +1693,7 @@
 
                         <div id="mergedPdfResultBox" class="pdf-result-box hidden">
                             <div style="font-weight: 800; color: #065f46; margin-bottom: 8px;" id="mergedPdfSummary"></div>
-                            <a id="downloadMergedPdfBtn" href="#" download="merged.pdf" class="primary-action-btn">⬇️ تحميل ملف PDF المجمّع</a>
+                            <a id="downloadMergedPdfBtn" href="#" download="merged.pdf" class="primary-action-btn">⬇Ǳ تحميل ملف PDF المجمّع</a>
                         </div>
                     </div>
 
@@ -1707,7 +1707,7 @@
                             <label class="input-label">اختر مستوى الضغط</label>
                             <div class="level-grid" id="compressionLevelGroup">
                                 <button type="button" id="btnLevelStrong" class="level-btn active" data-level="strong">
-                                    🔥 ضغط قوي
+                                    ⟃⋛ ضغط قوي
                                 </button>
                                 <button type="button" id="btnLevelUltra" class="level-btn" data-level="ultra">
                                     ⚡ ضغط قوي جداً (حجم صغير جداً)
@@ -1720,7 +1720,7 @@
 
                         <div id="compressedPdfResultBox" class="pdf-result-box hidden">
                             <div style="font-weight: 800; color: #065f46; margin-bottom: 8px;" id="compressedPdfSummary"></div>
-                            <a id="downloadCompressedPdfBtn" href="#" download="compressed.pdf" class="primary-action-btn">⬇️ تحميل ملف PDF المضغوط</a>
+                            <a id="downloadCompressedPdfBtn" href="#" download="compressed.pdf" class="primary-action-btn">⬇Ǳ تحميل ملف PDF المضغوط</a>
                         </div>
                     </div>
                 </div>
@@ -1732,7 +1732,7 @@
             <div>
                 <div class="scanner-top-bar">
                     <div class="crop-mode-pills">
-                        <button type="button" id="modeAutoCropBtn" class="crop-mode-pill active">✂️ قص تلقائي</button>
+                        <button type="button" id="modeAutoCropBtn" class="crop-mode-pill active">✂Ǳ قص تلقائي</button>
                         <button type="button" id="modeManualCropBtn" class="crop-mode-pill">✋ قص يدوي</button>
                     </div>
                     <button type="button" id="closeScannerBtn" class="delete-visit-btn">إغلاق</button>
@@ -1821,7 +1821,7 @@
             <div class="calculator-card">
                 <header class="card-header">
                     <div class="top-signature">
-                        <span>فوري للتمويل • إدارة الفريق</span>
+                        <span>فوري للتمويل  إدارة الفريق</span>
                     </div>
                     <h1>إضافة موظف جديد</h1>
                     <p>إنشاء يوزر وباسوورد للموظف على النظام</p>
@@ -1852,7 +1852,7 @@
             <div class="calculator-card">
                 <header class="card-header">
                     <div class="top-signature">
-                        <span>فوري للتمويل • إدارة الفريق</span>
+                        <span>فوري للتمويل  إدارة الفريق</span>
                     </div>
                     <h1>قاعدة بيانات الموظفين</h1>
                     <p>عرض وتعديل اليوزر والباسوورد لكل الموظفين المضافين</p>
@@ -1897,25 +1897,42 @@
     </div>
 
     <script>
-        (function setupPwa() {
+        (function setupDynamicManifestAndPwa() {
+            const cleanBaseUrl = window.location.origin + window.location.pathname.replace(/index\.html$/, '');
+            const iconUrl = new URL('./image_9208f7b4.jpg', cleanBaseUrl).href;
+
+            const manifestObj = {
+                name: "فوري للتمويل | نظام المتابعة",
+                short_name: "فوري للتمويل",
+                start_url: cleanBaseUrl,
+                scope: cleanBaseUrl,
+                display: "standalone",
+                background_color: "#065f46",
+                theme_color: "#065f46",
+                dir: "rtl",
+                lang: "ar",
+                icons: [
+                    {
+                        src: iconUrl,
+                        sizes: "192x192",
+                        type: "image/jpeg"
+                    },
+                    {
+                        src: iconUrl,
+                        sizes: "512x512",
+                        type: "image/jpeg"
+                    }
+                ]
+            };
+
+            const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+            const manifestEl = document.getElementById('appManifest');
+            if (manifestEl) {
+                manifestEl.href = URL.createObjectURL(manifestBlob);
+            }
+
             if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-                const swCode = `
-                    const CACHE_NAME = 'fawry-vercel-v8';
-                    self.addEventListener('install', (e) => {
-                        self.skipWaiting();
-                    });
-                    self.addEventListener('activate', (e) => {
-                        e.waitUntil(self.clients.claim());
-                    });
-                    self.addEventListener('fetch', (e) => {
-                        if (e.request.method !== 'GET') return;
-                        e.respondWith(
-                            fetch(e.request).catch(() => caches.match(e.request))
-                        );
-                    });
-                `;
-                const swBlob = new Blob([swCode], { type: 'application/javascript' });
-                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
             }
         })();
 
@@ -2374,7 +2391,7 @@
                         <div class="selected-img-footer">
                             <span class="selected-img-meta">${idx + 1}. ${escapeHTML(item.file.name)} (${formatBytes(item.file.size)})</span>
                             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                                <button type="button" class="edit-pass-btn" onclick="openScannerForImage(${idx})">تعديل 📷</button>
+                                <button type="button" class="edit-pass-btn" onclick="openScannerForImage(${idx})">تعديل ⟃⌉</button>
                                 ${idx > 0 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, -1)">↑</button>` : ''}
                                 ${idx < selectedPdfImages.length - 1 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, 1)">↓</button>` : ''}
                                 <button type="button" class="delete-visit-btn" onclick="removePdfImage(${idx})">حذف</button>
@@ -3215,7 +3232,7 @@
                             <div class="visit-row"><span class="visit-key">الموظف:</span> ${escapeHTML(emp.full_name || '')} (${escapeHTML(emp.phone || '')})</div>
                             <div class="ref-url-display">${escapeHTML(link)}</div>
                             <div class="visit-card-actions" style="justify-content: flex-start;">
-                                <button type="button" class="reset-btn" onclick="copyTextDirect('${escapeHTML(link)}')">📋 نسخ الرابط</button>
+                                <button type="button" class="reset-btn" onclick="copyTextDirect('${escapeHTML(link)}')">⟃⌵ نسخ الرابط</button>
                                 <a href="${waShare}" target="_blank" class="whatsapp-btn">واتساب</a>
                             </div>
                         </div>
@@ -3460,7 +3477,7 @@
                             <div class="visit-row"><span class="visit-key">نتيجة الزيارة:</span> ${escapeHTML(v.visit_result || 'غير محددة')}</div>
                             ${v.photo_url ? `<img src="${escapeHTML(v.photo_url)}" alt="صورة الزيارة" class="visit-photo">` : ''}
                             <div class="visit-card-actions">
-                                ${cleanTel ? `<a href="tel:${escapeHTML(cleanTel)}" class="reset-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;">📞 اتصال</a>` : ''}
+                                ${cleanTel ? `<a href="tel:${escapeHTML(cleanTel)}" class="reset-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;">⟃⌢ اتصال</a>` : ''}
                                 ${waTel ? `<a href="https://wa.me/${escapeHTML(waTel)}" target="_blank" rel="noopener noreferrer" class="whatsapp-btn">واتساب</a>` : ''}
                                 ${canDelete ? `<button type="button" class="delete-visit-btn" onclick="deleteVisit('${v.id}')">حذف</button>` : ''}
                             </div>
@@ -3585,7 +3602,7 @@
                             <div class="visit-row"><span class="visit-key">المبلغ المطلوب:</span> <strong>${formattedAmt} ج.م</strong></div>
                             ${createdDate ? `<div class="visit-row"><span class="visit-key">تاريخ التقديم:</span> ${escapeHTML(createdDate)}</div>` : ''}
                             <div class="visit-card-actions">
-                                ${cleanTel ? `<a href="tel:${escapeHTML(cleanTel)}" class="reset-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;">📞 اتصال</a>` : ''}
+                                ${cleanTel ? `<a href="tel:${escapeHTML(cleanTel)}" class="reset-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;">⟃⌢ اتصال</a>` : ''}
                                 ${waTel ? `<a href="https://wa.me/${escapeHTML(waTel)}" target="_blank" class="whatsapp-btn">واتساب</a>` : ''}
                                 <button type="button" class="delete-visit-btn" onclick="deleteClientRequest('${r.id}')">حذف</button>
                             </div>
