@@ -2104,24 +2104,26 @@
                     if (!sb) return;
                     try {
                         if (referralPhoneParam) {
-                            const { data } = await sb
-                                .from('profiles')
-                                .select('id, full_name')
+                            const { data: credData } = await sb
+                                .from('employee_credentials')
+                                .select('user_id, full_name')
                                 .eq('phone', referralPhoneParam)
                                 .maybeSingle();
-                            if (data) {
-                                targetEmployeeId = data.id || targetEmployeeId;
-                                targetEmployeeName = (data.full_name || '').trim();
+                            if (credData) {
+                                targetEmployeeId = credData.user_id || targetEmployeeId;
+                                targetEmployeeName = (credData.full_name || '').trim();
                             }
-                            if (!targetEmployeeName) {
-                                const { data: credData } = await sb
-                                    .from('employee_credentials')
-                                    .select('user_id, full_name')
-                                    .eq('phone', referralPhoneParam)
+                            if (!targetEmployeeId || !targetEmployeeName) {
+                                const { data: profData } = await sb
+                                    .from('profiles')
+                                    .select('id, full_name, email')
+                                    .ilike('email', `${referralPhoneParam}@%`)
                                     .maybeSingle();
-                                if (credData) {
-                                    targetEmployeeId = credData.user_id || targetEmployeeId;
-                                    targetEmployeeName = (credData.full_name || '').trim();
+                                if (profData) {
+                                    targetEmployeeId = profData.id || targetEmployeeId;
+                                    if (!targetEmployeeName) {
+                                        targetEmployeeName = (profData.full_name || '').trim();
+                                    }
                                 }
                             }
                         } else if (referralEmpIdParam) {
@@ -2192,21 +2194,32 @@
                     btn.textContent = 'جاري إرسال طلبك...';
 
                     try {
-                        if (!targetEmployeeName) {
+                        if (!targetEmployeeId || !targetEmployeeName) {
                             await resolveReferralEmployee();
                         }
 
-                        const { error } = await sb.from('client_requests').insert([{
-                            employee_id: targetEmployeeId,
-                            employee_name: targetEmployeeName || referralPhoneParam || 'موظف',
-                            client_name: clientName,
-                            client_phone: clientPhone,
-                            activity_type: activityType,
-                            city: city,
-                            requested_amount: requestedAmount
-                        }]);
+                        const { error: rpcError } = await sb.rpc('submit_client_request', {
+                            p_employee_phone: referralPhoneParam || '',
+                            p_employee_id: referralEmpIdParam || targetEmployeeId || '',
+                            p_client_name: clientName,
+                            p_client_phone: clientPhone,
+                            p_activity_type: activityType,
+                            p_city: city,
+                            p_requested_amount: requestedAmount
+                        });
 
-                        if (error) throw error;
+                        if (rpcError) {
+                            const { error: insertError } = await sb.from('client_requests').insert([{
+                                employee_id: targetEmployeeId,
+                                employee_name: targetEmployeeName || referralPhoneParam || 'موظف',
+                                client_name: clientName,
+                                client_phone: clientPhone,
+                                activity_type: activityType,
+                                city: city,
+                                requested_amount: requestedAmount
+                            }]);
+                            if (insertError) throw insertError;
+                        }
 
                         document.getElementById('publicLeadForm').reset();
                         document.getElementById('publicLeadFormWrap').classList.add('hidden');
@@ -3708,15 +3721,26 @@
                 });
             }
 
+            function isRequestOwnedByEmployee(req, user = currentUser, profile = currentProfile) {
+                if (!user || !req) return false;
+                if (profile?.role === 'manager') return true;
+                if (req.employee_id && user.id && String(req.employee_id) === String(user.id)) return true;
+
+                const myPhone = normalizePhone(profile?.phone || (user.email || '').split('@')[0] || '');
+                const reqEmpRaw = String(req.employee_name || '').trim();
+                const reqEmpPhone = normalizePhone(reqEmpRaw);
+                if (myPhone && reqEmpPhone && myPhone === reqEmpPhone) return true;
+
+                const myName = String(profile?.full_name || '').trim().toLowerCase();
+                if (myName && reqEmpRaw && reqEmpRaw.toLowerCase() === myName) return true;
+
+                return false;
+            }
+
             function isRequestRelevantToCurrentUser(req) {
                 if (!currentUser) return false;
                 if (currentProfile?.role === 'manager') return true;
-                if (req.employee_id && req.employee_id === currentUser.id) return true;
-                const myPhone = normalizePhone(currentProfile?.phone || (currentUser.email || '').split('@')[0] || '');
-                const reqEmpNorm = normalizePhone(req.employee_name || '');
-                if (myPhone && reqEmpNorm && myPhone === reqEmpNorm) return true;
-                if (currentProfile?.full_name && req.employee_name && req.employee_name.trim() === currentProfile.full_name.trim()) return true;
-                return true;
+                return isRequestOwnedByEmployee(req, currentUser, currentProfile);
             }
 
             async function subscribeToLiveClientRequests() {
@@ -3780,7 +3804,13 @@
                 allRequests.forEach(item => {
                     if (item?.id) seenRequestIds.add(item.id);
                 });
-                document.getElementById('requestsBadgeCount').textContent = allRequests.length;
+
+                const isManager = currentProfile?.role === 'manager';
+                const visibleCount = isManager
+                    ? allRequests.length
+                    : allRequests.filter(r => isRequestOwnedByEmployee(r, currentUser, currentProfile)).length;
+
+                document.getElementById('requestsBadgeCount').textContent = visibleCount;
                 populateReqEmployeeFilter();
                 renderClientRequests();
             }
@@ -3813,12 +3843,17 @@
             }
 
             function getFilteredRequests() {
+                const isManager = currentProfile?.role === 'manager';
                 const q = document.getElementById('reqFilterSearch').value.trim().toLowerCase();
-                const empFilter = document.getElementById('reqFilterEmployee').value;
+                const empFilter = isManager ? document.getElementById('reqFilterEmployee').value : '';
 
-                return allRequests.filter(r => {
+                const baseList = isManager
+                    ? allRequests
+                    : allRequests.filter(r => isRequestOwnedByEmployee(r, currentUser, currentProfile));
+
+                return baseList.filter(r => {
                     const empDisplayName = getRequestEmployeeDisplayName(r);
-                    if (empFilter && empDisplayName !== empFilter) return false;
+                    if (isManager && empFilter && empDisplayName !== empFilter) return false;
                     if (q) {
                         const hay = `${r.client_name || ''} ${r.client_phone || ''} ${r.activity_type || ''} ${r.city || ''} ${empDisplayName}`.toLowerCase();
                         if (!hay.includes(q)) return false;
