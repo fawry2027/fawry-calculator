@@ -9,11 +9,11 @@
     <meta name="apple-mobile-web-app-title" content="فوري للتمويل">
     <meta name="mobile-web-app-capable" content="yes">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="[https://fawry2027.github.io/fawry-calculator/](https://fawry2027.github.io/fawry-calculator/)">
+    <meta property="og:url" content="https://fawry2027.github.io/fawry-calculator/">
     <meta property="og:title" content="فوري للتمويل | طلب تمويل مشروعات">
     <meta property="og:description" content="قدّم على تمويل مشروعك بسهولة وسرعة — سجّل بياناتك وسيتواصل معك مسؤول التمويل فوراً.">
-    <meta property="og:image" content="[https://fawry2027.github.io/fawry-calculator/image_9208f7b4.jpg](https://fawry2027.github.io/fawry-calculator/image_9208f7b4.jpg)">
-    <meta property="og:image:secure_url" content="[https://fawry2027.github.io/fawry-calculator/image_9208f7b4.jpg](https://fawry2027.github.io/fawry-calculator/image_9208f7b4.jpg)">
+    <meta property="og:image" content="https://fawry2027.github.io/fawry-calculator/image_9208f7b4.jpg">
+    <meta property="og:image:secure_url" content="https://fawry2027.github.io/fawry-calculator/image_9208f7b4.jpg">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -21,10 +21,10 @@
     <link id="appManifest" rel="manifest">
     <link id="appleIconLink" rel="apple-touch-icon" href="./image_9208f7b4.jpg">
     <link rel="icon" type="image/jpeg" href="./image_9208f7b4.jpg">
-    <script src="[https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2](https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2)"></script>
-    <script src="[https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js](https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js)"></script>
-    <script src="[https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js](https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js)"></script>
-    <script src="[https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js](https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js)"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -1263,4 +1263,2861 @@
                 grid-template-columns: 1fr;
             }
             .store-buttons-grid {
-                grid-
+                grid-template-columns: 1fr;
+            }
+        }
+    
+        .live-toast-banner {
+            position: fixed;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10002;
+            width: calc(100% - 28px);
+            max-width: 480px;
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+            color: #ffffff;
+            border: 2px solid #a7f3d0;
+            border-radius: 18px;
+            padding: 14px 16px;
+            box-shadow: 0 16px 36px rgba(6, 95, 70, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .live-toast-banner.hiding {
+            opacity: 0;
+            transform: translate(-50%, -12px);
+            pointer-events: none;
+        }
+
+        .live-toast-content {
+            flex: 1;
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        .live-toast-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .live-toast-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .live-toast-open-btn {
+            background-color: #ffffff;
+            color: #065f46;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .live-toast-close-btn {
+            background: rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 4px 8px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+        <div id="liveToastBanner" class="live-toast-banner hidden" role="status" aria-live="polite">
+        <div class="live-toast-content">
+            <div class="live-toast-title" id="liveToastTitle">طلب تمويل جديد!</div>
+            <div id="liveToastBody"></div>
+        </div>
+        <div class="live-toast-actions">
+            <button type="button" id="liveToastOpenBtn" class="live-toast-open-btn">عرض الطلب</button>
+            <button type="button" id="liveToastCloseBtn" class="live-toast-close-btn">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="splashScreen" class="splash-screen">
+        <img src="./image_9208f7b4.jpg" alt="فوري للتمويل" class="splash-logo">
+        <div class="splash-title">فوري للتمويل</div>
+        <div class="splash-spinner"></div>
+    </div>
+
+    <!-- واجهة تقديم العميل من رابط السوشيال ميديا -->
+    <div id="publicLeadSection" class="calc-wrapper hidden">
+        <main class="calculator-card">
+            <header class="card-header">
+                <div class="top-signature">
+                    <span>فوري للتمويل  تمويل المشروعات</span>
+                </div>
+                <h1>طلب تمويل مشروعات</h1>
+                <p id="publicAdvisorBadge">سجّل بياناتك وسيتواصل معك مسؤول التمويل فوراً</p>
+            </header>
+            <div class="card-body">
+                <div id="publicLeadFormWrap">
+                    <form id="publicLeadForm">
+                        <div class="form-group">
+                            <label for="leadName" class="input-label">الاسم بالكامل</label>
+                            <input type="text" id="leadName" class="field-input" placeholder="اكتب اسمك الثلاثي" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leadPhone" class="input-label">رقم الموبايل (11 رقماً)</label>
+                            <input type="tel" id="leadPhone" class="field-input" placeholder="01xxxxxxxxx" maxlength="11" minlength="11" inputmode="numeric" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leadActivity" class="input-label">نوع النشاط التجاري / المشروع</label>
+                            <input type="text" id="leadActivity" class="field-input" placeholder="مثال: سوبر ماركت، ملابس، صيدلية، ورشة..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leadCity" class="input-label">المدينة / المركز</label>
+                            <input type="text" id="leadCity" class="field-input" placeholder="مثال: المنيا، ملوي، سمالوط، سوهاج..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leadAmount" class="input-label">المبلغ المطلوب (جنيه مصري)</label>
+                            <input type="text" id="leadAmount" class="field-input" placeholder="مثال: 500,000" inputmode="numeric" required>
+                        </div>
+
+                        <button type="submit" id="submitLeadBtn" class="primary-action-btn">إرسال طلب التمويل</button>
+                        <div id="leadStatus" class="status-text"></div>
+                    </form>
+                </div>
+
+                <div id="publicLeadSuccessWrap" class="success-card-box hidden">
+                    <div style="font-size: 2.5rem; margin-bottom: 8px;">✅</div>
+                    <h2 style="color: #065f46; font-size: 1.25rem; margin-bottom: 8px;">تم استلام طلبك بنجاح!</h2>
+                    <p style="color: #047857; font-size: 0.92rem; margin-bottom: 16px;">شكراً لتواصلك معنا، تم تسجيل بياناتك لدى مسؤول التمويل المختص وسيتم التواصل معك في أقرب وقت.</p>
+                    <button type="button" id="sendAnotherLeadBtn" class="reset-btn">تقديم طلب جديد</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- واجهة تسجيل الدخول -->
+    <div id="loginSection" class="calc-wrapper">
+        <main class="calculator-card">
+            <header class="card-header">
+                <div class="top-signature">
+                    <span>فوري للتمويل  نظام المتابعة</span>
+                </div>
+                <h1>تسجيل الدخول</h1>
+                <p>أدخل رقم الموبايل وكلمة المرور للوصول إلى التطبيق</p>
+            </header>
+            <div class="card-body">
+                <div id="installHintBox" class="install-banner">
+                    <div>لم تقم بتثبيت التطبيق بعد؟ اختر نظام هاتفك لتحميل التطبيق:</div>
+                    <div class="store-buttons-grid">
+                        <button type="button" id="downloadAndroidBtn" class="store-dl-btn android">
+                            <span>🤖</span>
+                            <span>تحميل التطبيق للأندرويد</span>
+                        </button>
+                        <button type="button" id="downloadIosBtn" class="store-dl-btn ios">
+                            <span>🍎</span>
+                            <span>تحميل التطبيق للآيفون</span>
+                        </button>
+                    </div>
+                </div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginPhone" class="input-label">رقم الموبايل</label>
+                        <input type="text" id="loginPhone" class="field-input" placeholder="01xxxxxxxxx" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword" class="input-label">كلمة المرور</label>
+                        <input type="password" id="loginPassword" class="field-input" placeholder="" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" id="loginBtn" class="primary-action-btn">دخول</button>
+                    <div id="loginStatus" class="status-text status-err"></div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- نافذة شرح تثبيت التطبيق للأندرويد والآيفون -->
+    <div id="installGuideModal" class="guide-modal-backdrop hidden">
+        <div class="guide-modal-card">
+            <div id="guideModalTitle" class="guide-modal-title">طريقة تحميل التطبيق</div>
+            <ol id="guideModalSteps" class="guide-steps-list"></ol>
+            <button type="button" id="closeGuideModalBtn" class="primary-action-btn">تم الفهم</button>
+        </div>
+    </div>
+
+    <!-- واجهة التطبيق الرئيسية -->
+    <div id="appSection" class="app-wrapper hidden">
+        <div class="topbar">
+            <div class="user-info">
+                <span id="currentUserName">مستخدم</span>
+                <span id="currentUserRole" class="role-badge">موظف</span>
+            </div>
+            <button type="button" id="logoutBtn" class="logout-btn">تسجيل خروج</button>
+        </div>
+
+        <div id="navTabs" class="nav-tabs">
+            <button type="button" id="tabBtnVisits" class="nav-tab-btn active" data-tab="visitsTab">📋 الزيارات</button>
+            <button type="button" id="tabBtnRequests" class="nav-tab-btn" data-tab="requestsTab">⏳ طلبات العملاء</button>
+            <button type="button" id="tabBtnCalc" class="nav-tab-btn" data-tab="calcTab">🧮 حاسبة القسط</button>
+            <button type="button" id="tabBtnPdfTools" class="nav-tab-btn" data-tab="pdfToolsTab">📄 تحويل صور إلى PDF وضغط ملفات</button>
+            <button type="button" id="tabBtnAddEmp" class="nav-tab-btn hidden" data-tab="addEmpTab">➕ إضافة موظف</button>
+            <button type="button" id="tabBtnEmpDb" class="nav-tab-btn hidden" data-tab="empDbTab">👥 قاعدة الموظفين</button>
+        </div>
+
+        <!-- تبويب الزيارات -->
+        <div id="visitsTab">
+            <div id="visitEntryCard" class="calculator-card">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>فوري للتمويل  نظام المتابعة</span>
+                    </div>
+                    <h1>تسجيل ومتابعة الزيارات</h1>
+                    <p>إدخال بيانات الزيارة والاطلاع على السجل</p>
+                </header>
+
+                <div class="card-body">
+                    <div class="actions-row">
+                        <button type="button" id="clearVisitBtn" class="reset-btn">مسح البيانات</button>
+                        <button type="button" id="exportExcelBtnEmployee" class="reset-btn">تصدير Excel</button>
+                    </div>
+
+                    <form id="visitForm">
+                        <div class="form-group">
+                            <label for="clientName" class="input-label">اسم العميل</label>
+                            <input type="text" id="clientName" class="field-input" placeholder="اكتب اسم العميل" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="visitDate" class="input-label">تاريخ الزيارة</label>
+                            <input type="date" id="visitDate" class="field-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="clientPhone" class="input-label">رقم العميل</label>
+                            <input type="tel" id="clientPhone" class="field-input" placeholder="01xxxxxxxxx" maxlength="11" minlength="11" inputmode="numeric" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="activityType" class="input-label">نوع النشاط</label>
+                            <input type="text" id="activityType" class="field-input" placeholder="مثال: تجارة مواد غذائية، ملابس، صيدلية..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="visitResult" class="input-label">نتيجة الزيارة</label>
+                            <select id="visitResult" class="field-select" required>
+                                <option value="">اختر نتيجة الزيارة</option>
+                                <option value="مهتم بالتمويل">مهتم بالتمويل</option>
+                                <option value="جاري استكمال المستندات">جاري استكمال المستندات</option>
+                                <option value="تم التعاقد">تم التعاقد</option>
+                                <option value="غير مهتم حالياً">غير مهتم حالياً</option>
+                                <option value="إعادة متابعة">إعادة متابعة</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="visitPhoto" class="input-label">صورة الزيارة (اختياري)</label>
+                            <input type="file" id="visitPhoto" class="field-input" accept="image/*">
+                        </div>
+
+                        <button type="submit" id="saveVisitBtn" class="primary-action-btn">حفظ الزيارة</button>
+                        <div id="visitStatus" class="status-text"></div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="calculator-card">
+                <div id="managerHeader" class="card-header hidden">
+                    <div class="top-signature">
+                        <span>فوري للتمويل  نظام المتابعة</span>
+                    </div>
+                    <h1>متابعة زيارات الموظفين</h1>
+                    <p>عرض وفلترة وتصدير سجل الزيارات</p>
+                </div>
+
+                <div class="card-body">
+                    <div class="section-top-bar">
+                        <h2 class="section-title">
+                            <span class="section-title-dot"></span>
+                            سجل الزيارات (<span id="visitsCount">0</span>)
+                        </h2>
+                        <div class="actions-row" style="margin-bottom:0;">
+                            <button type="button" id="clearVisitFiltersBtn" class="reset-btn">تفريغ الفلاتر</button>
+                            <button type="button" id="exportExcelBtnManager" class="reset-btn hidden">تصدير Excel</button>
+                        </div>
+                    </div>
+
+                    <div class="filters-grid">
+                        <input type="text" id="filterSearch" class="field-input" placeholder="بحث بالاسم أو الرقم أو النشاط...">
+                        <select id="filterResult" class="field-select">
+                            <option value="">كل النتائج</option>
+                            <option value="مهتم بالتمويل">مهتم بالتمويل</option>
+                            <option value="جاري استكمال المستندات">جاري استكمال المستندات</option>
+                            <option value="تم التعاقد">تم التعاقد</option>
+                            <option value="غير مهتم حالياً">غير مهتم حالياً</option>
+                            <option value="إعادة متابعة">إعادة متابعة</option>
+                        </select>
+                        <div>
+                            <label for="filterDateFrom" class="date-filter-label">من تاريخ</label>
+                            <input type="date" id="filterDateFrom" class="field-input">
+                        </div>
+                        <div>
+                            <label for="filterDateTo" class="date-filter-label">إلى تاريخ</label>
+                            <input type="date" id="filterDateTo" class="field-input">
+                        </div>
+                        <select id="filterEmployee" class="field-select hidden">
+                            <option value="">كل الموظفين</option>
+                        </select>
+                    </div>
+
+                    <div id="visitsContainer" class="visits-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب طلبات العملاء -->
+        <div id="requestsTab" class="hidden">
+            <div class="sub-tabs">
+                <button type="button" id="subBtnShareLink" class="sub-tab-btn active">🔗 رابط التقديم</button>
+                <button type="button" id="subBtnSubmissions" class="sub-tab-btn">📥 تقديمات (<span id="requestsBadgeCount">0</span>)</button>
+            </div>
+
+            <!-- الاختيار الأول: رابط التقديم للسوشيال ميديا -->
+            <div id="shareLinkSubView" class="calculator-card">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>فوري للتمويل  نظام المتابعة</span>
+                    </div>
+                    <h1>رابط التقديم الخاص</h1>
+                    <p>انشر الرابط على السوشيال ميديا لتلقي طلبات العملاء مباشرة</p>
+                </header>
+                <div class="card-body">
+                    <div id="employeePersonalLinkBox">
+                        <div class="ref-link-box">
+                            <div style="font-weight: 800; color: #065f46; font-size: 0.95rem;">رابط التقديم المختصر الخاص بك:</div>
+                            <div id="myReferralUrlDisplay" class="ref-url-display"></div>
+                            <div class="actions-row" style="margin-bottom: 0;">
+                                <button type="button" id="copyMyRefLinkBtn" class="primary-action-btn" style="flex:1;">📋 نسخ الرابط للنشر</button>
+                                <a id="shareWhatsappRefBtn" href="#" target="_blank" class="whatsapp-btn" style="padding: 12px 16px;">واتساب</a>
+                            </div>
+                        </div>
+                        <div id="copyRefStatus" class="status-text status-ok"></div>
+                        <p style="font-size: 0.85rem; color: #475569; margin-top: 8px;">
+                            أي عميل يدخل على هذا الرابط ويملأ بياناته (الاسم، الموبايل، النشاط، المدينة، المبلغ المطلوب) سيصل طلبه فوراً إلى قسم <strong>تقديمات</strong> لديك ولدى المدير.
+                        </p>
+                    </div>
+
+                    <div id="managerAllLinksBox" class="hidden">
+                        <div class="section-top-bar">
+                            <h2 class="section-title">
+                                <span class="section-title-dot"></span>
+                                روابط التقديم المختصرة للموظفين
+                            </h2>
+                        </div>
+                        <div id="managerLinksContainer" class="visits-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الاختيار الثاني: تقديمات العملاء -->
+            <div id="submissionsSubView" class="calculator-card hidden">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>فوري للتمويل  نظام المتابعة</span>
+                    </div>
+                    <h1>تقديمات العملاء</h1>
+                    <p id="submissionsSubtitle">العملاء المتقدمون عبر روابط السوشيال ميديا</p>
+                </header>
+                <div class="card-body">
+                    <div class="section-top-bar">
+                        <h2 class="section-title">
+                            <span class="section-title-dot"></span>
+                            إجمالي الطلبات (<span id="requestsCount">0</span>)
+                        </h2>
+                        <div class="actions-row" style="margin-bottom:0;">
+                            <button type="button" id="enableNotifBtn" class="reset-btn">تفعيل الإشعارات</button>
+                            <button type="button" id="refreshRequestsBtn" class="reset-btn">تحديث</button>
+                            <button type="button" id="exportRequestsExcelBtn" class="reset-btn">تصدير Excel</button>
+                        </div>
+                    </div>
+
+                    <div class="filters-grid">
+                        <input type="text" id="reqFilterSearch" class="field-input" placeholder="بحث بالاسم أو الرقم أو المدينة أو النشاط...">
+                        <select id="reqFilterEmployee" class="field-select hidden">
+                            <option value="">كل الموظفين</option>
+                        </select>
+                    </div>
+
+                    <div id="requestsContainer" class="visits-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب حاسبة القسط -->
+        <div id="calcTab" class="hidden calc-wrapper">
+            <main class="calculator-card">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>فوري للتمويل  حاسبة القسط</span>
+                    </div>
+                    <h1>حاسبة القسط الشهري</h1>
+                    <p>حساب فوري بنظام الفائدة المتناقصة</p>
+                </header>
+
+                <div class="card-body">
+                    <div class="section-top-bar">
+                        <h2 class="section-title">
+                            <span class="section-title-dot"></span>
+                            بيانات التمويل المطلوب
+                        </h2>
+                        <button type="button" id="resetBtn" class="reset-btn">إعادة ضبط</button>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="amountInput" class="input-label" style="margin-bottom:0;">مبلغ التمويل</label>
+                            <span class="range-hint">350,000 - 2,000,000</span>
+                        </div>
+
+                        <div class="amount-input-box">
+                            <input type="text" id="amountInput" class="amount-input" inputmode="numeric" value="500,000" autocomplete="off" aria-label="مبلغ التمويل">
+                            <span class="currency-badge">ج.م</span>
+                        </div>
+
+                        <div id="validationError" class="error-banner" role="alert">
+                            <span>⚠️</span>
+                            <span id="validationText">يرجى إدخال مبلغ يتراوح بين 350,000 و 2,000,000 جنيه مصري.</span>
+                        </div>
+
+                        <div class="slider-container">
+                            <input type="range" id="amountSlider" class="custom-slider" min="350000" max="2000000" step="10000" value="500000" aria-label="شريط تحديد مبلغ التمويل">
+                            <div class="quick-marks">
+                                <button type="button" class="quick-mark-btn" data-amount="350000">350 ألف</button>
+                                <button type="button" class="quick-mark-btn" data-amount="500000">500 ألف</button>
+                                <button type="button" class="quick-mark-btn" data-amount="1000000">1 مليون</button>
+                                <button type="button" class="quick-mark-btn" data-amount="2000000">2 مليون</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="input-label">مدة السداد</label>
+                        <div class="duration-grid" id="durationGroup">
+                            <button type="button" class="duration-btn active" data-months="12">
+                                <span class="months-num">12</span>
+                                <span class="months-text">شهر</span>
+                            </button>
+                            <button type="button" class="duration-btn" data-months="18">
+                                <span class="months-num">18</span>
+                                <span class="months-text">شهر</span>
+                            </button>
+                            <button type="button" class="duration-btn" data-months="24">
+                                <span class="months-num">24</span>
+                                <span class="months-text">شهر</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="result-box">
+                        <div class="result-label">القسط الشهري</div>
+                        <div class="result-value-row">
+                            <span id="monthlyInstallmentDisplay" class="result-amount">36,219.38</span>
+                            <span class="result-unit">جنيه / شهرياً</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- تبويب تحويل صور إلى PDF وضغط ملفات -->
+        <div id="pdfToolsTab" class="hidden">
+            <div class="calculator-card">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>فوري للتمويل  أدوات المستندات</span>
+                    </div>
+                    <h1>تحويل صور إلى PDF وضغط ملفات</h1>
+                    <p>معاينة كبيرة وتعديل الصور بقص تلقائي أو يدوي ودمجها في PDF أو ضغط ملفات PDF</p>
+                </header>
+
+                <div class="card-body">
+                    <div class="sub-tabs">
+                        <button type="button" id="btnModeImagesToPdf" class="sub-tab-btn active">🖼️ تحويل مجموعة صور إلى ملف واحد PDF</button>
+                        <button type="button" id="btnModeCompressPdf" class="sub-tab-btn">🗜️ ضغط ملفات PDF</button>
+                    </div>
+
+                    <div id="imagesToPdfPanel">
+                        <div class="form-group">
+                            <label for="pdfImagesInput" class="input-label">اختر مجموعة صور (يمكن تحديد أكثر من صورة)</label>
+                            <input type="file" id="pdfImagesInput" class="field-input" accept="image/*" multiple>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mergedPdfName" class="input-label">اسم ملف PDF الناتج</label>
+                            <input type="text" id="mergedPdfName" class="field-input" value="مستندات-العميل" placeholder="اكتب اسم الملف">
+                        </div>
+
+                        <div id="selectedImagesList" class="selected-images-list"></div>
+
+                        <div class="actions-row" style="margin-top: 12px;">
+                            <button type="button" id="clearImagesBtn" class="reset-btn">مسح الصور</button>
+                        </div>
+
+                        <button type="button" id="convertImagesToPdfBtn" class="primary-action-btn">تحويل الصور إلى ملف واحد PDF</button>
+                        <div id="imagesToPdfStatus" class="status-text"></div>
+
+                        <div id="mergedPdfResultBox" class="pdf-result-box hidden">
+                            <div style="font-weight: 800; color: #065f46; margin-bottom: 8px;" id="mergedPdfSummary"></div>
+                            <a id="downloadMergedPdfBtn" href="#" download="merged.pdf" class="primary-action-btn">⬇️ تحميل ملف PDF المجمّع</a>
+                        </div>
+                    </div>
+
+                    <div id="compressPdfPanel" class="hidden">
+                        <div class="form-group">
+                            <label for="compressPdfInput" class="input-label">اختر ملف PDF المراد ضغطه</label>
+                            <input type="file" id="compressPdfInput" class="field-input" accept="application/pdf,.pdf">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="input-label">اختر مستوى الضغط</label>
+                            <div class="level-grid" id="compressionLevelGroup">
+                                <button type="button" id="btnLevelStrong" class="level-btn active" data-level="strong">
+                                    🗜️ ضغط قوي
+                                </button>
+                                <button type="button" id="btnLevelUltra" class="level-btn" data-level="ultra">
+                                    ⚡ ضغط قوي جداً (حجم صغير جداً)
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" id="compressPdfActionBtn" class="primary-action-btn">ضغط وتحميل ملف PDF تلقائياً</button>
+                        <div id="compressPdfStatus" class="status-text"></div>
+
+                        <div id="compressedPdfResultBox" class="pdf-result-box hidden">
+                            <div style="font-weight: 800; color: #065f46; margin-bottom: 8px;" id="compressedPdfSummary"></div>
+                            <a id="downloadCompressedPdfBtn" href="#" download="compressed.pdf" class="primary-action-btn">⬇️ تحميل ملف PDF المضغوط</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- نافذة تعديل الصور ومعاينة وقص تلقائي/يدوي وتنقل -->
+        <div id="scannerModal" class="scanner-modal hidden">
+            <div>
+                <div class="scanner-top-bar">
+                    <div class="crop-mode-pills">
+                        <button type="button" id="modeAutoCropBtn" class="crop-mode-pill active">✂️ قص تلقائي</button>
+                        <button type="button" id="modeManualCropBtn" class="crop-mode-pill">✋ قص يدوي</button>
+                    </div>
+                    <button type="button" id="closeScannerBtn" class="delete-visit-btn">إغلاق</button>
+                </div>
+
+                <div class="scanner-stage-wrap">
+                    <div id="scannerCanvasBox" class="scanner-canvas-box">
+                        <canvas id="scannerCanvas"></canvas>
+                        <div id="manualCropBox" class="manual-crop-box hidden">
+                            <div id="manualCropHandle" class="manual-crop-handle"></div>
+                        </div>
+                    </div>
+
+                    <div class="page-pager-bar">
+                        <button type="button" id="prevPageBtn" class="pager-arrow-btn">◀</button>
+                        <span id="pageIndicatorText">1/1</span>
+                        <button type="button" id="nextPageBtn" class="pager-arrow-btn">▶</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scanner-bottom-panel">
+                <div class="apply-all-row">
+                    <label class="apply-all-label">
+                        <input type="checkbox" id="applyToAllPagesCheck">
+                        <span>تطبيق على كل الصور (Apply to All Pages)</span>
+                    </label>
+                </div>
+
+
+
+                <div class="scanner-dock-bar">
+                    <div class="dock-tools-group">
+                        <button type="button" id="dockRotateLeftBtn" class="dock-tool-btn">
+                            <span>↺</span>
+                            <span>Left</span>
+                        </button>
+                        <button type="button" id="dockCropBtn" class="dock-tool-btn">
+                            <span>✂</span>
+                            <span>Crop</span>
+                        </button>
+                        <button type="button" id="dockAutoEnhanceBtn" class="dock-tool-btn">
+                            <span>✨</span>
+                            <span>Auto Crop</span>
+                        </button>
+                    </div>
+                    <button type="button" id="applyScannerEditBtn" class="dock-check-btn" title="حفظ التعديلات">✓</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب إضافة موظف -->
+        <div id="addEmpTab" class="hidden calc-wrapper">
+            <div class="calculator-card">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>فوري للتمويل  إدارة الفريق</span>
+                    </div>
+                    <h1>إضافة موظف جديد</h1>
+                    <p>إنشاء يوزر وباسوورد للموظف على النظام</p>
+                </header>
+                <div class="card-body">
+                    <form id="createEmployeeForm">
+                        <div class="form-group">
+                            <label for="empName" class="input-label">اسم الموظف</label>
+                            <input type="text" id="empName" class="field-input" placeholder="الاسم الكامل للموظف" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="empPhone" class="input-label">رقم الموبايل / اليوزر (11 رقماً)</label>
+                            <input type="tel" id="empPhone" class="field-input" placeholder="01xxxxxxxxx" maxlength="11" minlength="11" inputmode="numeric" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="empPassword" class="input-label">كلمة المرور (6 أحرف أو أرقام فأكثر)</label>
+                            <input type="text" id="empPassword" class="field-input" placeholder="اكتب كلمة مرور الموظف" minlength="6" required>
+                        </div>
+                        <button type="submit" id="createEmpBtn" class="primary-action-btn">إنشاء حساب الموظف</button>
+                        <div id="empStatus" class="status-text"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب قاعدة الموظفين -->
+        <div id="empDbTab" class="hidden">
+            <div class="calculator-card">
+                <header class="card-header">
+                    <div class="top-signature">
+                        <span>فوري للتمويل  إدارة الفريق</span>
+                    </div>
+                    <h1>قاعدة بيانات الموظفين</h1>
+                    <p>عرض وتعديل اليوزر والباسوورد لكل الموظفين المضافين</p>
+                </header>
+                <div class="card-body">
+                    <div class="section-top-bar">
+                        <h2 class="section-title">
+                            <span class="section-title-dot"></span>
+                            قائمة الموظفين (<span id="empCount">0</span>)
+                        </h2>
+                        <div class="actions-row" style="margin-bottom:0;">
+                            <button type="button" id="refreshEmpBtn" class="reset-btn">تحديث القائمة</button>
+                            <button type="button" id="exportEmpExcelBtn" class="reset-btn">تصدير Excel</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <input type="text" id="empSearchInput" class="field-input" placeholder="بحث باسم الموظف أو رقم الموبايل...">
+                    </div>
+
+                    <div class="emp-table-wrap">
+                        <table class="emp-table">
+                            <thead>
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>اليوزر (رقم الموبايل)</th>
+                                    <th>الباسوورد</th>
+                                    <th>إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="empTableBody">
+                                <tr>
+                                    <td colspan="4" style="text-align:center; color:#64748b; padding:16px;">جاري التحميل...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="empDbStatus" class="status-text"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function setupDynamicManifestAndPwa() {
+            const cleanBaseUrl = window.location.origin + window.location.pathname.replace(/index\.html$/, '');
+            const iconUrl = new URL('./image_9208f7b4.jpg', cleanBaseUrl).href;
+
+            const manifestObj = {
+                name: "فوري للتمويل | نظام المتابعة",
+                short_name: "فوري للتمويل",
+                start_url: cleanBaseUrl,
+                scope: cleanBaseUrl,
+                display: "standalone",
+                background_color: "#065f46",
+                theme_color: "#065f46",
+                dir: "rtl",
+                lang: "ar",
+                icons: [
+                    {
+                        src: iconUrl,
+                        sizes: "192x192",
+                        type: "image/jpeg"
+                    },
+                    {
+                        src: iconUrl,
+                        sizes: "512x512",
+                        type: "image/jpeg"
+                    }
+                ]
+            };
+
+            const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+            const manifestEl = document.getElementById('appManifest');
+            if (manifestEl) {
+                manifestEl.href = URL.createObjectURL(manifestBlob);
+            }
+
+            if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
+        })();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.pdfjsLib && window.pdfjsLib.GlobalWorkerOptions) {
+                window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+                    'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+            }
+
+            const splashScreen = document.getElementById('splashScreen');
+            function hideSplash() {
+                if (!splashScreen) return;
+                splashScreen.classList.add('fade-out');
+                setTimeout(() => {
+                    splashScreen.classList.add('hidden');
+                }, 400);
+            }
+            setTimeout(hideSplash, 700);
+
+            const SUPABASE_URL = 'https://xuuddxaqkmblotqvxard.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1dWRkeGFxa21ibG90cXZ4YXJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUyNjQyNDgsImV4cCI6MjExMDg0MDI0OH0.aBjKy59KwghDczH3jnAreE355u_F-NpHsum6TKq99Xs';
+            const PHOTO_BUCKET = 'visit-photos';
+            const CACHED_SESSION_KEY = 'fawry_saved_session_v1';
+
+            const sb = (window.supabase && typeof window.supabase.createClient === 'function')
+                ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: {
+                        storage: window.localStorage,
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true
+                    }
+                })
+                : null;
+
+            function escapeHTML(str = '') {
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
+
+            function normalizePhone(phone = '') {
+                const arabicDigits = '٠١٢٣٤٥٦٧٨٩';
+                const converted = String(phone).replace(/[٠-٩]/g, d => arabicDigits.indexOf(d));
+                return converted.replace(/[^0-9]/g, '');
+            }
+
+            function normalizeDigits(val = '') {
+                const arabicDigits = '٠١٢٣٤٥٦٧٨٩';
+                return String(val).replace(/[٠-٩]/g, d => arabicDigits.indexOf(d)).replace(/[^\d]/g, '');
+            }
+
+            function formatBytes(bytes = 0) {
+                if (!bytes || bytes <= 0) return '0 KB';
+                if (bytes < 1024 * 1024) {
+                    return `${(bytes / 1024).toFixed(1)} KB`;
+                }
+                return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+            }
+
+            function sanitizePdfFileName(name = '', fallback = 'document') {
+                const clean = String(name || '').trim().replace(/[\\/:*?"<>|]/g, '-').replace(/\.pdf$/i, '');
+                return `${clean || fallback}.pdf`;
+            }
+
+            function triggerAutoDownload(url, fileName) {
+                const tempLink = document.createElement('a');
+                tempLink.href = url;
+                tempLink.download = fileName;
+                tempLink.style.display = 'none';
+                document.body.appendChild(tempLink);
+                tempLink.click();
+                setTimeout(() => {
+                    document.body.removeChild(tempLink);
+                }, 300);
+            }
+
+            function getShortBaseUrl() {
+                const rawPath = window.location.pathname || '/';
+                const normalizedPath = rawPath.replace(/\/+$/, '/');
+                const cleanPath = normalizedPath.endsWith('/index.html')
+                    ? normalizedPath.slice(0, -'index.html'.length)
+                    : normalizedPath;
+                return `${window.location.origin}${cleanPath}`;
+            }
+
+            function buildShortReferralUrl(empPhone, empId) {
+                const cleanPhone = normalizePhone(empPhone || '');
+                const base = getShortBaseUrl();
+                if (cleanPhone.length === 11) {
+                    return `${base}?r=${cleanPhone}`;
+                }
+                return `${base}?ref=${empId}`;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const referralPhoneParam = normalizePhone(urlParams.get('r') || '');
+            const referralEmpIdParam = urlParams.get('ref') || '';
+
+            if (referralPhoneParam || referralEmpIdParam) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('appSection').classList.add('hidden');
+                document.getElementById('publicLeadSection').classList.remove('hidden');
+
+                let targetEmployeeId = referralEmpIdParam || null;
+                let targetEmployeeName = '';
+
+                async function resolveReferralEmployee() {
+                    if (!sb) return;
+                    try {
+                        if (referralPhoneParam) {
+                            const { data } = await sb
+                                .from('profiles')
+                                .select('id, full_name')
+                                .eq('phone', referralPhoneParam)
+                                .maybeSingle();
+                            if (data) {
+                                targetEmployeeId = data.id || targetEmployeeId;
+                                targetEmployeeName = (data.full_name || '').trim();
+                            }
+                            if (!targetEmployeeName) {
+                                const { data: credData } = await sb
+                                    .from('employee_credentials')
+                                    .select('user_id, full_name')
+                                    .eq('phone', referralPhoneParam)
+                                    .maybeSingle();
+                                if (credData) {
+                                    targetEmployeeId = credData.user_id || targetEmployeeId;
+                                    targetEmployeeName = (credData.full_name || '').trim();
+                                }
+                            }
+                        } else if (referralEmpIdParam) {
+                            const { data } = await sb
+                                .from('profiles')
+                                .select('id, full_name')
+                                .eq('id', referralEmpIdParam)
+                                .maybeSingle();
+                            if (data) {
+                                targetEmployeeId = data.id || targetEmployeeId;
+                                targetEmployeeName = (data.full_name || '').trim();
+                            }
+                        }
+
+                        if (targetEmployeeName) {
+                            document.getElementById('publicAdvisorBadge').textContent = `مسؤول التمويل: ${targetEmployeeName}`;
+                        }
+                    } catch (_) {}
+                }
+
+                resolveReferralEmployee();
+
+                const leadPhoneInput = document.getElementById('leadPhone');
+                leadPhoneInput.addEventListener('input', (e) => {
+                    e.target.value = normalizePhone(e.target.value).slice(0, 11);
+                });
+
+                const leadAmountInput = document.getElementById('leadAmount');
+                leadAmountInput.addEventListener('input', (e) => {
+                    const digits = normalizeDigits(e.target.value);
+                    e.target.value = digits ? parseInt(digits, 10).toLocaleString('en-US') : '';
+                });
+
+                document.getElementById('publicLeadForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const statusEl = document.getElementById('leadStatus');
+                    const btn = document.getElementById('submitLeadBtn');
+                    statusEl.textContent = '';
+                    statusEl.className = 'status-text';
+
+                    const clientName = document.getElementById('leadName').value.trim();
+                    const clientPhone = normalizePhone(leadPhoneInput.value);
+                    const activityType = document.getElementById('leadActivity').value.trim();
+                    const city = document.getElementById('leadCity').value.trim();
+                    const rawAmount = normalizeDigits(leadAmountInput.value);
+                    const requestedAmount = rawAmount ? parseInt(rawAmount, 10) : 0;
+
+                    if (!clientName || !activityType || !city || requestedAmount <= 0) {
+                        statusEl.textContent = 'يرجى استكمال جميع البيانات بشكل صحيح';
+                        statusEl.classList.add('status-err');
+                        return;
+                    }
+
+                    if (clientPhone.length !== 11) {
+                        statusEl.textContent = 'رقم الموبايل يجب أن يكون 11 رقماً بالضبط';
+                        statusEl.classList.add('status-err');
+                        leadPhoneInput.focus();
+                        return;
+                    }
+
+                    if (!sb) {
+                        statusEl.textContent = 'تعذر الاتصال بالخادم، تحقق من الإنترنت';
+                        statusEl.classList.add('status-err');
+                        return;
+                    }
+
+                    btn.disabled = true;
+                    btn.textContent = 'جاري إرسال طلبك...';
+
+                    try {
+                        if (!targetEmployeeName) {
+                            await resolveReferralEmployee();
+                        }
+
+                        const { error } = await sb.from('client_requests').insert([{
+                            employee_id: targetEmployeeId,
+                            employee_name: targetEmployeeName || referralPhoneParam || 'موظف',
+                            client_name: clientName,
+                            client_phone: clientPhone,
+                            activity_type: activityType,
+                            city: city,
+                            requested_amount: requestedAmount
+                        }]);
+
+                        if (error) throw error;
+
+                        document.getElementById('publicLeadForm').reset();
+                        document.getElementById('publicLeadFormWrap').classList.add('hidden');
+                        document.getElementById('publicLeadSuccessWrap').classList.remove('hidden');
+                    } catch (err) {
+                        statusEl.textContent = `تعذر إرسال الطلب: ${err.message || err}`;
+                        statusEl.classList.add('status-err');
+                    } finally {
+                        btn.disabled = false;
+                        btn.textContent = 'إرسال طلب التمويل';
+                    }
+                });
+
+                document.getElementById('sendAnotherLeadBtn').addEventListener('click', () => {
+                    document.getElementById('publicLeadSuccessWrap').classList.add('hidden');
+                    document.getElementById('publicLeadFormWrap').classList.remove('hidden');
+                });
+
+                hideSplash();
+                return;
+            }
+
+            let deferredInstallPrompt = null;
+            const installHintBox = document.getElementById('installHintBox');
+            const downloadAndroidBtn = document.getElementById('downloadAndroidBtn');
+            const downloadIosBtn = document.getElementById('downloadIosBtn');
+            const installGuideModal = document.getElementById('installGuideModal');
+            const guideModalTitle = document.getElementById('guideModalTitle');
+            const guideModalSteps = document.getElementById('guideModalSteps');
+            const closeGuideModalBtn = document.getElementById('closeGuideModalBtn');
+
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+            if (isStandalone) {
+                installHintBox.classList.add('hidden');
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+            });
+
+            function openInstallGuide(platform) {
+                if (platform === 'android') {
+                    guideModalTitle.textContent = 'تحميل وتثبيت التطبيق على الأندرويد';
+                    guideModalSteps.innerHTML = `
+                        <li>افتح قائمة المتصفح (الثلاث نقاط <strong>⋮</strong> أعلى أو أسفل الشاشة).</li>
+                        <li>اختر <strong>"تثبيت التطبيق" (Install app)</strong> أو <strong>"إضافة إلى الشاشة الرئيسية"</strong>.</li>
+                        <li>اضغط <strong>تثبيت</strong> وسيظهر التطبيق على شاشة هاتفك فوراً.</li>
+                    `;
+                } else {
+                    guideModalTitle.textContent = 'تحميل وتثبيت التطبيق على الآيفون';
+                    guideModalSteps.innerHTML = `
+                        <li>تأكد من فتح الصفحة داخل متصفح <strong>Safari</strong>.</li>
+                        <li>اضغط على زر <strong>المشاركة (Share)</strong> في شريط السفاري.</li>
+                        <li>انزل للأسفل واختر <strong>"إضافة إلى الشاشة الرئيسية" (Add to Home Screen)</strong> ثم اضغط <strong>إضافة</strong>.</li>
+                    `;
+                }
+                installGuideModal.classList.remove('hidden');
+            }
+
+            downloadAndroidBtn.addEventListener('click', async () => {
+                if (deferredInstallPrompt) {
+                    deferredInstallPrompt.prompt();
+                    const choice = await deferredInstallPrompt.userChoice;
+                    deferredInstallPrompt = null;
+                    if (choice?.outcome === 'accepted') {
+                        installHintBox.classList.add('hidden');
+                        return;
+                    }
+                }
+                openInstallGuide('android');
+            });
+
+            downloadIosBtn.addEventListener('click', () => {
+                openInstallGuide('ios');
+            });
+
+            closeGuideModalBtn.addEventListener('click', () => {
+                installGuideModal.classList.add('hidden');
+            });
+
+            installGuideModal.addEventListener('click', (e) => {
+                if (e.target === installGuideModal) {
+                    installGuideModal.classList.add('hidden');
+                }
+            });
+
+            window.addEventListener('appinstalled', () => {
+                installHintBox.classList.add('hidden');
+                installGuideModal.classList.add('hidden');
+            });
+
+            const MIN_AMOUNT = 350000;
+            const MAX_AMOUNT = 2000000;
+            const DEFAULT_AMOUNT = 500000;
+            const DEFAULT_MONTHS = 12;
+
+            let currentAmount = DEFAULT_AMOUNT;
+            let currentMonths = DEFAULT_MONTHS;
+
+            const amountInput = document.getElementById('amountInput');
+            const amountSlider = document.getElementById('amountSlider');
+            const validationError = document.getElementById('validationError');
+            const validationText = document.getElementById('validationText');
+            const durationBtns = document.querySelectorAll('.duration-btn');
+            const quickMarkBtns = document.querySelectorAll('.quick-mark-btn');
+            const resetBtn = document.getElementById('resetBtn');
+            const monthlyInstallmentDisplay = document.getElementById('monthlyInstallmentDisplay');
+
+            function formatCurrency(num, decimals = 2) {
+                return Number(num).toLocaleString('en-US', {
+                    minimumFractionDigits: decimals,
+                    maximumFractionDigits: decimals
+                });
+            }
+
+            function formatInteger(num) {
+                return Math.round(Number(num)).toLocaleString('en-US');
+            }
+
+            function getAnnualInterestRate(amount) {
+                if (amount >= 350000 && amount <= 500000) {
+                    return 0.42;
+                } else if (amount > 500000 && amount <= 1000000) {
+                    return 0.41;
+                } else {
+                    return 0.40;
+                }
+            }
+
+            function calculateAndRender() {
+                if (isNaN(currentAmount) || currentAmount < MIN_AMOUNT) {
+                    validationText.textContent = `الحد الأدنى لمبلغ التمويل هو ${formatInteger(MIN_AMOUNT)} جنيه مصري.`;
+                    validationError.classList.add('visible');
+                    amountInput.classList.add('has-error');
+                } else if (currentAmount > MAX_AMOUNT) {
+                    validationText.textContent = `الحد الأقصى لمبلغ التمويل هو ${formatInteger(MAX_AMOUNT)} جنيه مصري.`;
+                    validationError.classList.add('visible');
+                    amountInput.classList.add('has-error');
+                } else {
+                    validationError.classList.remove('visible');
+                    amountInput.classList.remove('has-error');
+                }
+
+                const P = Math.min(Math.max(isNaN(currentAmount) ? MIN_AMOUNT : currentAmount, MIN_AMOUNT), MAX_AMOUNT);
+                const annualRate = getAnnualInterestRate(P);
+                const r = annualRate / 12;
+                const n = currentMonths;
+
+                const factor = Math.pow(1 + r, n);
+                const monthlyInstallment = P * (r * factor) / (factor - 1);
+
+                monthlyInstallmentDisplay.textContent = formatCurrency(monthlyInstallment, 2);
+            }
+
+            amountInput.addEventListener('input', (e) => {
+                const rawDigits = normalizeDigits(e.target.value);
+
+                if (rawDigits === '') {
+                    currentAmount = NaN;
+                    e.target.value = '';
+                    calculateAndRender();
+                    return;
+                }
+
+                const numericVal = parseInt(rawDigits, 10);
+                currentAmount = numericVal;
+                e.target.value = numericVal.toLocaleString('en-US');
+
+                const clamped = Math.min(Math.max(numericVal, MIN_AMOUNT), MAX_AMOUNT);
+                amountSlider.value = clamped;
+
+                calculateAndRender();
+            });
+
+            amountInput.addEventListener('blur', () => {
+                if (isNaN(currentAmount) || currentAmount < MIN_AMOUNT) {
+                    currentAmount = MIN_AMOUNT;
+                } else if (currentAmount > MAX_AMOUNT) {
+                    currentAmount = MAX_AMOUNT;
+                }
+                amountInput.value = formatInteger(currentAmount);
+                amountSlider.value = currentAmount;
+                calculateAndRender();
+            });
+
+            amountSlider.addEventListener('input', (e) => {
+                currentAmount = parseInt(e.target.value, 10);
+                amountInput.value = formatInteger(currentAmount);
+                calculateAndRender();
+            });
+
+            quickMarkBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentAmount = parseInt(btn.getAttribute('data-amount'), 10);
+                    amountInput.value = formatInteger(currentAmount);
+                    amountSlider.value = currentAmount;
+                    calculateAndRender();
+                });
+            });
+
+            durationBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    durationBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentMonths = parseInt(btn.getAttribute('data-months'), 10);
+                    calculateAndRender();
+                });
+            });
+
+            resetBtn.addEventListener('click', () => {
+                currentAmount = DEFAULT_AMOUNT;
+                currentMonths = DEFAULT_MONTHS;
+                amountInput.value = formatInteger(DEFAULT_AMOUNT);
+                amountSlider.value = DEFAULT_AMOUNT;
+                durationBtns.forEach(b => b.classList.remove('active'));
+                durationBtns[0].classList.add('active');
+                calculateAndRender();
+            });
+
+            calculateAndRender();
+
+            let selectedPdfImages = [];
+            let selectedCompressionLevel = 'strong';
+            let lastMergedBlobUrl = null;
+            let lastCompressedBlobUrl = null;
+
+            const btnModeImagesToPdf = document.getElementById('btnModeImagesToPdf');
+            const btnModeCompressPdf = document.getElementById('btnModeCompressPdf');
+            const imagesToPdfPanel = document.getElementById('imagesToPdfPanel');
+            const compressPdfPanel = document.getElementById('compressPdfPanel');
+
+            btnModeImagesToPdf.addEventListener('click', () => {
+                btnModeImagesToPdf.classList.add('active');
+                btnModeCompressPdf.classList.remove('active');
+                imagesToPdfPanel.classList.remove('hidden');
+                compressPdfPanel.classList.add('hidden');
+            });
+
+            btnModeCompressPdf.addEventListener('click', () => {
+                btnModeCompressPdf.classList.add('active');
+                btnModeImagesToPdf.classList.remove('active');
+                compressPdfPanel.classList.remove('hidden');
+                imagesToPdfPanel.classList.add('hidden');
+            });
+
+            const pdfImagesInput = document.getElementById('pdfImagesInput');
+            const selectedImagesList = document.getElementById('selectedImagesList');
+
+            function renderSelectedImagesList() {
+                if (!selectedPdfImages.length) {
+                    selectedImagesList.innerHTML = '';
+                    return;
+                }
+                selectedImagesList.innerHTML = selectedPdfImages.map((item, idx) => `
+                    <div class="selected-img-card">
+                        <img src="${escapeHTML(item.previewUrl)}" alt="${escapeHTML(item.file.name)}" class="selected-img-large-preview">
+                        <div class="selected-img-footer">
+                            <span class="selected-img-meta">${idx + 1}. ${escapeHTML(item.file.name)} (${formatBytes(item.file.size)})</span>
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button type="button" class="edit-pass-btn" onclick="openScannerForImage(${idx})">تعديل ✏️</button>
+                                ${idx > 0 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, -1)">↑</button>` : ''}
+                                ${idx < selectedPdfImages.length - 1 ? `<button type="button" class="reset-btn" onclick="movePdfImage(${idx}, 1)">↓</button>` : ''}
+                                <button type="button" class="delete-visit-btn" onclick="removePdfImage(${idx})">حذف</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            window.movePdfImage = function(index, delta) {
+                const target = index + delta;
+                if (target < 0 || target >= selectedPdfImages.length) return;
+                const temp = selectedPdfImages[index];
+                selectedPdfImages[index] = selectedPdfImages[target];
+                selectedPdfImages[target] = temp;
+                renderSelectedImagesList();
+            };
+
+            window.removePdfImage = function(index) {
+                const removed = selectedPdfImages[index];
+                if (removed?.previewUrl) {
+                    URL.revokeObjectURL(removed.previewUrl);
+                }
+                selectedPdfImages.splice(index, 1);
+                renderSelectedImagesList();
+            };
+
+            pdfImagesInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files || []);
+                if (!files.length) return;
+                const wrapped = files.map(file => ({
+                    file,
+                    previewUrl: URL.createObjectURL(file)
+                }));
+                selectedPdfImages = [...selectedPdfImages, ...wrapped];
+                pdfImagesInput.value = '';
+                renderSelectedImagesList();
+                document.getElementById('imagesToPdfStatus').textContent = '';
+            });
+
+            document.getElementById('clearImagesBtn').addEventListener('click', () => {
+                selectedPdfImages.forEach(item => {
+                    if (item?.previewUrl) URL.revokeObjectURL(item.previewUrl);
+                });
+                selectedPdfImages = [];
+                pdfImagesInput.value = '';
+                renderSelectedImagesList();
+                document.getElementById('imagesToPdfStatus').textContent = '';
+                document.getElementById('mergedPdfResultBox').classList.add('hidden');
+            });
+
+            const scannerModal = document.getElementById('scannerModal');
+            const scannerCanvas = document.getElementById('scannerCanvas');
+            const manualCropBox = document.getElementById('manualCropBox');
+            const manualCropHandle = document.getElementById('manualCropHandle');
+            const modeAutoCropBtn = document.getElementById('modeAutoCropBtn');
+            const modeManualCropBtn = document.getElementById('modeManualCropBtn');
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            const pageIndicatorText = document.getElementById('pageIndicatorText');
+            const applyToAllPagesCheck = document.getElementById('applyToAllPagesCheck');
+
+            let activePageIdx = 0;
+            let activeImgElement = null;
+            let cropMode = 'auto';
+            let activeFilterPreset = 'original';
+            let rotationLeftDeg = 0;
+            let autoCropRect = { x: 0, y: 0, w: 1, h: 1 };
+            let manualCropRect = { x: 0.08, y: 0.08, w: 0.84, h: 0.84 };
+            let manualBoxVisible = false;
+
+            function getCssFilterString(preset) {
+                if (preset === 'omnifix') return 'contrast(155%) brightness(106%)';
+                if (preset === 'noshadow') return 'grayscale(100%) contrast(175%) brightness(115%)';
+                if (preset === 'lighten') return 'brightness(124%) contrast(115%)';
+                return 'none';
+            }
+
+            function computeAutoCropNormalized(img) {
+                const srcW = img.naturalWidth || img.width;
+                const srcH = img.naturalHeight || img.height;
+                if (!srcW || !srcH) return { x: 0, y: 0, w: 1, h: 1 };
+
+                const sampleMax = 360;
+                const s = Math.min(1, sampleMax / Math.max(srcW, srcH));
+                const sw = Math.max(1, Math.round(srcW * s));
+                const sh = Math.max(1, Math.round(srcH * s));
+
+                const c = document.createElement('canvas');
+                c.width = sw;
+                c.height = sh;
+                const ctx = c.getContext('2d');
+                ctx.drawImage(img, 0, 0, sw, sh);
+
+                try {
+                    const data = ctx.getImageData(0, 0, sw, sh).data;
+                    let minX = sw, minY = sh, maxX = 0, maxY = 0;
+                    const threshold = 238;
+
+                    for (let y = 0; y < sh; y++) {
+                        for (let x = 0; x < sw; x++) {
+                            const idx = (y * sw + x) * 4;
+                            const r = data[idx];
+                            const g = data[idx + 1];
+                            const b = data[idx + 2];
+                            if (r < threshold || g < threshold || b < threshold) {
+                                if (x < minX) minX = x;
+                                if (x > maxX) maxX = x;
+                                if (y < minY) minY = y;
+                                if (y > maxY) maxY = y;
+                            }
+                        }
+                    }
+
+                    if (maxX > minX && maxY > minY) {
+                        const padX = Math.max(2, Math.round((maxX - minX) * 0.02));
+                        const padY = Math.max(2, Math.round((maxY - minY) * 0.02));
+                        const nx = Math.max(0, (minX - padX) / sw);
+                        const ny = Math.max(0, (minY - padY) / sh);
+                        const nw = Math.min(1 - nx, (maxX - minX + padX * 2) / sw);
+                        const nh = Math.min(1 - ny, (maxY - minY + padY * 2) / sh);
+                        if (nw > 0.25 && nh > 0.25) {
+                            return { x: nx, y: ny, w: nw, h: nh };
+                        }
+                    }
+                } catch (_) {}
+
+                return { x: 0.03, y: 0.03, w: 0.94, h: 0.94 };
+            }
+
+            function syncManualCropOverlay() {
+                if (cropMode !== 'manual' || !manualBoxVisible) {
+                    manualCropBox.classList.add('hidden');
+                    return;
+                }
+                manualCropBox.classList.remove('hidden');
+                const rect = scannerCanvas.getBoundingClientRect();
+                if (!rect.width || !rect.height) return;
+
+                manualCropBox.style.left = `${manualCropRect.x * rect.width}px`;
+                manualCropBox.style.top = `${manualCropRect.y * rect.height}px`;
+                manualCropBox.style.width = `${manualCropRect.w * rect.width}px`;
+                manualCropBox.style.height = `${manualCropRect.h * rect.height}px`;
+            }
+
+            function renderScannerPage() {
+                if (!activeImgElement) return;
+                const total = selectedPdfImages.length;
+                pageIndicatorText.textContent = `${activePageIdx + 1}/${total}`;
+                prevPageBtn.disabled = activePageIdx <= 0;
+                nextPageBtn.disabled = activePageIdx >= total - 1;
+
+                const srcW = activeImgElement.naturalWidth || activeImgElement.width;
+                const srcH = activeImgElement.naturalHeight || activeImgElement.height;
+                const rad = (rotationLeftDeg * Math.PI) / 180;
+                const swapDims = Math.abs(rotationLeftDeg % 180) === 90;
+                const rotW = swapDims ? srcH : srcW;
+                const rotH = swapDims ? srcW : srcH;
+
+                const maxPreviewSide = 1100;
+                const scale = Math.min(1, maxPreviewSide / Math.max(rotW, rotH));
+                scannerCanvas.width = Math.max(1, Math.round(rotW * scale));
+                scannerCanvas.height = Math.max(1, Math.round(rotH * scale));
+
+                const ctx = scannerCanvas.getContext('2d');
+                ctx.save();
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, scannerCanvas.width, scannerCanvas.height);
+                ctx.filter = getCssFilterString(activeFilterPreset);
+                ctx.translate(scannerCanvas.width / 2, scannerCanvas.height / 2);
+                ctx.rotate(rad);
+                ctx.drawImage(
+                    activeImgElement,
+                    -(srcW * scale) / 2,
+                    -(srcH * scale) / 2,
+                    srcW * scale,
+                    srcH * scale
+                );
+                ctx.restore();
+
+                setTimeout(syncManualCropOverlay, 20);
+            }
+
+            async function loadScannerPageAt(index) {
+                if (index < 0 || index >= selectedPdfImages.length) return;
+                activePageIdx = index;
+                rotationLeftDeg = 0;
+                activeFilterPreset = 'original';
+                manualBoxVisible = false;
+
+
+                const item = selectedPdfImages[activePageIdx];
+                const dataUrl = await fileToDataUrl(item.file);
+                activeImgElement = await loadHtmlImage(dataUrl);
+                autoCropRect = computeAutoCropNormalized(activeImgElement);
+                manualCropRect = { ...autoCropRect };
+                renderScannerPage();
+            }
+
+            window.openScannerForImage = async function(index) {
+                if (!selectedPdfImages.length) return;
+                applyToAllPagesCheck.checked = false;
+                cropMode = 'auto';
+                modeAutoCropBtn.classList.add('active');
+                modeManualCropBtn.classList.remove('active');
+                scannerModal.classList.remove('hidden');
+                await loadScannerPageAt(index);
+            };
+
+            document.getElementById('closeScannerBtn').addEventListener('click', () => {
+                scannerModal.classList.add('hidden');
+                activeImgElement = null;
+            });
+
+            prevPageBtn.addEventListener('click', () => {
+                if (activePageIdx > 0) {
+                    loadScannerPageAt(activePageIdx - 1);
+                }
+            });
+
+            nextPageBtn.addEventListener('click', () => {
+                if (activePageIdx < selectedPdfImages.length - 1) {
+                    loadScannerPageAt(activePageIdx + 1);
+                }
+            });
+
+            modeAutoCropBtn.addEventListener('click', () => {
+                cropMode = 'auto';
+                manualBoxVisible = false;
+                modeAutoCropBtn.classList.add('active');
+                modeManualCropBtn.classList.remove('active');
+                document.getElementById('dockCropBtn').classList.remove('active');
+                syncManualCropOverlay();
+            });
+
+            modeManualCropBtn.addEventListener('click', () => {
+                cropMode = 'manual';
+                manualBoxVisible = true;
+                modeManualCropBtn.classList.add('active');
+                modeAutoCropBtn.classList.remove('active');
+                document.getElementById('dockCropBtn').classList.add('active');
+                syncManualCropOverlay();
+            });
+
+            document.getElementById('dockCropBtn').addEventListener('click', () => {
+                cropMode = 'manual';
+                manualBoxVisible = !manualBoxVisible;
+                modeManualCropBtn.classList.toggle('active', manualBoxVisible);
+                modeAutoCropBtn.classList.toggle('active', !manualBoxVisible);
+                document.getElementById('dockCropBtn').classList.toggle('active', manualBoxVisible);
+                syncManualCropOverlay();
+            });
+
+            document.getElementById('dockAutoEnhanceBtn').addEventListener('click', () => {
+                cropMode = 'auto';
+                manualBoxVisible = false;
+                modeAutoCropBtn.classList.add('active');
+                modeManualCropBtn.classList.remove('active');
+                document.getElementById('dockCropBtn').classList.remove('active');
+                activeFilterPreset = 'omnifix';
+                syncManualCropOverlay();
+                renderScannerPage();
+            });
+
+            document.getElementById('dockRotateLeftBtn').addEventListener('click', () => {
+                rotationLeftDeg = (rotationLeftDeg - 90) % 360;
+                renderScannerPage();
+            });
+
+
+
+            let dragState = null;
+
+            manualCropBox.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                const rect = scannerCanvas.getBoundingClientRect();
+                const isResize = e.target === manualCropHandle;
+                dragState = {
+                    type: isResize ? 'resize' : 'move',
+                    startX: e.clientX,
+                    startY: e.clientY,
+                    width: rect.width,
+                    height: rect.height,
+                    orig: { ...manualCropRect }
+                };
+                manualCropBox.setPointerCapture(e.pointerId);
+            });
+
+            manualCropBox.addEventListener('pointermove', (e) => {
+                if (!dragState) return;
+                const dx = (e.clientX - dragState.startX) / dragState.width;
+                const dy = (e.clientY - dragState.startY) / dragState.height;
+
+                if (dragState.type === 'move') {
+                    const nx = Math.min(Math.max(0, dragState.orig.x + dx), 1 - dragState.orig.w);
+                    const ny = Math.min(Math.max(0, dragState.orig.y + dy), 1 - dragState.orig.h);
+                    manualCropRect.x = nx;
+                    manualCropRect.y = ny;
+                } else if (dragState.type === 'resize') {
+                    const nw = Math.min(Math.max(0.15, dragState.orig.w + dx), 1 - dragState.orig.x);
+                    const nh = Math.min(Math.max(0.15, dragState.orig.h + dy), 1 - dragState.orig.y);
+                    manualCropRect.w = nw;
+                    manualCropRect.h = nh;
+                }
+                syncManualCropOverlay();
+            });
+
+            manualCropBox.addEventListener('pointerup', () => {
+                dragState = null;
+            });
+
+            window.addEventListener('resize', syncManualCropOverlay);
+
+            async function renderFinalEditedFile(item, useManualCrop, manualRect, preset, rotDeg) {
+                const dataUrl = await fileToDataUrl(item.file);
+                const img = await loadHtmlImage(dataUrl);
+                const srcW = img.naturalWidth || img.width;
+                const srcH = img.naturalHeight || img.height;
+                const rad = (rotDeg * Math.PI) / 180;
+                const swapDims = Math.abs(rotDeg % 180) === 90;
+                const rotW = swapDims ? srcH : srcW;
+                const rotH = swapDims ? srcW : srcH;
+
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = rotW;
+                tempCanvas.height = rotH;
+                const tCtx = tempCanvas.getContext('2d');
+                tCtx.fillStyle = '#ffffff';
+                tCtx.fillRect(0, 0, rotW, rotH);
+                tCtx.filter = getCssFilterString(preset);
+                tCtx.translate(rotW / 2, rotH / 2);
+                tCtx.rotate(rad);
+                tCtx.drawImage(img, -srcW / 2, -srcH / 2, srcW, srcH);
+
+                const cropNorm = useManualCrop
+                    ? manualRect
+                    : (cropMode === 'auto' ? computeAutoCropNormalized(img) : { x: 0, y: 0, w: 1, h: 1 });
+
+                const cx = Math.max(0, Math.round(cropNorm.x * rotW));
+                const cy = Math.max(0, Math.round(cropNorm.y * rotH));
+                const cw = Math.max(10, Math.min(rotW - cx, Math.round(cropNorm.w * rotW)));
+                const ch = Math.max(10, Math.min(rotH - cy, Math.round(cropNorm.h * rotH)));
+
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = cw;
+                finalCanvas.height = ch;
+                const fCtx = finalCanvas.getContext('2d');
+                fCtx.fillStyle = '#ffffff';
+                fCtx.fillRect(0, 0, cw, ch);
+                fCtx.drawImage(tempCanvas, cx, cy, cw, ch, 0, 0, cw, ch);
+
+                const blob = await new Promise(resolve => finalCanvas.toBlob(resolve, 'image/jpeg', 0.9));
+                const baseName = item.file.name.replace(/\.[^.]+$/, '');
+                const newFile = new File([blob], `${baseName}-scanned.jpg`, { type: 'image/jpeg' });
+
+                if (item.previewUrl) {
+                    URL.revokeObjectURL(item.previewUrl);
+                }
+
+                return {
+                    file: newFile,
+                    previewUrl: URL.createObjectURL(newFile)
+                };
+            }
+
+            document.getElementById('applyScannerEditBtn').addEventListener('click', async () => {
+                if (!selectedPdfImages.length) return;
+                const applyAll = applyToAllPagesCheck.checked;
+                const useManual = cropMode === 'manual' && manualBoxVisible;
+
+                if (applyAll) {
+                    const updated = [];
+                    for (let i = 0; i < selectedPdfImages.length; i++) {
+                        updated.push(await renderFinalEditedFile(
+                            selectedPdfImages[i],
+                            useManual,
+                            manualCropRect,
+                            activeFilterPreset,
+                            rotationLeftDeg
+                        ));
+                    }
+                    selectedPdfImages = updated;
+                } else {
+                    selectedPdfImages[activePageIdx] = await renderFinalEditedFile(
+                        selectedPdfImages[activePageIdx],
+                        useManual,
+                        manualCropRect,
+                        activeFilterPreset,
+                        rotationLeftDeg
+                    );
+                }
+
+                renderSelectedImagesList();
+                scannerModal.classList.add('hidden');
+                activeImgElement = null;
+            });
+
+            function fileToDataUrl(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            function loadHtmlImage(src) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = reject;
+                    img.src = src;
+                });
+            }
+
+            async function convertImageFileToJpegBytes(file, quality = 0.88, maxDim = 2000) {
+                const dataUrl = await fileToDataUrl(file);
+                const img = await loadHtmlImage(dataUrl);
+                let width = img.naturalWidth || img.width;
+                let height = img.naturalHeight || img.height;
+
+                if (width > maxDim || height > maxDim) {
+                    const ratio = Math.min(maxDim / width, maxDim / height);
+                    width = Math.round(width * ratio);
+                    height = Math.round(height * ratio);
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, width, height);
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const jpegBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
+                const arrayBuffer = await jpegBlob.arrayBuffer();
+                return { bytes: new Uint8Array(arrayBuffer), width, height };
+            }
+
+            document.getElementById('convertImagesToPdfBtn').addEventListener('click', async () => {
+                const statusEl = document.getElementById('imagesToPdfStatus');
+                const btn = document.getElementById('convertImagesToPdfBtn');
+                const resultBox = document.getElementById('mergedPdfResultBox');
+                statusEl.textContent = '';
+                statusEl.className = 'status-text';
+
+                if (!selectedPdfImages.length) {
+                    statusEl.textContent = 'يرجى اختيار صورة واحدة على الأقل أولاً';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                if (!window.PDFLib || !window.PDFLib.PDFDocument) {
+                    statusEl.textContent = 'تعذر تحميل مكتبة إنشاء ملفات PDF، تحقق من الإنترنت وحدّث الصفحة';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = 'جاري تحويل الصور إلى ملف PDF...';
+
+                try {
+                    const pdfDoc = await window.PDFLib.PDFDocument.create();
+
+                    for (let i = 0; i < selectedPdfImages.length; i++) {
+                        statusEl.textContent = `جاري معالجة الصورة ${i + 1} من ${selectedPdfImages.length}...`;
+                        statusEl.className = 'status-text status-ok';
+
+                        const imgFile = selectedPdfImages[i].file;
+                        const { bytes, width, height } = await convertImageFileToJpegBytes(imgFile, 0.88, 2200);
+                        const embeddedImg = await pdfDoc.embedJpg(bytes);
+
+                        const page = pdfDoc.addPage([width, height]);
+                        page.drawImage(embeddedImg, {
+                            x: 0,
+                            y: 0,
+                            width: width,
+                            height: height
+                        });
+                    }
+
+                    const pdfBytes = await pdfDoc.save();
+                    if (lastMergedBlobUrl) {
+                        URL.revokeObjectURL(lastMergedBlobUrl);
+                    }
+                    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                    lastMergedBlobUrl = URL.createObjectURL(blob);
+
+                    const fileName = sanitizePdfFileName(document.getElementById('mergedPdfName').value, 'مستندات-العميل');
+                    const downloadLink = document.getElementById('downloadMergedPdfBtn');
+                    downloadLink.href = lastMergedBlobUrl;
+                    downloadLink.download = fileName;
+
+                    document.getElementById('mergedPdfSummary').textContent =
+                        `تم دمج ${selectedPdfImages.length} صور في ملف PDF واحد (${fileName}) — الحجم: ${formatBytes(blob.size)}`;
+                    resultBox.classList.remove('hidden');
+
+                    statusEl.textContent = 'تم إنشاء ملف PDF بنجاح';
+                    statusEl.className = 'status-text status-ok';
+                } catch (err) {
+                    statusEl.textContent = `حدث خطأ أثناء التحويل: ${err.message || err}`;
+                    statusEl.classList.add('status-err');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'تحويل الصور إلى ملف واحد PDF';
+                }
+            });
+
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedCompressionLevel = btn.getAttribute('data-level') || 'strong';
+                });
+            });
+
+            document.getElementById('compressPdfActionBtn').addEventListener('click', async () => {
+                const statusEl = document.getElementById('compressPdfStatus');
+                const btn = document.getElementById('compressPdfActionBtn');
+                const resultBox = document.getElementById('compressedPdfResultBox');
+                const fileInput = document.getElementById('compressPdfInput');
+                const pdfFile = fileInput.files[0];
+
+                statusEl.textContent = '';
+                statusEl.className = 'status-text';
+
+                if (!pdfFile) {
+                    statusEl.textContent = 'يرجى اختيار ملف PDF أولاً';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                if (!window.PDFLib || !window.pdfjsLib) {
+                    statusEl.textContent = 'تعذر تحميل مكتبات ضغط PDF، تحقق من الإنترنت وحدّث الصفحة';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                const isUltra = selectedCompressionLevel === 'ultra';
+                const renderScale = isUltra ? 0.72 : 1.05;
+                const jpegQuality = isUltra ? 0.25 : 0.48;
+                const levelLabel = isUltra ? 'ضغط قوي جداً' : 'ضغط قوي';
+
+                btn.disabled = true;
+                btn.textContent = 'جاري ضغط ملف PDF...';
+
+                try {
+                    const arrayBuffer = await pdfFile.arrayBuffer();
+                    const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
+                    const srcPdf = await loadingTask.promise;
+                    const outPdf = await window.PDFLib.PDFDocument.create();
+
+                    const totalPages = srcPdf.numPages;
+
+                    for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                        statusEl.textContent = `جاري ضغط الصفحة ${pageNum} من ${totalPages} (${levelLabel})...`;
+                        statusEl.className = 'status-text status-ok';
+
+                        const page = await srcPdf.getPage(pageNum);
+                        const viewport = page.getViewport({ scale: renderScale });
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = Math.round(viewport.width);
+                        canvas.height = Math.round(viewport.height);
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                        await page.render({ canvasContext: ctx, viewport }).promise;
+
+                        const jpegBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', jpegQuality));
+                        const jpegBytes = new Uint8Array(await jpegBlob.arrayBuffer());
+                        const embeddedImg = await outPdf.embedJpg(jpegBytes);
+
+                        const origViewport = page.getViewport({ scale: 1.0 });
+                        const outPage = outPdf.addPage([origViewport.width, origViewport.height]);
+                        outPage.drawImage(embeddedImg, {
+                            x: 0,
+                            y: 0,
+                            width: origViewport.width,
+                            height: origViewport.height
+                        });
+                    }
+
+                    const compressedBytes = await outPdf.save();
+                    if (lastCompressedBlobUrl) {
+                        URL.revokeObjectURL(lastCompressedBlobUrl);
+                    }
+                    const compressedBlob = new Blob([compressedBytes], { type: 'application/pdf' });
+                    lastCompressedBlobUrl = URL.createObjectURL(compressedBlob);
+
+                    const baseName = pdfFile.name.replace(/\.pdf$/i, '');
+                    const outName = sanitizePdfFileName(`${baseName}-${isUltra ? 'ضغط-قوي-جدا' : 'ضغط-قوي'}`);
+
+                    const downloadBtn = document.getElementById('downloadCompressedPdfBtn');
+                    downloadBtn.href = lastCompressedBlobUrl;
+                    downloadBtn.download = outName;
+
+                    const diffBytes = pdfFile.size - compressedBlob.size;
+                    const savingPercent = pdfFile.size > 0
+                        ? ((diffBytes / pdfFile.size) * 100).toFixed(1)
+                        : '0.0';
+
+                    document.getElementById('compressedPdfSummary').textContent =
+                        `المستوى: ${levelLabel} | الأصلي: ${formatBytes(pdfFile.size)} ← المضغوط: ${formatBytes(compressedBlob.size)} (توفير ${savingPercent}%)`;
+                    resultBox.classList.remove('hidden');
+
+                    statusEl.textContent = 'تم ضغط ملف PDF وبدأ التحميل تلقائياً';
+                    statusEl.className = 'status-text status-ok';
+
+                    triggerAutoDownload(lastCompressedBlobUrl, outName);
+                } catch (err) {
+                    statusEl.textContent = `تعذر ضغط الملف: ${err.message || err}`;
+                    statusEl.classList.add('status-err');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'ضغط وتحميل ملف PDF تلقائياً';
+                }
+            });
+
+            let currentUser = null;
+            let currentProfile = null;
+            let allVisits = [];
+            let allEmployees = [];
+            let allRequests = [];
+
+            const clientPhoneInput = document.getElementById('clientPhone');
+            clientPhoneInput.addEventListener('input', (e) => {
+                e.target.value = normalizePhone(e.target.value).slice(0, 11);
+            });
+
+            const empPhoneInput = document.getElementById('empPhone');
+            empPhoneInput.addEventListener('input', (e) => {
+                e.target.value = normalizePhone(e.target.value).slice(0, 11);
+            });
+
+            function buildLoginEmail(inputValue = '') {
+                const trimmed = String(inputValue).trim();
+                if (trimmed.includes('@')) {
+                    return trimmed.toLowerCase();
+                }
+                const cleanPhone = normalizePhone(trimmed);
+                return `${cleanPhone}@fawry.com`;
+            }
+
+            function setTodayDate() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('visitDate').value = today;
+            }
+
+            setTodayDate();
+
+            const tabMap = {
+                visitsTab: 'tabBtnVisits',
+                requestsTab: 'tabBtnRequests',
+                calcTab: 'tabBtnCalc',
+                pdfToolsTab: 'tabBtnPdfTools',
+                addEmpTab: 'tabBtnAddEmp',
+                empDbTab: 'tabBtnEmpDb'
+            };
+
+            function switchTab(targetTab) {
+                Object.entries(tabMap).forEach(([tabId, btnId]) => {
+                    document.getElementById(btnId).classList.toggle('active', tabId === targetTab);
+                    document.getElementById(tabId).classList.toggle('hidden', tabId !== targetTab);
+                });
+                if (targetTab === 'requestsTab') {
+                    loadClientRequests();
+                }
+                if (targetTab === 'empDbTab' && currentProfile?.role === 'manager') {
+                    loadEmployeesDb();
+                }
+            }
+
+            document.getElementById('tabBtnVisits').addEventListener('click', () => switchTab('visitsTab'));
+            document.getElementById('tabBtnRequests').addEventListener('click', () => switchTab('requestsTab'));
+            document.getElementById('tabBtnCalc').addEventListener('click', () => switchTab('calcTab'));
+            document.getElementById('tabBtnPdfTools').addEventListener('click', () => switchTab('pdfToolsTab'));
+            document.getElementById('tabBtnAddEmp').addEventListener('click', () => switchTab('addEmpTab'));
+            document.getElementById('tabBtnEmpDb').addEventListener('click', () => switchTab('empDbTab'));
+
+            const subBtnShareLink = document.getElementById('subBtnShareLink');
+            const subBtnSubmissions = document.getElementById('subBtnSubmissions');
+            const shareLinkSubView = document.getElementById('shareLinkSubView');
+            const submissionsSubView = document.getElementById('submissionsSubView');
+
+            function switchRequestSubTab(view) {
+                const isLinkView = view === 'link';
+                subBtnShareLink.classList.toggle('active', isLinkView);
+                subBtnSubmissions.classList.toggle('active', !isLinkView);
+                shareLinkSubView.classList.toggle('hidden', !isLinkView);
+                submissionsSubView.classList.toggle('hidden', isLinkView);
+                if (!isLinkView) {
+                    loadClientRequests();
+                }
+            }
+
+            subBtnShareLink.addEventListener('click', () => switchRequestSubTab('link'));
+            subBtnSubmissions.addEventListener('click', () => switchRequestSubTab('submissions'));
+
+            function saveLocalSession(session, profile) {
+                try {
+                    if (session) {
+                        window.localStorage.setItem(CACHED_SESSION_KEY, JSON.stringify({ session, profile }));
+                    }
+                } catch (_) {}
+            }
+
+            function getLocalSession() {
+                try {
+                    const raw = window.localStorage.getItem(CACHED_SESSION_KEY);
+                    return raw ? JSON.parse(raw) : null;
+                } catch (_) {
+                    return null;
+                }
+            }
+
+            function clearLocalSession() {
+                try {
+                    window.localStorage.removeItem(CACHED_SESSION_KEY);
+                } catch (_) {}
+            }
+
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const statusEl = document.getElementById('loginStatus');
+                const loginBtn = document.getElementById('loginBtn');
+                statusEl.textContent = '';
+
+                if (!sb) {
+                    statusEl.textContent = 'تعذر تحميل مكتبة الاتصال، تحقق من الإنترنت وحدّث الصفحة';
+                    return;
+                }
+
+                const rawLogin = document.getElementById('loginPhone').value.trim();
+                const cleanPhone = normalizePhone(rawLogin);
+                const password = document.getElementById('loginPassword').value;
+
+                if (!rawLogin.includes('@') && cleanPhone.length !== 11) {
+                    statusEl.textContent = 'أدخل رقم موبايل صحيحاً من 11 رقماً';
+                    return;
+                }
+
+                if (!password) {
+                    statusEl.textContent = 'أدخل كلمة المرور';
+                    return;
+                }
+
+                loginBtn.disabled = true;
+                loginBtn.textContent = 'جاري الدخول...';
+
+                try {
+                    const email = buildLoginEmail(rawLogin);
+                    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+                    if (error) {
+                        statusEl.textContent = 'رقم الموبايل أو كلمة المرور غير صحيحة';
+                        return;
+                    }
+
+                    await initSession(data.user, data.session);
+                } catch (err) {
+                    statusEl.textContent = 'حدث خطأ أثناء الاتصال بالخادم';
+                } finally {
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'دخول';
+                }
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                clearLocalSession();
+                if (sb) {
+                    await sb.auth.signOut();
+                }
+                currentUser = null;
+                currentProfile = null;
+                document.getElementById('appSection').classList.add('hidden');
+                document.getElementById('loginSection').classList.remove('hidden');
+            });
+
+            function setupReferralLinksSection(isManager) {
+                const empPersonalBox = document.getElementById('employeePersonalLinkBox');
+                const managerLinksBox = document.getElementById('managerAllLinksBox');
+
+                if (!isManager && currentUser) {
+                    empPersonalBox.classList.remove('hidden');
+                    managerLinksBox.classList.add('hidden');
+
+                    const empPhoneFromEmail = normalizePhone((currentUser.email || '').split('@')[0]);
+                    const empPhone = currentProfile?.phone || empPhoneFromEmail;
+                    const myUrl = buildShortReferralUrl(empPhone, currentUser.id);
+                    document.getElementById('myReferralUrlDisplay').textContent = myUrl;
+                    const waText = encodeURIComponent(`قدّم على تمويل مشروعك بسهولة من خلال الرابط التالي:\n${myUrl}`);
+                    document.getElementById('shareWhatsappRefBtn').href = `https://wa.me/?text=${waText}`;
+                } else {
+                    empPersonalBox.classList.add('hidden');
+                    managerLinksBox.classList.remove('hidden');
+                    renderManagerEmployeeLinks();
+                }
+            }
+
+            document.getElementById('copyMyRefLinkBtn').addEventListener('click', async () => {
+                const urlText = document.getElementById('myReferralUrlDisplay').textContent;
+                const statusEl = document.getElementById('copyRefStatus');
+                try {
+                    await navigator.clipboard.writeText(urlText);
+                    statusEl.textContent = 'تم نسخ الرابط المختصر بنجاح! يمكنك لصقه الآن على فيسبوك أو واتساب.';
+                } catch (_) {
+                    statusEl.textContent = 'انسخ الرابط من المربع أعلاه للمشاركة.';
+                }
+            });
+
+            function renderManagerEmployeeLinks() {
+                const container = document.getElementById('managerLinksContainer');
+                if (!allEmployees.length) {
+                    container.innerHTML = '<p style="color:#64748b; text-align:center; padding:12px;">لا يوجد موظفون مضافون بعد</p>';
+                    return;
+                }
+                container.innerHTML = allEmployees.map(emp => {
+                    const link = buildShortReferralUrl(emp.phone, emp.user_id);
+                    const waShare = `https://wa.me/?text=${encodeURIComponent(`رابط التقديم الخاص بـ ${emp.full_name}:\n${link}`)}`;
+                    return `
+                        <div class="visit-card">
+                            <div class="visit-row"><span class="visit-key">الموظف:</span> ${escapeHTML(emp.full_name || '')} (${escapeHTML(emp.phone || '')})</div>
+                            <div class="ref-url-display">${escapeHTML(link)}</div>
+                            <div class="visit-card-actions" style="justify-content: flex-start;">
+                                <button type="button" class="reset-btn" onclick="copyTextDirect('${escapeHTML(link)}')">📋 نسخ الرابط</button>
+                                <a href="${waShare}" target="_blank" class="whatsapp-btn">واتساب</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            window.copyTextDirect = async function(text) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    alert('تم نسخ الرابط بنجاح');
+                } catch (_) {}
+            };
+
+            function applyRoleView(isManager) {
+                document.getElementById('currentUserRole').textContent = isManager ? 'مراقب زيارات' : 'موظف';
+                document.getElementById('navTabs').classList.remove('hidden');
+                document.getElementById('tabBtnVisits').classList.remove('hidden');
+                document.getElementById('tabBtnRequests').classList.remove('hidden');
+                document.getElementById('tabBtnCalc').classList.remove('hidden');
+                document.getElementById('tabBtnPdfTools').classList.remove('hidden');
+                document.getElementById('tabBtnAddEmp').classList.toggle('hidden', !isManager);
+                document.getElementById('tabBtnEmpDb').classList.toggle('hidden', !isManager);
+                document.getElementById('visitEntryCard').classList.toggle('hidden', isManager);
+                document.getElementById('managerHeader').classList.toggle('hidden', !isManager);
+                document.getElementById('exportExcelBtnManager').classList.toggle('hidden', !isManager);
+                document.getElementById('filterEmployee').classList.toggle('hidden', !isManager);
+                document.getElementById('reqFilterEmployee').classList.toggle('hidden', !isManager);
+                document.getElementById('submissionsSubtitle').textContent = isManager
+                    ? 'جميع طلبات العملاء المجمّعة من روابط كل الموظفين'
+                    : 'العملاء المتقدمون عبر رابط التقديم الخاص بك';
+
+                setupReferralLinksSection(isManager);
+                switchTab('visitsTab');
+            }
+
+            async function initSession(user, session = null, fallbackProfile = null) {
+                if (!user) return;
+                currentUser = user;
+                let profile = fallbackProfile || null;
+
+                if (sb) {
+                    try {
+                        const res = await sb
+                            .from('profiles')
+                            .select('*')
+                            .eq('id', user.id)
+                            .single();
+                        if (res.data) {
+                            profile = res.data;
+                        }
+                    } catch (_) {}
+                }
+
+                currentProfile = profile || {
+                    id: user.id,
+                    full_name: user.email,
+                    role: 'employee'
+                };
+
+                if (session) {
+                    saveLocalSession(session, currentProfile);
+                }
+
+                document.getElementById('currentUserName').textContent = currentProfile.full_name || 'مستخدم';
+                const isManager = currentProfile.role === 'manager';
+                applyRoleView(isManager);
+
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('appSection').classList.remove('hidden');
+
+                await Promise.all([
+                    loadVisits(),
+                    loadClientRequests(),
+                    isManager ? loadEmployeesDb() : Promise.resolve()
+                ]);
+                subscribeToLiveClientRequests();
+                updateNotificationButtonState();
+                hideSplash();
+            }
+
+            document.getElementById('clearVisitBtn').addEventListener('click', () => {
+                document.getElementById('visitForm').reset();
+                setTodayDate();
+                document.getElementById('visitStatus').textContent = '';
+            });
+
+            document.getElementById('visitForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (currentProfile?.role === 'manager') return;
+
+                const statusEl = document.getElementById('visitStatus');
+                const saveBtn = document.getElementById('saveVisitBtn');
+                statusEl.textContent = '';
+                statusEl.className = 'status-text';
+
+                if (!sb || !currentUser) {
+                    statusEl.textContent = 'يرجى تسجيل الدخول أولاً';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                const clientName = document.getElementById('clientName').value.trim();
+                const visitDate = document.getElementById('visitDate').value;
+                const clientPhone = normalizePhone(clientPhoneInput.value);
+                const activityType = document.getElementById('activityType').value.trim();
+                const visitResult = document.getElementById('visitResult').value;
+                const photoFile = document.getElementById('visitPhoto').files[0];
+
+                if (!clientName || !visitDate || !clientPhone || !activityType || !visitResult) {
+                    statusEl.textContent = 'يرجى استكمال جميع الحقول المطلوبة';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                if (clientPhone.length !== 11) {
+                    statusEl.textContent = 'رقم موبايل العميل يجب أن يكون 11 رقماً بالضبط';
+                    statusEl.classList.add('status-err');
+                    clientPhoneInput.focus();
+                    return;
+                }
+
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'جاري الحفظ...';
+
+                let photoUrl = null;
+
+                try {
+                    if (photoFile) {
+                        const ext = photoFile.name.split('.').pop() || 'jpg';
+                        const filePath = `${currentUser.id}/${Date.now()}.${ext}`;
+                        const { error: uploadError } = await sb.storage
+                            .from(PHOTO_BUCKET)
+                            .upload(filePath, photoFile, { upsert: false });
+
+                        if (uploadError) throw uploadError;
+
+                        const { data: pubData } = sb.storage.from(PHOTO_BUCKET).getPublicUrl(filePath);
+                        photoUrl = pubData.publicUrl;
+                    }
+
+                    const payload = {
+                        user_id: currentUser.id,
+                        employee_name: currentProfile.full_name || currentUser.email,
+                        client_name: clientName,
+                        visit_date: visitDate,
+                        client_phone: clientPhone,
+                        activity_type: activityType,
+                        visit_result: visitResult,
+                        photo_url: photoUrl
+                    };
+
+                    const { error: insertError } = await sb.from('visits').insert([payload]);
+                    if (insertError) throw insertError;
+
+                    document.getElementById('visitForm').reset();
+                    setTodayDate();
+                    statusEl.textContent = 'تم حفظ الزيارة بنجاح';
+                    statusEl.classList.add('status-ok');
+
+                    await loadVisits();
+                } catch (err) {
+                    statusEl.textContent = `تعذر حفظ الزيارة: ${err.message || err}`;
+                    statusEl.classList.add('status-err');
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'حفظ الزيارة';
+                }
+            });
+
+            async function loadVisits() {
+                if (!sb) return;
+                const { data, error } = await sb
+                    .from('visits')
+                    .select('*')
+                    .order('visit_date', { ascending: false })
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    document.getElementById('visitsContainer').innerHTML =
+                        `<div class="status-text status-err">تعذر تحميل الزيارات: ${escapeHTML(error.message)}</div>`;
+                    return;
+                }
+
+                allVisits = data || [];
+                populateEmployeeFilter();
+                renderVisits();
+            }
+
+            function populateEmployeeFilter() {
+                const select = document.getElementById('filterEmployee');
+                const currentVal = select.value;
+                const names = [...new Set(allVisits.map(v => v.employee_name).filter(Boolean))];
+                select.innerHTML = '<option value="">كل الموظفين</option>' +
+                    names.map(n => `<option value="${escapeHTML(n)}">${escapeHTML(n)}</option>`).join('');
+                select.value = currentVal;
+            }
+
+            function getFilteredVisits() {
+                const q = document.getElementById('filterSearch').value.trim().toLowerCase();
+                const resFilter = document.getElementById('filterResult').value;
+                const dateFrom = document.getElementById('filterDateFrom').value;
+                const dateTo = document.getElementById('filterDateTo').value;
+                const empFilter = document.getElementById('filterEmployee').value;
+
+                return allVisits.filter(v => {
+                    if (resFilter && v.visit_result !== resFilter) return false;
+                    if (empFilter && v.employee_name !== empFilter) return false;
+                    const vDate = (v.visit_date || '').slice(0, 10);
+                    if (dateFrom && (!vDate || vDate < dateFrom)) return false;
+                    if (dateTo && (!vDate || vDate > dateTo)) return false;
+                    if (q) {
+                        const hay = `${v.client_name || ''} ${v.client_phone || ''} ${v.activity_type || ''} ${v.employee_name || ''}`.toLowerCase();
+                        if (!hay.includes(q)) return false;
+                    }
+                    return true;
+                });
+            }
+
+            function renderVisits() {
+                const filtered = getFilteredVisits();
+                document.getElementById('visitsCount').textContent = filtered.length;
+                const container = document.getElementById('visitsContainer');
+
+                if (!filtered.length) {
+                    container.innerHTML = '<p style="color:#64748b; text-align:center; padding:16px;">لا توجد زيارات مطابقة</p>';
+                    return;
+                }
+
+                const isManager = currentProfile?.role === 'manager';
+
+                container.innerHTML = filtered.map(v => {
+                    const canDelete = isManager || v.user_id === currentUser?.id;
+                    const cleanTel = normalizePhone(v.client_phone || '');
+                    const waTel = cleanTel.startsWith('0') ? `2${cleanTel}` : cleanTel;
+
+                    return `
+                        <div class="visit-card">
+                            ${isManager ? `<div class="visit-row"><span class="visit-key">الموظف:</span> ${escapeHTML(v.employee_name || 'غير محدد')}</div>` : ''}
+                            <div class="visit-row"><span class="visit-key">اسم العميل:</span> ${escapeHTML(v.client_name || 'غير محدد')}</div>
+                            <div class="visit-row"><span class="visit-key">تاريخ الزيارة:</span> ${escapeHTML(v.visit_date || 'غير محدد')}</div>
+                            <div class="visit-row"><span class="visit-key">رقم العميل:</span> ${escapeHTML(v.client_phone || 'غير مسجل')}</div>
+                            <div class="visit-row"><span class="visit-key">نوع النشاط:</span> ${escapeHTML(v.activity_type || 'غير محدد')}</div>
+                            <div class="visit-row"><span class="visit-key">نتيجة الزيارة:</span> ${escapeHTML(v.visit_result || 'غير محددة')}</div>
+                            ${v.photo_url ? `<img src="${escapeHTML(v.photo_url)}" alt="صورة الزيارة" class="visit-photo">` : ''}
+                            <div class="visit-card-actions">
+                                ${cleanTel ? `<a href="tel:${escapeHTML(cleanTel)}" class="reset-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;">📞 اتصال</a>` : ''}
+                                ${waTel ? `<a href="https://wa.me/${escapeHTML(waTel)}" target="_blank" rel="noopener noreferrer" class="whatsapp-btn">واتساب</a>` : ''}
+                                ${canDelete ? `<button type="button" class="delete-visit-btn" onclick="deleteVisit('${v.id}')">حذف</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            window.deleteVisit = async function(id) {
+                if (!sb || !confirm('هل أنت متأكد من حذف هذه الزيارة؟')) return;
+                const { error } = await sb.from('visits').delete().eq('id', id);
+                if (!error) {
+                    await loadVisits();
+                }
+            };
+
+            ['filterSearch', 'filterResult', 'filterDateFrom', 'filterDateTo', 'filterEmployee'].forEach(id => {
+                document.getElementById(id).addEventListener('input', renderVisits);
+                document.getElementById(id).addEventListener('change', renderVisits);
+            });
+
+            document.getElementById('clearVisitFiltersBtn').addEventListener('click', () => {
+                document.getElementById('filterSearch').value = '';
+                document.getElementById('filterResult').value = '';
+                document.getElementById('filterDateFrom').value = '';
+                document.getElementById('filterDateTo').value = '';
+                document.getElementById('filterEmployee').value = '';
+                renderVisits();
+            });
+
+            function exportVisitsToExcel() {
+                if (!window.XLSX) return;
+                const isManager = currentProfile?.role === 'manager';
+                const rows = getFilteredVisits().map(v => {
+                    const row = {};
+                    if (isManager) row['الموظف'] = v.employee_name || '';
+                    row['اسم العميل'] = v.client_name || '';
+                    row['تاريخ الزيارة'] = v.visit_date || '';
+                    row['رقم العميل'] = v.client_phone || '';
+                    row['نوع النشاط'] = v.activity_type || '';
+                    row['نتيجة الزيارة'] = v.visit_result || '';
+                    row['رابط الصورة'] = v.photo_url || '';
+                    return row;
+                });
+
+                const ws = XLSX.utils.json_to_sheet(rows);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'الزيارات');
+                XLSX.writeFile(wb, `visits_${new Date().toISOString().split('T')[0]}.xlsx`);
+            }
+
+            document.getElementById('exportExcelBtnEmployee').addEventListener('click', exportVisitsToExcel);
+            document.getElementById('exportExcelBtnManager').addEventListener('click', exportVisitsToExcel);
+
+
+            let requestsRealtimeChannel = null;
+            let toastHideTimer = null;
+            const seenRequestIds = new Set();
+
+            const liveToastBanner = document.getElementById('liveToastBanner');
+            const liveToastTitle = document.getElementById('liveToastTitle');
+            const liveToastBody = document.getElementById('liveToastBody');
+            const liveToastOpenBtn = document.getElementById('liveToastOpenBtn');
+            const liveToastCloseBtn = document.getElementById('liveToastCloseBtn');
+            const enableNotifBtn = document.getElementById('enableNotifBtn');
+
+            function updateNotificationButtonState() {
+                if (!enableNotifBtn) return;
+                if (!('Notification' in window)) {
+                    enableNotifBtn.classList.add('hidden');
+                    return;
+                }
+                if (Notification.permission === 'granted') {
+                    enableNotifBtn.textContent = 'الإشعارات مفعّلة ✓';
+                } else if (Notification.permission === 'denied') {
+                    enableNotifBtn.textContent = 'الإشعارات محظورة';
+                } else {
+                    enableNotifBtn.textContent = 'تفعيل الإشعارات';
+                }
+            }
+
+            if (enableNotifBtn) {
+                enableNotifBtn.addEventListener('click', async () => {
+                    if (!('Notification' in window)) return;
+                    try {
+                        const perm = await Notification.requestPermission();
+                        updateNotificationButtonState();
+                        if (perm === 'granted') {
+                            showInAppToast('تم تفعيل الإشعارات', 'سيصلك تنبيه فوري عند وصول أي طلب تمويل جديد.');
+                        }
+                    } catch (_) {}
+                });
+            }
+
+            function playNotificationChime() {
+                try {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioCtx) return;
+                    const ctx = new AudioCtx();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.18);
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.23);
+                } catch (_) {}
+            }
+
+            function showInAppToast(title, body) {
+                if (!liveToastBanner) return;
+                liveToastTitle.textContent = title;
+                liveToastBody.textContent = body;
+                liveToastBanner.classList.remove('hidden', 'hiding');
+                playNotificationChime();
+
+                if (toastHideTimer) clearTimeout(toastHideTimer);
+                toastHideTimer = setTimeout(() => {
+                    liveToastBanner.classList.add('hiding');
+                    setTimeout(() => {
+                        liveToastBanner.classList.add('hidden');
+                    }, 260);
+                }, 7000);
+            }
+
+            function showSystemNotification(title, body) {
+                if (!('Notification' in window)) return;
+                if (Notification.permission !== 'granted') return;
+                try {
+                    const n = new Notification(title, {
+                        body,
+                        icon: './image_9208f7b4.jpg',
+                        badge: './image_9208f7b4.jpg',
+                        dir: 'rtl',
+                        lang: 'ar'
+                    });
+                    n.onclick = () => {
+                        window.focus();
+                        switchTab('requestsTab');
+                        switchRequestSubTab('submissions');
+                        n.close();
+                    };
+                } catch (_) {}
+            }
+
+            if (liveToastOpenBtn) {
+                liveToastOpenBtn.addEventListener('click', () => {
+                    liveToastBanner.classList.add('hidden');
+                    switchTab('requestsTab');
+                    switchRequestSubTab('submissions');
+                    loadClientRequests();
+                });
+            }
+
+            if (liveToastCloseBtn) {
+                liveToastCloseBtn.addEventListener('click', () => {
+                    liveToastBanner.classList.add('hidden');
+                });
+            }
+
+            function isRequestRelevantToCurrentUser(req) {
+                if (!currentUser) return false;
+                if (currentProfile?.role === 'manager') return true;
+                if (req.employee_id && req.employee_id === currentUser.id) return true;
+                const myPhone = normalizePhone(currentProfile?.phone || (currentUser.email || '').split('@')[0] || '');
+                const reqEmpNorm = normalizePhone(req.employee_name || '');
+                if (myPhone && reqEmpNorm && myPhone === reqEmpNorm) return true;
+                if (currentProfile?.full_name && req.employee_name && req.employee_name.trim() === currentProfile.full_name.trim()) return true;
+                return true;
+            }
+
+            async function subscribeToLiveClientRequests() {
+                if (!sb || !currentUser || typeof sb.channel !== 'function') return;
+
+                try {
+                    if (requestsRealtimeChannel) {
+                        await sb.removeChannel(requestsRealtimeChannel);
+                        requestsRealtimeChannel = null;
+                    }
+
+                    requestsRealtimeChannel = sb
+                        .channel('fawry-client-requests-live')
+                        .on(
+                            'postgres_changes',
+                            { event: 'INSERT', schema: 'public', table: 'client_requests' },
+                            async (payload) => {
+                                const newReq = payload?.new;
+                                if (!newReq) return;
+                                if (newReq.id && seenRequestIds.has(newReq.id)) return;
+                                if (newReq.id) seenRequestIds.add(newReq.id);
+
+                                if (!isRequestRelevantToCurrentUser(newReq)) return;
+
+                                await loadClientRequests();
+
+                                const clientName = newReq.client_name || 'عميل جديد';
+                                const city = newReq.city ? ` - ${newReq.city}` : '';
+                                const amountText = newReq.requested_amount
+                                    ? ` (${Number(newReq.requested_amount).toLocaleString('en-US')} ج.م)`
+                                    : '';
+                                const empText = currentProfile?.role === 'manager' && newReq.employee_name
+                                    ? ` | الموظف: ${getRequestEmployeeDisplayName(newReq)}`
+                                    : '';
+
+                                const toastTitle = 'طلب تمويل جديد وصل الآن!';
+                                const toastBody = `${clientName}${city}${amountText}${empText}`;
+
+                                showInAppToast(toastTitle, toastBody);
+                                showSystemNotification(toastTitle, toastBody);
+                            }
+                        )
+                        .subscribe();
+                } catch (_) {}
+            }
+
+            async function loadClientRequests() {
+                if (!sb || !currentUser) return;
+                const { data, error } = await sb
+                    .from('client_requests')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    document.getElementById('requestsContainer').innerHTML =
+                        `<div class="status-text status-err">تعذر تحميل الطلبات: ${escapeHTML(error.message)}</div>`;
+                    return;
+                }
+
+                allRequests = data || [];
+                allRequests.forEach(item => {
+                    if (item?.id) seenRequestIds.add(item.id);
+                });
+                document.getElementById('requestsBadgeCount').textContent = allRequests.length;
+                populateReqEmployeeFilter();
+                renderClientRequests();
+            }
+
+            function getRequestEmployeeDisplayName(r) {
+                const raw = String(r.employee_name || '').trim();
+                const digitsOnly = normalizePhone(raw);
+                if (digitsOnly && digitsOnly === raw) {
+                    const matchedEmp = allEmployees.find(emp => normalizePhone(emp.phone || '') === digitsOnly);
+                    if (matchedEmp && matchedEmp.full_name) {
+                        return matchedEmp.full_name.trim();
+                    }
+                }
+                if (r.employee_id) {
+                    const matchedById = allEmployees.find(emp => emp.user_id === r.employee_id);
+                    if (matchedById && matchedById.full_name) {
+                        return matchedById.full_name.trim();
+                    }
+                }
+                return raw || 'غير محدد';
+            }
+
+            function populateReqEmployeeFilter() {
+                const select = document.getElementById('reqFilterEmployee');
+                const currentVal = select.value;
+                const names = [...new Set(allRequests.map(r => getRequestEmployeeDisplayName(r)).filter(Boolean))];
+                select.innerHTML = '<option value="">كل الموظفين</option>' +
+                    names.map(n => `<option value="${escapeHTML(n)}">${escapeHTML(n)}</option>`).join('');
+                select.value = currentVal;
+            }
+
+            function getFilteredRequests() {
+                const q = document.getElementById('reqFilterSearch').value.trim().toLowerCase();
+                const empFilter = document.getElementById('reqFilterEmployee').value;
+
+                return allRequests.filter(r => {
+                    const empDisplayName = getRequestEmployeeDisplayName(r);
+                    if (empFilter && empDisplayName !== empFilter) return false;
+                    if (q) {
+                        const hay = `${r.client_name || ''} ${r.client_phone || ''} ${r.activity_type || ''} ${r.city || ''} ${empDisplayName}`.toLowerCase();
+                        if (!hay.includes(q)) return false;
+                    }
+                    return true;
+                });
+            }
+
+            function renderClientRequests() {
+                const filtered = getFilteredRequests();
+                document.getElementById('requestsCount').textContent = filtered.length;
+                const container = document.getElementById('requestsContainer');
+
+                if (!filtered.length) {
+                    container.innerHTML = '<p style="color:#64748b; text-align:center; padding:16px;">لا توجد تقديمات عملاء بعد</p>';
+                    return;
+                }
+
+                const isManager = currentProfile?.role === 'manager';
+
+                container.innerHTML = filtered.map(r => {
+                    const cleanTel = normalizePhone(r.client_phone || '');
+                    const waTel = cleanTel.startsWith('0') ? `2${cleanTel}` : cleanTel;
+                    const createdDate = r.created_at ? r.created_at.split('T')[0] : '';
+                    const formattedAmt = Number(r.requested_amount || 0).toLocaleString('en-US');
+                    const empDisplayName = getRequestEmployeeDisplayName(r);
+
+                    return `
+                        <div class="visit-card">
+                            ${isManager ? `<div class="visit-row"><span class="visit-key">الموظف التابع له:</span> ${escapeHTML(empDisplayName)}</div>` : ''}
+                            <div class="visit-row"><span class="visit-key">اسم العميل:</span> ${escapeHTML(r.client_name || '')}</div>
+                            <div class="visit-row"><span class="visit-key">رقم الموبايل:</span> ${escapeHTML(r.client_phone || '')}</div>
+                            <div class="visit-row"><span class="visit-key">نوع النشاط:</span> ${escapeHTML(r.activity_type || '')}</div>
+                            <div class="visit-row"><span class="visit-key">المدينة:</span> ${escapeHTML(r.city || '')}</div>
+                            <div class="visit-row"><span class="visit-key">المبلغ المطلوب:</span> <strong>${formattedAmt} ج.م</strong></div>
+                            ${createdDate ? `<div class="visit-row"><span class="visit-key">تاريخ التقديم:</span> ${escapeHTML(createdDate)}</div>` : ''}
+                            <div class="visit-card-actions">
+                                ${cleanTel ? `<a href="tel:${escapeHTML(cleanTel)}" class="reset-btn" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;">📞 اتصال</a>` : ''}
+                                ${waTel ? `<a href="https://wa.me/${escapeHTML(waTel)}" target="_blank" class="whatsapp-btn">واتساب</a>` : ''}
+                                <button type="button" class="delete-visit-btn" onclick="deleteClientRequest('${r.id}')">حذف</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            window.deleteClientRequest = async function(id) {
+                if (!sb || !confirm('هل أنت متأكد من حذف هذا الطلب؟')) return;
+                const { error } = await sb.from('client_requests').delete().eq('id', id);
+                if (!error) {
+                    await loadClientRequests();
+                }
+            };
+
+            ['reqFilterSearch', 'reqFilterEmployee'].forEach(id => {
+                document.getElementById(id).addEventListener('input', renderClientRequests);
+                document.getElementById(id).addEventListener('change', renderClientRequests);
+            });
+
+            document.getElementById('refreshRequestsBtn').addEventListener('click', loadClientRequests);
+
+            document.getElementById('exportRequestsExcelBtn').addEventListener('click', () => {
+                if (!window.XLSX) return;
+                const isManager = currentProfile?.role === 'manager';
+                const rows = getFilteredRequests().map(r => {
+                    const row = {};
+                    if (isManager) row['الموظف'] = r.employee_name || '';
+                    row['اسم العميل'] = r.client_name || '';
+                    row['رقم الموبايل'] = r.client_phone || '';
+                    row['نوع النشاط'] = r.activity_type || '';
+                    row['المدينة'] = r.city || '';
+                    row['المبلغ المطلوب'] = Number(r.requested_amount || 0);
+                    row['تاريخ التقديم'] = r.created_at ? r.created_at.split('T')[0] : '';
+                    return row;
+                });
+
+                const ws = XLSX.utils.json_to_sheet(rows);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'تقديمات العملاء');
+                XLSX.writeFile(wb, `client_requests_${new Date().toISOString().split('T')[0]}.xlsx`);
+            });
+
+            document.getElementById('createEmployeeForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (currentProfile?.role !== 'manager') return;
+
+                const statusEl = document.getElementById('empStatus');
+                const btn = document.getElementById('createEmpBtn');
+                statusEl.textContent = '';
+                statusEl.className = 'status-text';
+
+                if (!sb) return;
+
+                const fullName = document.getElementById('empName').value.trim();
+                const phone = normalizePhone(empPhoneInput.value);
+                const password = document.getElementById('empPassword').value;
+
+                if (!fullName) {
+                    statusEl.textContent = 'أدخل اسم الموظف';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                if (phone.length !== 11) {
+                    statusEl.textContent = 'رقم الموبايل يجب أن يكون 11 رقماً بالضبط';
+                    statusEl.classList.add('status-err');
+                    empPhoneInput.focus();
+                    return;
+                }
+
+                if (password.length < 6) {
+                    statusEl.textContent = 'كلمة المرور يجب أن تكون 6 أحرف أو أرقام فأكثر';
+                    statusEl.classList.add('status-err');
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = 'جاري إنشاء الحساب...';
+
+                try {
+                    const { error } = await sb.rpc('admin_create_employee', {
+                        p_full_name: fullName,
+                        p_phone: phone,
+                        p_password: password
+                    });
+
+                    if (error) throw error;
+
+                    document.getElementById('createEmployeeForm').reset();
+                    statusEl.textContent = `تم إنشاء حساب الموظف (${phone}) وحفظه في قاعدة بيانات الموظفين`;
+                    statusEl.classList.add('status-ok');
+                    await loadEmployeesDb();
+                } catch (err) {
+                    statusEl.textContent = `تعذر إنشاء الحساب: ${err.message || err}`;
+                    statusEl.classList.add('status-err');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'إنشاء حساب الموظف';
+                }
+            });
+
+            async function loadEmployeesDb() {
+                if (!sb || currentProfile?.role !== 'manager') return;
+                const tbody = document.getElementById('empTableBody');
+                const dbStatus = document.getElementById('empDbStatus');
+                dbStatus.textContent = '';
+
+                const { data, error } = await sb
+                    .from('employee_credentials')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="status-err" style="text-align:center; padding:14px;">تعذر تحميل قاعدة بيانات الموظفين: ${escapeHTML(error.message)}</td></tr>`;
+                    return;
+                }
+
+                allEmployees = data || [];
+                renderEmployeesDb();
+                renderManagerEmployeeLinks();
+                populateReqEmployeeFilter();
+                renderClientRequests();
+            }
+
+            function getFilteredEmployees() {
+                const q = document.getElementById('empSearchInput').value.trim().toLowerCase();
+                if (!q) return allEmployees;
+                return allEmployees.filter(emp => {
+                    const hay = `${emp.full_name || ''} ${emp.phone || ''} ${emp.password || ''}`.toLowerCase();
+                    return hay.includes(q);
+                });
+            }
+
+            function renderEmployeesDb() {
+                const list = getFilteredEmployees();
+                document.getElementById('empCount').textContent = list.length;
+                const tbody = document.getElementById('empTableBody');
+
+                if (!list.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#64748b; padding:16px;">لا يوجد موظفون مضافون بعد</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = list.map(emp => `
+                    <tr>
+                        <td><strong>${escapeHTML(emp.full_name || '')}</strong></td>
+                        <td><span class="cred-pill">${escapeHTML(emp.phone || '')}</span></td>
+                        <td><span class="cred-pill">${escapeHTML(emp.password || '')}</span></td>
+                        <td>
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button type="button" class="reset-btn" onclick="copyEmpCred('${escapeHTML(emp.phone || '')}', '${escapeHTML(emp.password || '')}')">نسخ</button>
+                                <button type="button" class="edit-pass-btn" onclick="changeEmpPassword('${emp.user_id}', '${escapeHTML(emp.full_name || '')}', '${escapeHTML(emp.phone || '')}')">تغيير</button>
+                                <button type="button" class="delete-visit-btn" onclick="deleteEmpAccount('${emp.user_id}')">حذف</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            window.copyEmpCred = async function(phone, password) {
+                const text = `اليوزر: ${phone}\nالباسوورد: ${password}`;
+                const dbStatus = document.getElementById('empDbStatus');
+                try {
+                    await navigator.clipboard.writeText(text);
+                    dbStatus.textContent = `تم نسخ بيانات الموظف (${phone})`;
+                    dbStatus.className = 'status-text status-ok';
+                } catch (_) {
+                    dbStatus.textContent = text;
+                    dbStatus.className = 'status-text status-ok';
+                }
+            };
+
+            window.changeEmpPassword = async function(userId, fullName, phone) {
+                if (!sb || !userId) return;
+                const dbStatus = document.getElementById('empDbStatus');
+                const newPass = window.prompt(`أدخل كلمة المرور الجديدة للموظف (${fullName || phone}) — 6 أحرف أو أرقام فأكثر:`);
+
+                if (newPass === null) return;
+                const trimmedPass = newPass.trim();
+
+                if (trimmedPass.length < 6) {
+                    dbStatus.textContent = 'كلمة المرور يجب أن تكون 6 أحرف أو أرقام فأكثر';
+                    dbStatus.className = 'status-text status-err';
+                    return;
+                }
+
+                const { error } = await sb.rpc('admin_update_employee_password', {
+                    p_user_id: userId,
+                    p_new_password: trimmedPass
+                });
+
+                if (error) {
+                    dbStatus.textContent = `تعذر تغيير كلمة المرور: ${error.message}`;
+                    dbStatus.className = 'status-text status-err';
+                    return;
+                }
+
+                dbStatus.textContent = `تم تحديث كلمة مرور (${fullName || phone}) بنجاح دون المساس ببيانات الزيارات`;
+                dbStatus.className = 'status-text status-ok';
+                await loadEmployeesDb();
+            };
+
+            window.deleteEmpAccount = async function(userId) {
+                if (!sb || !userId || !confirm('هل أنت متأكد من حذف حساب هذا الموظف نهائياً؟')) return;
+                const dbStatus = document.getElementById('empDbStatus');
+                const { error } = await sb.rpc('admin_delete_employee', { p_user_id: userId });
+                if (error) {
+                    dbStatus.textContent = `تعذر حذف الموظف: ${error.message}`;
+                    dbStatus.className = 'status-text status-err';
+                    return;
+                }
+                dbStatus.textContent = 'تم حذف حساب الموظف بنجاح';
+                dbStatus.className = 'status-text status-ok';
+                await loadEmployeesDb();
+            };
+
+            document.getElementById('empSearchInput').addEventListener('input', renderEmployeesDb);
+            document.getElementById('refreshEmpBtn').addEventListener('click', loadEmployeesDb);
+
+            document.getElementById('exportEmpExcelBtn').addEventListener('click', () => {
+                if (!window.XLSX) return;
+                const rows = getFilteredEmployees().map(emp => ({
+                    'اسم الموظف': emp.full_name || '',
+                    'اليوزر (رقم الموبايل)': emp.phone || '',
+                    'الباسوورد': emp.password || '',
+                    'تاريخ الإضافة': emp.created_at ? emp.created_at.split('T')[0] : ''
+                }));
+                const ws = XLSX.utils.json_to_sheet(rows);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'الموظفون');
+                XLSX.writeFile(wb, `employees_${new Date().toISOString().split('T')[0]}.xlsx`);
+            });
+
+            async function restoreSession() {
+                const cached = getLocalSession();
+                if (cached?.session?.user) {
+                    await initSession(cached.session.user, cached.session, cached.profile);
+                }
+
+                if (sb && sb.auth) {
+                    try {
+                        const { data } = await sb.auth.getSession();
+                        if (data?.session?.user) {
+                            await initSession(data.session.user, data.session, cached?.profile || null);
+                        } else if (cached?.session?.access_token && cached?.session?.refresh_token) {
+                            const { data: setData } = await sb.auth.setSession({
+                                access_token: cached.session.access_token,
+                                refresh_token: cached.session.refresh_token
+                            });
+                            if (setData?.session?.user) {
+                                await initSession(setData.session.user, setData.session, cached?.profile || null);
+                            }
+                        }
+                    } catch (_) {}
+                }
+            }
+
+            restoreSession();
+        });
+    </script>
+</body>
+</html>
