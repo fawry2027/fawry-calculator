@@ -2106,23 +2106,28 @@
                         if (referralPhoneParam) {
                             const { data } = await sb
                                 .from('profiles')
-                                .select('id, full_name')
+                                .select('id, full_name, phone')
                                 .eq('phone', referralPhoneParam)
                                 .maybeSingle();
                             if (data) {
                                 targetEmployeeId = data.id || targetEmployeeId;
                                 targetEmployeeName = (data.full_name || '').trim();
                             }
-                            if (!targetEmployeeName) {
+                            if (!targetEmployeeName || !targetEmployeeId) {
                                 const { data: credData } = await sb
                                     .from('employee_credentials')
-                                    .select('user_id, full_name')
+                                    .select('user_id, full_name, phone')
                                     .eq('phone', referralPhoneParam)
                                     .maybeSingle();
                                 if (credData) {
                                     targetEmployeeId = credData.user_id || targetEmployeeId;
-                                    targetEmployeeName = (credData.full_name || '').trim();
+                                    if (!targetEmployeeName) {
+                                        targetEmployeeName = (credData.full_name || '').trim();
+                                    }
                                 }
+                            }
+                            if (!targetEmployeeName) {
+                                targetEmployeeName = referralPhoneParam;
                             }
                         } else if (referralEmpIdParam) {
                             const { data } = await sb
@@ -2136,10 +2141,14 @@
                             }
                         }
 
-                        if (targetEmployeeName) {
+                        if (targetEmployeeName && targetEmployeeName !== referralPhoneParam) {
                             document.getElementById('publicAdvisorBadge').textContent = `مسؤول التمويل: ${targetEmployeeName}`;
                         }
-                    } catch (_) {}
+                    } catch (_) {
+                        if (referralPhoneParam && !targetEmployeeName) {
+                            targetEmployeeName = referralPhoneParam;
+                        }
+                    }
                 }
 
                 resolveReferralEmployee();
@@ -3716,7 +3725,7 @@
                 const reqEmpNorm = normalizePhone(req.employee_name || '');
                 if (myPhone && reqEmpNorm && myPhone === reqEmpNorm) return true;
                 if (currentProfile?.full_name && req.employee_name && req.employee_name.trim() === currentProfile.full_name.trim()) return true;
-                return true;
+                return false;
             }
 
             async function subscribeToLiveClientRequests() {
@@ -3761,6 +3770,48 @@
                         )
                         .subscribe();
                 } catch (_) {}
+
+                if (!window.__fawryRequestsPollTimer) {
+                    window.__fawryRequestsPollTimer = setInterval(async () => {
+                        if (!sb || !currentUser) return;
+                        try {
+                            const { data } = await sb
+                                .from('client_requests')
+                                .select('*')
+                                .order('created_at', { ascending: false });
+                            if (!Array.isArray(data)) return;
+
+                            const newlyArrived = data.filter(item => item?.id && !seenRequestIds.has(item.id));
+                            if (newlyArrived.length > 0) {
+                                newlyArrived.forEach(item => seenRequestIds.add(item.id));
+                                await loadClientRequests();
+
+                                const relevantNew = newlyArrived.filter(isRequestRelevantToCurrentUser);
+                                if (relevantNew.length > 0) {
+                                    const topReq = relevantNew[0];
+                                    const clientName = topReq.client_name || 'عميل جديد';
+                                    const city = topReq.city ? ` - ${topReq.city}` : '';
+                                    const amountText = topReq.requested_amount
+                                        ? ` (${Number(topReq.requested_amount).toLocaleString('en-US')} ج.م)`
+                                        : '';
+                                    const empText = currentProfile?.role === 'manager' && topReq.employee_name
+                                        ? ` | الموظف: ${getRequestEmployeeDisplayName(topReq)}`
+                                        : '';
+                                    const toastTitle = 'طلب تمويل جديد وصل الآن!';
+                                    const toastBody = `${clientName}${city}${amountText}${empText}`;
+                                    showInAppToast(toastTitle, toastBody);
+                                    showSystemNotification(toastTitle, toastBody);
+                                }
+                            }
+                        } catch (_) {}
+                    }, 8000);
+
+                    document.addEventListener('visibilitychange', () => {
+                        if (!document.hidden && sb && currentUser) {
+                            loadClientRequests();
+                        }
+                    });
+                }
             }
 
             async function loadClientRequests() {
