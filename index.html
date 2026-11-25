@@ -8,9 +8,15 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="فوري للتمويل">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fawry2027.github.io/fawry-calculator/">
     <meta property="og:title" content="فوري للتمويل | طلب تمويل مشروعات">
     <meta property="og:description" content="قدّم على تمويل مشروعك بسهولة وسرعة — سجّل بياناتك وسيتواصل معك مسؤول التمويل فوراً.">
-    <meta property="og:image" content="./image_9208f7b4.jpg">
+    <meta property="og:image" content="https://fawry2027.github.io/fawry-calculator/image_9208f7b4.jpg">
+    <meta property="og:image:secure_url" content="https://fawry2027.github.io/fawry-calculator/image_9208f7b4.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <title>فوري للتمويل | طلب تمويل مشروعات</title>
     <link id="appManifest" rel="manifest">
     <link id="appleIconLink" rel="apple-touch-icon" href="./image_9208f7b4.jpg">
@@ -2043,21 +2049,49 @@
                 let targetEmployeeId = referralEmpIdParam || null;
                 let targetEmployeeName = '';
 
-                if (sb) {
-                    const lookupPromise = referralPhoneParam
-                        ? sb.from('profiles').select('id, full_name').eq('phone', referralPhoneParam).maybeSingle()
-                        : sb.from('profiles').select('id, full_name').eq('id', referralEmpIdParam).maybeSingle();
-
-                    lookupPromise.then(({ data }) => {
-                        if (data) {
-                            targetEmployeeId = data.id;
-                            targetEmployeeName = data.full_name || '';
-                            if (targetEmployeeName) {
-                                document.getElementById('publicAdvisorBadge').textContent = `مسؤول التمويل: ${targetEmployeeName}`;
+                async function resolveReferralEmployee() {
+                    if (!sb) return;
+                    try {
+                        if (referralPhoneParam) {
+                            const { data } = await sb
+                                .from('profiles')
+                                .select('id, full_name')
+                                .eq('phone', referralPhoneParam)
+                                .maybeSingle();
+                            if (data) {
+                                targetEmployeeId = data.id || targetEmployeeId;
+                                targetEmployeeName = (data.full_name || '').trim();
+                            }
+                            if (!targetEmployeeName) {
+                                const { data: credData } = await sb
+                                    .from('employee_credentials')
+                                    .select('user_id, full_name')
+                                    .eq('phone', referralPhoneParam)
+                                    .maybeSingle();
+                                if (credData) {
+                                    targetEmployeeId = credData.user_id || targetEmployeeId;
+                                    targetEmployeeName = (credData.full_name || '').trim();
+                                }
+                            }
+                        } else if (referralEmpIdParam) {
+                            const { data } = await sb
+                                .from('profiles')
+                                .select('id, full_name')
+                                .eq('id', referralEmpIdParam)
+                                .maybeSingle();
+                            if (data) {
+                                targetEmployeeId = data.id || targetEmployeeId;
+                                targetEmployeeName = (data.full_name || '').trim();
                             }
                         }
-                    }).catch(() => {});
+
+                        if (targetEmployeeName) {
+                            document.getElementById('publicAdvisorBadge').textContent = `مسؤول التمويل: ${targetEmployeeName}`;
+                        }
+                    } catch (_) {}
                 }
+
+                resolveReferralEmployee();
 
                 const leadPhoneInput = document.getElementById('leadPhone');
                 leadPhoneInput.addEventListener('input', (e) => {
@@ -2107,16 +2141,8 @@
                     btn.textContent = 'جاري إرسال طلبك...';
 
                     try {
-                        if (!targetEmployeeId && referralPhoneParam) {
-                            const { data: empRow } = await sb
-                                .from('profiles')
-                                .select('id, full_name')
-                                .eq('phone', referralPhoneParam)
-                                .maybeSingle();
-                            if (empRow) {
-                                targetEmployeeId = empRow.id;
-                                targetEmployeeName = empRow.full_name || '';
-                            }
+                        if (!targetEmployeeName) {
+                            await resolveReferralEmployee();
                         }
 
                         const { error } = await sb.from('client_requests').insert([{
@@ -3551,10 +3577,28 @@
                 renderClientRequests();
             }
 
+            function getRequestEmployeeDisplayName(r) {
+                const raw = String(r.employee_name || '').trim();
+                const digitsOnly = normalizePhone(raw);
+                if (digitsOnly && digitsOnly === raw) {
+                    const matchedEmp = allEmployees.find(emp => normalizePhone(emp.phone || '') === digitsOnly);
+                    if (matchedEmp && matchedEmp.full_name) {
+                        return matchedEmp.full_name.trim();
+                    }
+                }
+                if (r.employee_id) {
+                    const matchedById = allEmployees.find(emp => emp.user_id === r.employee_id);
+                    if (matchedById && matchedById.full_name) {
+                        return matchedById.full_name.trim();
+                    }
+                }
+                return raw || 'غير محدد';
+            }
+
             function populateReqEmployeeFilter() {
                 const select = document.getElementById('reqFilterEmployee');
                 const currentVal = select.value;
-                const names = [...new Set(allRequests.map(r => r.employee_name).filter(Boolean))];
+                const names = [...new Set(allRequests.map(r => getRequestEmployeeDisplayName(r)).filter(Boolean))];
                 select.innerHTML = '<option value="">كل الموظفين</option>' +
                     names.map(n => `<option value="${escapeHTML(n)}">${escapeHTML(n)}</option>`).join('');
                 select.value = currentVal;
@@ -3565,9 +3609,10 @@
                 const empFilter = document.getElementById('reqFilterEmployee').value;
 
                 return allRequests.filter(r => {
-                    if (empFilter && r.employee_name !== empFilter) return false;
+                    const empDisplayName = getRequestEmployeeDisplayName(r);
+                    if (empFilter && empDisplayName !== empFilter) return false;
                     if (q) {
-                        const hay = `${r.client_name || ''} ${r.client_phone || ''} ${r.activity_type || ''} ${r.city || ''} ${r.employee_name || ''}`.toLowerCase();
+                        const hay = `${r.client_name || ''} ${r.client_phone || ''} ${r.activity_type || ''} ${r.city || ''} ${empDisplayName}`.toLowerCase();
                         if (!hay.includes(q)) return false;
                     }
                     return true;
@@ -3591,10 +3636,11 @@
                     const waTel = cleanTel.startsWith('0') ? `2${cleanTel}` : cleanTel;
                     const createdDate = r.created_at ? r.created_at.split('T')[0] : '';
                     const formattedAmt = Number(r.requested_amount || 0).toLocaleString('en-US');
+                    const empDisplayName = getRequestEmployeeDisplayName(r);
 
                     return `
                         <div class="visit-card">
-                            ${isManager ? `<div class="visit-row"><span class="visit-key">الموظف التابع له:</span> ${escapeHTML(r.employee_name || 'غير محدد')}</div>` : ''}
+                            ${isManager ? `<div class="visit-row"><span class="visit-key">الموظف التابع له:</span> ${escapeHTML(empDisplayName)}</div>` : ''}
                             <div class="visit-row"><span class="visit-key">اسم العميل:</span> ${escapeHTML(r.client_name || '')}</div>
                             <div class="visit-row"><span class="visit-key">رقم الموبايل:</span> ${escapeHTML(r.client_phone || '')}</div>
                             <div class="visit-row"><span class="visit-key">نوع النشاط:</span> ${escapeHTML(r.activity_type || '')}</div>
@@ -3725,6 +3771,8 @@
                 allEmployees = data || [];
                 renderEmployeesDb();
                 renderManagerEmployeeLinks();
+                populateReqEmployeeFilter();
+                renderClientRequests();
             }
 
             function getFilteredEmployees() {
