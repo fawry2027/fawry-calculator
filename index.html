@@ -1266,9 +1266,91 @@
                 grid-template-columns: 1fr;
             }
         }
+    
+        .live-toast-banner {
+            position: fixed;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10002;
+            width: calc(100% - 28px);
+            max-width: 480px;
+            background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+            color: #ffffff;
+            border: 2px solid #a7f3d0;
+            border-radius: 18px;
+            padding: 14px 16px;
+            box-shadow: 0 16px 36px rgba(6, 95, 70, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .live-toast-banner.hiding {
+            opacity: 0;
+            transform: translate(-50%, -12px);
+            pointer-events: none;
+        }
+
+        .live-toast-content {
+            flex: 1;
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        .live-toast-title {
+            font-weight: 800;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .live-toast-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .live-toast-open-btn {
+            background-color: #ffffff;
+            color: #065f46;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 10px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .live-toast-close-btn {
+            background: rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 4px 8px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
+
+        <div id="liveToastBanner" class="live-toast-banner hidden" role="status" aria-live="polite">
+        <div class="live-toast-content">
+            <div class="live-toast-title" id="liveToastTitle">طلب تمويل جديد!</div>
+            <div id="liveToastBody"></div>
+        </div>
+        <div class="live-toast-actions">
+            <button type="button" id="liveToastOpenBtn" class="live-toast-open-btn">عرض الطلب</button>
+            <button type="button" id="liveToastCloseBtn" class="live-toast-close-btn">إغلاق</button>
+        </div>
+    </div>
 
     <div id="splashScreen" class="splash-screen">
         <img src="./image_9208f7b4.jpg" alt="فوري للتمويل" class="splash-logo">
@@ -1567,6 +1649,7 @@
                             إجمالي الطلبات (<span id="requestsCount">0</span>)
                         </h2>
                         <div class="actions-row" style="margin-bottom:0;">
+                            <button type="button" id="enableNotifBtn" class="reset-btn">تفعيل الإشعارات</button>
                             <button type="button" id="refreshRequestsBtn" class="reset-btn">تحديث</button>
                             <button type="button" id="exportRequestsExcelBtn" class="reset-btn">تصدير Excel</button>
                         </div>
@@ -1768,39 +1851,7 @@
                     </label>
                 </div>
 
-                <div class="filters-strip" id="scannerFiltersStrip">
-                    <button type="button" class="filter-preset-card active" data-filter="original">
-                        <div class="filter-preset-thumb">
-                            <span>CamScanner</span>
-                            <span>Original</span>
-                        </div>
-                        <div class="filter-preset-label">Original</div>
-                    </button>
 
-                    <button type="button" class="filter-preset-card" data-filter="omnifix">
-                        <div class="filter-preset-thumb omnifix">
-                            <span>CamScanner</span>
-                            <span>OmniFix</span>
-                        </div>
-                        <div class="filter-preset-label">OmniFix</div>
-                    </button>
-
-                    <button type="button" class="filter-preset-card" data-filter="noshadow">
-                        <div class="filter-preset-thumb noshadow">
-                            <span>CamScanner</span>
-                            <span>No Shadow</span>
-                        </div>
-                        <div class="filter-preset-label">No Shadow</div>
-                    </button>
-
-                    <button type="button" class="filter-preset-card" data-filter="lighten">
-                        <div class="filter-preset-thumb lighten">
-                            <span>CamScanner</span>
-                            <span>Lighten</span>
-                        </div>
-                        <div class="filter-preset-label">Lighten</div>
-                    </button>
-                </div>
 
                 <div class="scanner-dock-bar">
                     <div class="dock-tools-group">
@@ -2608,9 +2659,6 @@
                 activeFilterPreset = 'original';
                 manualBoxVisible = false;
 
-                document.querySelectorAll('.filter-preset-card').forEach(card => {
-                    card.classList.toggle('active', card.getAttribute('data-filter') === 'original');
-                });
 
                 const item = selectedPdfImages[activePageIdx];
                 const dataUrl = await fileToDataUrl(item.file);
@@ -2681,9 +2729,6 @@
                 modeManualCropBtn.classList.remove('active');
                 document.getElementById('dockCropBtn').classList.remove('active');
                 activeFilterPreset = 'omnifix';
-                document.querySelectorAll('.filter-preset-card').forEach(card => {
-                    card.classList.toggle('active', card.getAttribute('data-filter') === 'omnifix');
-                });
                 syncManualCropOverlay();
                 renderScannerPage();
             });
@@ -2693,14 +2738,7 @@
                 renderScannerPage();
             });
 
-            document.querySelectorAll('.filter-preset-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    activeFilterPreset = card.getAttribute('data-filter') || 'original';
-                    document.querySelectorAll('.filter-preset-card').forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    renderScannerPage();
-                });
-            });
+
 
             let dragState = null;
 
@@ -3335,6 +3373,8 @@
                     loadClientRequests(),
                     isManager ? loadEmployeesDb() : Promise.resolve()
                 ]);
+                subscribeToLiveClientRequests();
+                updateNotificationButtonState();
                 hideSplash();
             }
 
@@ -3558,6 +3598,171 @@
             document.getElementById('exportExcelBtnEmployee').addEventListener('click', exportVisitsToExcel);
             document.getElementById('exportExcelBtnManager').addEventListener('click', exportVisitsToExcel);
 
+
+            let requestsRealtimeChannel = null;
+            let toastHideTimer = null;
+            const seenRequestIds = new Set();
+
+            const liveToastBanner = document.getElementById('liveToastBanner');
+            const liveToastTitle = document.getElementById('liveToastTitle');
+            const liveToastBody = document.getElementById('liveToastBody');
+            const liveToastOpenBtn = document.getElementById('liveToastOpenBtn');
+            const liveToastCloseBtn = document.getElementById('liveToastCloseBtn');
+            const enableNotifBtn = document.getElementById('enableNotifBtn');
+
+            function updateNotificationButtonState() {
+                if (!enableNotifBtn) return;
+                if (!('Notification' in window)) {
+                    enableNotifBtn.classList.add('hidden');
+                    return;
+                }
+                if (Notification.permission === 'granted') {
+                    enableNotifBtn.textContent = 'الإشعارات مفعّلة ✓';
+                } else if (Notification.permission === 'denied') {
+                    enableNotifBtn.textContent = 'الإشعارات محظورة';
+                } else {
+                    enableNotifBtn.textContent = 'تفعيل الإشعارات';
+                }
+            }
+
+            if (enableNotifBtn) {
+                enableNotifBtn.addEventListener('click', async () => {
+                    if (!('Notification' in window)) return;
+                    try {
+                        const perm = await Notification.requestPermission();
+                        updateNotificationButtonState();
+                        if (perm === 'granted') {
+                            showInAppToast('تم تفعيل الإشعارات', 'سيصلك تنبيه فوري عند وصول أي طلب تمويل جديد.');
+                        }
+                    } catch (_) {}
+                });
+            }
+
+            function playNotificationChime() {
+                try {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioCtx) return;
+                    const ctx = new AudioCtx();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.18);
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.23);
+                } catch (_) {}
+            }
+
+            function showInAppToast(title, body) {
+                if (!liveToastBanner) return;
+                liveToastTitle.textContent = title;
+                liveToastBody.textContent = body;
+                liveToastBanner.classList.remove('hidden', 'hiding');
+                playNotificationChime();
+
+                if (toastHideTimer) clearTimeout(toastHideTimer);
+                toastHideTimer = setTimeout(() => {
+                    liveToastBanner.classList.add('hiding');
+                    setTimeout(() => {
+                        liveToastBanner.classList.add('hidden');
+                    }, 260);
+                }, 7000);
+            }
+
+            function showSystemNotification(title, body) {
+                if (!('Notification' in window)) return;
+                if (Notification.permission !== 'granted') return;
+                try {
+                    const n = new Notification(title, {
+                        body,
+                        icon: './image_9208f7b4.jpg',
+                        badge: './image_9208f7b4.jpg',
+                        dir: 'rtl',
+                        lang: 'ar'
+                    });
+                    n.onclick = () => {
+                        window.focus();
+                        switchTab('requestsTab');
+                        switchRequestSubTab('submissions');
+                        n.close();
+                    };
+                } catch (_) {}
+            }
+
+            if (liveToastOpenBtn) {
+                liveToastOpenBtn.addEventListener('click', () => {
+                    liveToastBanner.classList.add('hidden');
+                    switchTab('requestsTab');
+                    switchRequestSubTab('submissions');
+                    loadClientRequests();
+                });
+            }
+
+            if (liveToastCloseBtn) {
+                liveToastCloseBtn.addEventListener('click', () => {
+                    liveToastBanner.classList.add('hidden');
+                });
+            }
+
+            function isRequestRelevantToCurrentUser(req) {
+                if (!currentUser) return false;
+                if (currentProfile?.role === 'manager') return true;
+                if (req.employee_id && req.employee_id === currentUser.id) return true;
+                const myPhone = normalizePhone(currentProfile?.phone || (currentUser.email || '').split('@')[0] || '');
+                const reqEmpNorm = normalizePhone(req.employee_name || '');
+                if (myPhone && reqEmpNorm && myPhone === reqEmpNorm) return true;
+                if (currentProfile?.full_name && req.employee_name && req.employee_name.trim() === currentProfile.full_name.trim()) return true;
+                return true;
+            }
+
+            async function subscribeToLiveClientRequests() {
+                if (!sb || !currentUser || typeof sb.channel !== 'function') return;
+
+                try {
+                    if (requestsRealtimeChannel) {
+                        await sb.removeChannel(requestsRealtimeChannel);
+                        requestsRealtimeChannel = null;
+                    }
+
+                    requestsRealtimeChannel = sb
+                        .channel('fawry-client-requests-live')
+                        .on(
+                            'postgres_changes',
+                            { event: 'INSERT', schema: 'public', table: 'client_requests' },
+                            async (payload) => {
+                                const newReq = payload?.new;
+                                if (!newReq) return;
+                                if (newReq.id && seenRequestIds.has(newReq.id)) return;
+                                if (newReq.id) seenRequestIds.add(newReq.id);
+
+                                if (!isRequestRelevantToCurrentUser(newReq)) return;
+
+                                await loadClientRequests();
+
+                                const clientName = newReq.client_name || 'عميل جديد';
+                                const city = newReq.city ? ` - ${newReq.city}` : '';
+                                const amountText = newReq.requested_amount
+                                    ? ` (${Number(newReq.requested_amount).toLocaleString('en-US')} ج.م)`
+                                    : '';
+                                const empText = currentProfile?.role === 'manager' && newReq.employee_name
+                                    ? ` | الموظف: ${getRequestEmployeeDisplayName(newReq)}`
+                                    : '';
+
+                                const toastTitle = 'طلب تمويل جديد وصل الآن!';
+                                const toastBody = `${clientName}${city}${amountText}${empText}`;
+
+                                showInAppToast(toastTitle, toastBody);
+                                showSystemNotification(toastTitle, toastBody);
+                            }
+                        )
+                        .subscribe();
+                } catch (_) {}
+            }
+
             async function loadClientRequests() {
                 if (!sb || !currentUser) return;
                 const { data, error } = await sb
@@ -3572,6 +3777,9 @@
                 }
 
                 allRequests = data || [];
+                allRequests.forEach(item => {
+                    if (item?.id) seenRequestIds.add(item.id);
+                });
                 document.getElementById('requestsBadgeCount').textContent = allRequests.length;
                 populateReqEmployeeFilter();
                 renderClientRequests();
