@@ -181,105 +181,6 @@
             box-shadow: 0 4px 12px rgba(6, 95, 70, 0.2);
         }
 
-        .sub-tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .sub-tab-btn {
-            background-color: #ffffff;
-            color: #334155;
-            border: 2px solid #cbd5e1;
-            border-radius: 14px;
-            padding: 12px 10px;
-            font-size: 0.88rem;
-            font-weight: 800;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            text-align: center;
-        }
-
-        .sub-tab-btn.active {
-            background-color: #ecfdf5;
-            color: #065f46;
-            border-color: #059669;
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.14);
-        }
-
-        .level-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        .level-btn {
-            background-color: #f8fafc;
-            color: #334155;
-            border: 2px solid #cbd5e1;
-            border-radius: 14px;
-            padding: 12px 10px;
-            font-size: 0.88rem;
-            font-weight: 800;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-
-        .level-btn.active {
-            background-color: #ecfdf5;
-            color: #065f46;
-            border-color: #059669;
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.14);
-        }
-
-        .selected-images-list {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-top: 12px;
-        }
-
-        .selected-img-card {
-            background-color: #f8fafc;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 12px;
-        }
-
-        .selected-img-large-preview {
-            display: block;
-            width: 100%;
-            max-height: 360px;
-            object-fit: contain;
-            border-radius: 12px;
-            background-color: #ffffff;
-            border: 1px solid #cbd5e1;
-            margin-bottom: 10px;
-        }
-
-        .selected-img-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .selected-img-meta {
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: #0f172a;
-        }
-
         .scanner-modal {
             position: fixed;
             inset: 0;
@@ -379,34 +280,6 @@
             touch-action: none;
         }
 
-        .page-pager-bar {
-            display: inline-flex;
-            align-items: center;
-            gap: 14px;
-            background-color: #242426;
-            border: 1px solid #3a3a3c;
-            border-radius: 10px;
-            padding: 6px 14px;
-            font-size: 0.88rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .pager-arrow-btn {
-            background: none;
-            border: none;
-            color: #ffffff;
-            font-size: 0.9rem;
-            font-weight: 800;
-            cursor: pointer;
-            padding: 2px 6px;
-        }
-
-        .pager-arrow-btn:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-        }
-
         .scanner-bottom-panel {
             background-color: #18181a;
             border-top: 1px solid #2c2c2e;
@@ -451,14 +324,14 @@
             border: none;
             color: #e5e7eb;
             font-family: inherit;
-            font-size: 0.76rem;
+            font-size: 0.78rem;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 3px;
-            padding: 4px 8px;
+            padding: 6px 10px;
             border-radius: 8px;
         }
 
@@ -480,15 +353,6 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .pdf-result-box {
-            margin-top: 16px;
-            background-color: #ecfdf5;
-            border: 2px solid #a7f3d0;
-            border-radius: 18px;
-            padding: 16px;
-            text-align: center;
         }
 
         .calculator-card {
@@ -587,54 +451,8 @@
             border-color: #a7f3d0;
         }
 
-        .whatsapp-btn {
-            background-color: #ecfdf5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-            border-radius: 10px;
-            padding: 7px 12px;
-            font-size: 0.78rem;
-            font-weight: 800;
-            font-family: inherit;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .whatsapp-btn:hover {
-            background-color: #059669;
-            color: #ffffff;
-        }
-
-        .edit-pass-btn {
-            background-color: #eff6ff;
-            color: #1d4ed8;
-            border: 1px solid #bfdbfe;
-            border-radius: 9px;
-            padding: 6px 11px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .edit-pass-btn:hover {
-            background-color: #1d4ed8;
-            color: #ffffff;
-        }
-
         .form-group {
             margin-bottom: 18px;
-        }
-
-        .label-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
         }
 
         .input-label {
@@ -643,62 +461,6 @@
             font-weight: 700;
             color: #334155;
             margin-bottom: 6px;
-        }
-
-        .range-hint {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #64748b;
-            background-color: #f1f5f9;
-            padding: 3px 9px;
-            border-radius: 8px;
-            direction: ltr;
-        }
-
-        .amount-input-box {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .amount-input {
-            width: 100%;
-            height: 58px;
-            padding: 12px 16px 12px 58px;
-            font-size: 1.65rem;
-            font-weight: 800;
-            font-family: inherit;
-            color: #0f172a;
-            background-color: #f8fafc;
-            border: 2px solid #cbd5e1;
-            border-radius: 16px;
-            text-align: right;
-            direction: ltr;
-            outline: none;
-            transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .amount-input:focus {
-            background-color: #ffffff;
-            border-color: #059669;
-            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12);
-        }
-
-        .amount-input.has-error {
-            border-color: #e11d48;
-            background-color: #fff1f2;
-        }
-
-        .currency-badge {
-            position: absolute;
-            left: 14px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #059669;
-            background-color: #ecfdf5;
-            padding: 4px 10px;
-            border-radius: 8px;
-            pointer-events: none;
         }
 
         .field-input, .field-select {
@@ -719,14 +481,6 @@
             background-color: #ffffff;
             border-color: #059669;
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
-        }
-
-        .date-filter-label {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: #475569;
-            margin-bottom: 4px;
         }
 
         .primary-action-btn {
@@ -752,20 +506,9 @@
             opacity: 0.95;
         }
 
-        .primary-action-btn:active {
-            transform: scale(0.99);
-        }
-
         .primary-action-btn:disabled {
             opacity: 0.65;
             cursor: not-allowed;
-        }
-
-        .actions-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
         }
 
         .status-text {
@@ -781,73 +524,6 @@
 
         .status-err {
             color: #be123c;
-        }
-
-        .filters-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .visits-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .visit-card {
-            background-color: #f8fafc;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 18px;
-            padding: 14px 16px;
-        }
-
-        .visit-row {
-            font-size: 0.92rem;
-            margin-bottom: 6px;
-            color: #0f172a;
-        }
-
-        .visit-key {
-            font-weight: 800;
-            color: #065f46;
-        }
-
-        .visit-photo {
-            display: block;
-            max-width: 100%;
-            max-height: 260px;
-            border-radius: 12px;
-            margin-top: 10px;
-            border: 1px solid #cbd5e1;
-            background-color: #ffffff;
-            object-fit: contain;
-        }
-
-        .visit-card-actions {
-            margin-top: 10px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .delete-visit-btn {
-            background-color: #fff1f2;
-            color: #be123c;
-            border: 1px solid #fecdd3;
-            border-radius: 9px;
-            padding: 6px 12px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            font-family: inherit;
-            cursor: pointer;
-        }
-
-        .delete-visit-btn:hover {
-            background-color: #be123c;
-            color: #ffffff;
         }
 
         .ref-link-box {
@@ -873,49 +549,6 @@
             word-break: break-all;
         }
 
-        .emp-table-wrap {
-            width: 100%;
-            overflow-x: auto;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            background-color: #ffffff;
-        }
-
-        .emp-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.86rem;
-            min-width: 540px;
-        }
-
-        .emp-table th, .emp-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #e2e8f0;
-            text-align: right;
-            vertical-align: middle;
-        }
-
-        .emp-table th {
-            background-color: #ecfdf5;
-            color: #065f46;
-            font-weight: 800;
-        }
-
-        .emp-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .cred-pill {
-            display: inline-block;
-            background-color: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-family: monospace;
-            direction: ltr;
-            font-weight: 700;
-        }
-
         .install-banner {
             background-color: #ecfdf5;
             border: 1.5px solid #a7f3d0;
@@ -925,172 +558,6 @@
             color: #065f46;
             font-size: 0.84rem;
             font-weight: 700;
-        }
-
-        .store-buttons-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .store-dl-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px 12px;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            font-weight: 800;
-            font-family: inherit;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1.5px solid transparent;
-        }
-
-        .store-dl-btn.android {
-            background-color: #065f46;
-            color: #ffffff;
-        }
-
-        .store-dl-btn.android:hover {
-            background-color: #047857;
-        }
-
-        .store-dl-btn.ios {
-            background-color: #ffffff;
-            color: #0f172a;
-            border-color: #94a3b8;
-        }
-
-        .store-dl-btn.ios:hover {
-            background-color: #f8fafc;
-            border-color: #065f46;
-        }
-
-        .guide-modal-backdrop {
-            position: fixed;
-            inset: 0;
-            z-index: 10001;
-            background-color: rgba(15, 23, 42, 0.65);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-        }
-
-        .guide-modal-card {
-            width: 100%;
-            max-width: 420px;
-            background-color: #ffffff;
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-        }
-
-        .guide-modal-title {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: #065f46;
-            margin-bottom: 10px;
-        }
-
-        .guide-steps-list {
-            padding-right: 18px;
-            margin-bottom: 16px;
-            font-size: 0.9rem;
-            color: #1e293b;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .error-banner {
-            display: none;
-            margin-top: 10px;
-            padding: 10px 12px;
-            background-color: #fff1f2;
-            border: 1px solid #fecdd3;
-            border-radius: 12px;
-            color: #be123c;
-            font-size: 0.82rem;
-            font-weight: 700;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .error-banner.visible {
-            display: flex;
-        }
-
-        .slider-container {
-            margin-top: 18px;
-        }
-
-        input[type="range"].custom-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 999px;
-            outline: none;
-            cursor: pointer;
-            direction: rtl;
-        }
-
-        input[type="range"].custom-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #059669;
-            border: 3px solid #ffffff;
-            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.45);
-            cursor: pointer;
-            transition: transform 0.15s ease;
-        }
-
-        input[type="range"].custom-slider::-webkit-slider-thumb:active {
-            transform: scale(1.15);
-        }
-
-        input[type="range"].custom-slider::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #059669;
-            border: 3px solid #ffffff;
-            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.45);
-            cursor: pointer;
-        }
-
-        .quick-marks {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            gap: 4px;
-        }
-
-        .quick-mark-btn {
-            background: none;
-            border: none;
-            font-family: inherit;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #64748b;
-            padding: 4px 6px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: color 0.15s ease, background-color 0.15s ease;
-        }
-
-        .quick-mark-btn:hover, .quick-mark-btn:active {
-            color: #065f46;
-            background-color: #ecfdf5;
         }
 
         .duration-grid {
@@ -1112,7 +579,6 @@
             cursor: pointer;
             font-family: inherit;
             transition: all 0.2s ease;
-            position: relative;
         }
 
         .duration-btn .months-num {
@@ -1135,50 +601,20 @@
             box-shadow: 0 4px 12px rgba(5, 150, 105, 0.14);
         }
 
-        .duration-btn.active .months-num {
-            color: #065f46;
-        }
-
-        .duration-btn.active .months-text {
-            color: #047857;
-        }
-
         .result-box {
-            margin-top: 24px;
+            margin-top: 20px;
             background-color: #ecfdf5;
             border: 2px solid #a7f3d0;
             border-radius: 20px;
-            padding: 20px 18px;
+            padding: 18px;
             text-align: center;
         }
 
-        .result-label {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #047857;
-            margin-bottom: 6px;
-        }
-
-        .result-value-row {
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
         .result-amount {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 900;
             color: #065f46;
-            letter-spacing: -0.02em;
             direction: ltr;
-        }
-
-        .result-unit {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #059669;
         }
 
         .success-card-box {
@@ -1191,15 +627,6 @@
 
         .hidden {
             display: none !important;
-        }
-
-        @media (max-width: 520px) {
-            .filters-grid {
-                grid-template-columns: 1fr;
-            }
-            .store-buttons-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -1275,4 +702,456 @@
                 <p>أدخل رقم الموبايل وكلمة المرور للوصول إلى التطبيق</p>
             </header>
             <div class="card-body">
-                <div id="installHintBox"
+                <div id="installHintBox" class="install-banner hidden"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginPhone" class="input-label">رقم الموبايل</label>
+                        <input type="tel" id="loginPhone" class="field-input" placeholder="01xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword" class="input-label">كلمة المرور</label>
+                        <input type="password" id="loginPassword" class="field-input" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="primary-action-btn">دخول</button>
+                    <div id="loginStatus" class="status-text"></div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- واجهة التطبيق الرئيسية -->
+    <div id="mainAppSection" class="app-wrapper hidden">
+        <div class="topbar">
+            <div class="user-info">
+                <span id="currentUserLabel">مستخدم فوري</span>
+                <span id="currentRoleBadge" class="role-badge">فريق العمل</span>
+            </div>
+            <button type="button" id="logoutBtn" class="logout-btn">تسجيل الخروج</button>
+        </div>
+
+        <div class="nav-tabs">
+            <button type="button" id="tabCalcBtn" class="nav-tab-btn active">حاسبة التمويل</button>
+            <button type="button" id="tabRefBtn" class="nav-tab-btn">رابط الإحالة</button>
+            <button type="button" id="tabScannerBtn" class="nav-tab-btn">ماسح المستندات</button>
+        </div>
+
+        <!-- تبويب الحاسبة -->
+        <div id="calcTabPanel" class="calculator-card">
+            <div class="card-body">
+                <div class="section-top-bar">
+                    <div class="section-title"><span class="section-title-dot"></span>حاسبة القسط الشهري</div>
+                    <button type="button" id="resetCalcBtn" class="reset-btn">إعادة ضبط</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="loanAmountInput" class="input-label">قيمة التمويل (جنيه مصري)</label>
+                    <input type="text" id="loanAmountInput" class="field-input" value="100,000" inputmode="numeric">
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">مدة التمويل (بالأشهر)</label>
+                    <div class="duration-grid" id="durationGrid">
+                        <button type="button" class="duration-btn active" data-months="12">
+                            <span class="months-num">12</span>
+                            <span class="months-text">شهر</span>
+                        </button>
+                        <button type="button" class="duration-btn" data-months="24">
+                            <span class="months-num">24</span>
+                            <span class="months-text">شهر</span>
+                        </button>
+                        <button type="button" class="duration-btn" data-months="36">
+                            <span class="months-num">36</span>
+                            <span class="months-text">شهر</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <div style="font-size: 0.9rem; font-weight: 700; color: #047857;">القسط الشهري التقديري</div>
+                    <div id="monthlyInstallmentDisplay" class="result-amount">0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب رابط الإحالة -->
+        <div id="refTabPanel" class="calculator-card hidden">
+            <div class="card-body">
+                <div class="section-top-bar">
+                    <div class="section-title"><span class="section-title-dot"></span>رابط تقديم العملاء</div>
+                </div>
+                <div class="ref-link-box">
+                    <label for="refCodeInput" class="input-label">كود المسؤول / رقم الموبايل</label>
+                    <input type="text" id="refCodeInput" class="field-input" placeholder="مثال: 01270145062">
+                    <div id="generatedRefUrl" class="ref-url-display">https://fawry2027.github.io/fawry-calculator/</div>
+                    <button type="button" id="copyRefUrlBtn" class="primary-action-btn">نسخ الرابط</button>
+                    <div id="refCopyStatus" class="status-text"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- تبويب ماسح المستندات (قص وتدوير فقط بدون فلاتر) -->
+        <div id="scannerTabPanel" class="calculator-card hidden">
+            <div class="card-body">
+                <div class="section-top-bar">
+                    <div class="section-title"><span class="section-title-dot"></span>ماسح المستندات (قص وتدوير)</div>
+                </div>
+                <div class="form-group">
+                    <label for="scannerFileInput" class="input-label">اختر صورة أو ملف PDF</label>
+                    <input type="file" id="scannerFileInput" class="field-input" accept="image/*,application/pdf">
+                </div>
+                <div id="scannerPreviewWrap" class="hidden" style="text-align: center;">
+                    <img id="scannerResultImg" alt="معاينة المستند" style="max-width: 100%; max-height: 320px; border-radius: 12px; border: 1px solid #cbd5e1; margin-bottom: 12px;">
+                    <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                        <button type="button" id="openScannerEditorBtn" class="reset-btn">قص وتدوير</button>
+                        <a id="downloadScannedImgBtn" class="primary-action-btn" style="width: auto; padding: 8px 16px;" download="document.jpg">تحميل الصورة</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة القص والتدوير فقط (بدون فلاتر) -->
+    <div id="scannerModal" class="scanner-modal hidden">
+        <div class="scanner-top-bar">
+            <div class="crop-mode-pills">
+                <button type="button" id="cropFullBtn" class="crop-mode-pill active">كامل المستند</button>
+                <button type="button" id="cropManualBtn" class="crop-mode-pill">قص يدوي</button>
+            </div>
+            <button type="button" id="closeScannerBtn" class="logout-btn">إغلاق</button>
+        </div>
+
+        <div class="scanner-stage-wrap">
+            <div id="scannerCanvasBox" class="scanner-canvas-box">
+                <canvas id="scannerCanvas"></canvas>
+                <div id="manualCropBox" class="manual-crop-box hidden" style="left: 15%; top: 15%; width: 70%; height: 70%;">
+                    <div id="manualCropHandle" class="manual-crop-handle"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scanner-bottom-panel">
+            <div class="apply-all-row">
+                <label class="apply-all-label">
+                    <input type="checkbox" id="applyAllPagesCheckbox">
+                    <span>تطبيق على كل الصور (Apply to All Pages)</span>
+                </label>
+            </div>
+
+            <div class="scanner-dock-bar">
+                <div class="dock-tools-group">
+                    <button type="button" id="rotateLeftBtn" class="dock-tool-btn">↶ تدوير يسار</button>
+                    <button type="button" id="rotateRightBtn" class="dock-tool-btn">↷ تدوير يمين</button>
+                    <button type="button" id="resetCropBtn" class="dock-tool-btn">↺ إعادة القص</button>
+                </div>
+                <button type="button" id="confirmScannerBtn" class="dock-check-btn" title="تأكيد">✓</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CLEAN_BASE_URL = "https://fawry2027.github.io/fawry-calculator/";
+        const SUPABASE_URL = "";
+        const SUPABASE_ANON_KEY = "";
+        const supabaseClient = (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase)
+            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+            : null;
+
+        function hideSplashScreen() {
+            const splash = document.getElementById("splashScreen");
+            if (!splash) return;
+            splash.classList.add("fade-out");
+            setTimeout(() => {
+                splash.classList.add("hidden");
+            }, 400);
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            setTimeout(hideSplashScreen, 250);
+            initApp();
+        });
+        window.addEventListener("load", hideSplashScreen);
+        setTimeout(hideSplashScreen, 2500);
+
+        function buildReferralUrl(code) {
+            const cleaned = String(code || "").trim();
+            if (!cleaned) return CLEAN_BASE_URL;
+            return `${CLEAN_BASE_URL}?r=${encodeURIComponent(cleaned)}`;
+        }
+
+        function initApp() {
+            const params = new URLSearchParams(window.location.search);
+            const refParam = (params.get("r") || "").trim();
+
+            const publicLeadSection = document.getElementById("publicLeadSection");
+            const loginSection = document.getElementById("loginSection");
+            const mainAppSection = document.getElementById("mainAppSection");
+
+            if (refParam) {
+                publicLeadSection.classList.remove("hidden");
+                loginSection.classList.add("hidden");
+                mainAppSection.classList.add("hidden");
+                document.getElementById("publicAdvisorBadge").textContent = `كود المسؤول: ${refParam} — سجّل بياناتك وسيتواصل معك فوراً`;
+            }
+
+            // التبويبات الرئيسية
+            const tabCalcBtn = document.getElementById("tabCalcBtn");
+            const tabRefBtn = document.getElementById("tabRefBtn");
+            const tabScannerBtn = document.getElementById("tabScannerBtn");
+
+            function switchMainTab(activeBtn, panelId) {
+                [tabCalcBtn, tabRefBtn, tabScannerBtn].forEach(b => b.classList.remove("active"));
+                activeBtn.classList.add("active");
+                ["calcTabPanel", "refTabPanel", "scannerTabPanel"].forEach(id => {
+                    document.getElementById(id).classList.toggle("hidden", id !== panelId);
+                });
+            }
+
+            tabCalcBtn.addEventListener("click", () => switchMainTab(tabCalcBtn, "calcTabPanel"));
+            tabRefBtn.addEventListener("click", () => switchMainTab(tabRefBtn, "refTabPanel"));
+            tabScannerBtn.addEventListener("click", () => switchMainTab(tabScannerBtn, "scannerTabPanel"));
+
+            // الحاسبة
+            let selectedMonths = 12;
+            const loanAmountInput = document.getElementById("loanAmountInput");
+            const monthlyDisplay = document.getElementById("monthlyInstallmentDisplay");
+
+            function recalcInstallment() {
+                const raw = Number(String(loanAmountInput.value || "").replace(/[^0-9.]/g, "")) || 0;
+                if (raw > 0) {
+                    loanAmountInput.value = raw.toLocaleString("en-US");
+                }
+                const rateFactor = 1.24; // معدل تقديري قابل للتعديل حسب فئة التمويل
+                const installment = selectedMonths > 0 ? (raw * rateFactor) / selectedMonths : 0;
+                monthlyDisplay.textContent = installment.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+
+            loanAmountInput.addEventListener("input", recalcInstallment);
+            document.querySelectorAll("#durationGrid .duration-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    document.querySelectorAll("#durationGrid .duration-btn").forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    selectedMonths = Number(btn.dataset.months) || 12;
+                    recalcInstallment();
+                });
+            });
+            document.getElementById("resetCalcBtn").addEventListener("click", () => {
+                loanAmountInput.value = "100,000";
+                selectedMonths = 12;
+                document.querySelectorAll("#durationGrid .duration-btn").forEach((b, i) => b.classList.toggle("active", i === 0));
+                recalcInstallment();
+            });
+            recalcInstallment();
+
+            // رابط الإحالة النظيف
+            const refCodeInput = document.getElementById("refCodeInput");
+            const generatedRefUrl = document.getElementById("generatedRefUrl");
+            const refCopyStatus = document.getElementById("refCopyStatus");
+
+            function updateRefPreview() {
+                generatedRefUrl.textContent = buildReferralUrl(refCodeInput.value);
+            }
+            refCodeInput.addEventListener("input", updateRefPreview);
+            document.getElementById("copyRefUrlBtn").addEventListener("click", async () => {
+                const url = buildReferralUrl(refCodeInput.value);
+                try {
+                    await navigator.clipboard.writeText(url);
+                    refCopyStatus.className = "status-text status-ok";
+                    refCopyStatus.textContent = "تم نسخ الرابط النظيف بنجاح";
+                } catch {
+                    refCopyStatus.className = "status-text status-ok";
+                    refCopyStatus.textContent = url;
+                }
+            });
+
+            // تسجيل الدخول التجريبي / المبدئي
+            document.getElementById("loginForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const phone = document.getElementById("loginPhone").value.trim();
+                const pass = document.getElementById("loginPassword").value.trim();
+                const statusEl = document.getElementById("loginStatus");
+
+                if (!phone || !pass) {
+                    statusEl.className = "status-text status-err";
+                    statusEl.textContent = "يرجى إدخال رقم الموبايل وكلمة المرور";
+                    return;
+                }
+
+                document.getElementById("currentUserLabel").textContent = phone;
+                refCodeInput.value = phone;
+                updateRefPreview();
+                loginSection.classList.add("hidden");
+                mainAppSection.classList.remove("hidden");
+            });
+
+            document.getElementById("logoutBtn").addEventListener("click", () => {
+                mainAppSection.classList.add("hidden");
+                loginSection.classList.remove("hidden");
+            });
+
+            // إرسال طلب العميل العام
+            document.getElementById("publicLeadForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const leadStatus = document.getElementById("leadStatus");
+                const payload = {
+                    name: document.getElementById("leadName").value.trim(),
+                    phone: document.getElementById("leadPhone").value.trim(),
+                    activity: document.getElementById("leadActivity").value.trim(),
+                    city: document.getElementById("leadCity").value.trim(),
+                    amount: document.getElementById("leadAmount").value.trim(),
+                    referral_code: refParam
+                };
+
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.from("leads").insert([payload]);
+                    if (error) {
+                        leadStatus.className = "status-text status-err";
+                        leadStatus.textContent = "تعذر إرسال الطلب، حاول مرة أخرى";
+                        return;
+                    }
+                }
+
+                document.getElementById("publicLeadFormWrap").classList.add("hidden");
+                document.getElementById("publicLeadSuccessWrap").classList.remove("hidden");
+            });
+
+            document.getElementById("sendAnotherLeadBtn").addEventListener("click", () => {
+                document.getElementById("publicLeadForm").reset();
+                document.getElementById("publicLeadSuccessWrap").classList.add("hidden");
+                document.getElementById("publicLeadFormWrap").classList.remove("hidden");
+                document.getElementById("leadStatus").textContent = "";
+            });
+
+            // الماسح الضوئي (قص وتدوير فقط بدون فلاتر)
+            const scannerFileInput = document.getElementById("scannerFileInput");
+            const scannerModal = document.getElementById("scannerModal");
+            const scannerCanvas = document.getElementById("scannerCanvas");
+            const ctx = scannerCanvas.getContext("2d");
+            const manualCropBox = document.getElementById("manualCropBox");
+            const cropFullBtn = document.getElementById("cropFullBtn");
+            const cropManualBtn = document.getElementById("cropManualBtn");
+
+            let sourceImage = new Image();
+            let rotationDeg = 0;
+            let isManualCrop = false;
+
+            function drawScannerCanvas() {
+                if (!sourceImage.complete || !sourceImage.naturalWidth) return;
+                const rad = (rotationDeg * Math.PI) / 180;
+                const swap = Math.abs(rotationDeg % 180) === 90;
+                const drawW = swap ? sourceImage.naturalHeight : sourceImage.naturalWidth;
+                const drawH = swap ? sourceImage.naturalWidth : sourceImage.naturalHeight;
+
+                const maxSide = 1200;
+                const scale = Math.min(1, maxSide / Math.max(drawW, drawH));
+                scannerCanvas.width = Math.round(drawW * scale);
+                scannerCanvas.height = Math.round(drawH * scale);
+
+                ctx.save();
+                ctx.clearRect(0, 0, scannerCanvas.width, scannerCanvas.height);
+                ctx.translate(scannerCanvas.width / 2, scannerCanvas.height / 2);
+                ctx.rotate(rad);
+                const imgW = sourceImage.naturalWidth * scale;
+                const imgH = sourceImage.naturalHeight * scale;
+                ctx.drawImage(sourceImage, -imgW / 2, -imgH / 2, imgW, imgH);
+                ctx.restore();
+            }
+
+            scannerFileInput.addEventListener("change", (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    sourceImage = new Image();
+                    sourceImage.onload = () => {
+                        rotationDeg = 0;
+                        isManualCrop = false;
+                        cropFullBtn.classList.add("active");
+                        cropManualBtn.classList.remove("active");
+                        manualCropBox.classList.add("hidden");
+                        drawScannerCanvas();
+                        scannerModal.classList.remove("hidden");
+                    };
+                    sourceImage.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            cropFullBtn.addEventListener("click", () => {
+                isManualCrop = false;
+                cropFullBtn.classList.add("active");
+                cropManualBtn.classList.remove("active");
+                manualCropBox.classList.add("hidden");
+            });
+
+            cropManualBtn.addEventListener("click", () => {
+                isManualCrop = true;
+                cropManualBtn.classList.add("active");
+                cropFullBtn.classList.remove("active");
+                manualCropBox.classList.remove("hidden");
+            });
+
+            document.getElementById("rotateLeftBtn").addEventListener("click", () => {
+                rotationDeg = (rotationDeg - 90 + 360) % 360;
+                drawScannerCanvas();
+            });
+
+            document.getElementById("rotateRightBtn").addEventListener("click", () => {
+                rotationDeg = (rotationDeg + 90) % 360;
+                drawScannerCanvas();
+            });
+
+            document.getElementById("resetCropBtn").addEventListener("click", () => {
+                rotationDeg = 0;
+                manualCropBox.style.left = "15%";
+                manualCropBox.style.top = "15%";
+                manualCropBox.style.width = "70%";
+                manualCropBox.style.height = "70%";
+                drawScannerCanvas();
+            });
+
+            document.getElementById("closeScannerBtn").addEventListener("click", () => {
+                scannerModal.classList.add("hidden");
+            });
+
+            document.getElementById("confirmScannerBtn").addEventListener("click", () => {
+                const outCanvas = document.createElement("canvas");
+                const outCtx = outCanvas.getContext("2d");
+
+                if (isManualCrop && !manualCropBox.classList.contains("hidden")) {
+                    const boxRect = manualCropBox.getBoundingClientRect();
+                    const canvasRect = scannerCanvas.getBoundingClientRect();
+                    const sx = ((boxRect.left - canvasRect.left) / canvasRect.width) * scannerCanvas.width;
+                    const sy = ((boxRect.top - canvasRect.top) / canvasRect.height) * scannerCanvas.height;
+                    const sw = (boxRect.width / canvasRect.width) * scannerCanvas.width;
+                    const sh = (boxRect.height / canvasRect.height) * scannerCanvas.height;
+                    outCanvas.width = Math.max(1, Math.round(sw));
+                    outCanvas.height = Math.max(1, Math.round(sh));
+                    outCtx.drawImage(scannerCanvas, sx, sy, sw, sh, 0, 0, outCanvas.width, outCanvas.height);
+                } else {
+                    outCanvas.width = scannerCanvas.width;
+                    outCanvas.height = scannerCanvas.height;
+                    outCtx.drawImage(scannerCanvas, 0, 0);
+                }
+
+                const dataUrl = outCanvas.toDataURL("image/jpeg", 0.92);
+                const resultImg = document.getElementById("scannerResultImg");
+                const dlBtn = document.getElementById("downloadScannedImgBtn");
+                resultImg.src = dataUrl;
+                dlBtn.href = dataUrl;
+                document.getElementById("scannerPreviewWrap").classList.remove("hidden");
+                scannerModal.classList.add("hidden");
+            });
+
+            document.getElementById("openScannerEditorBtn").addEventListener("click", () => {
+                if (sourceImage.src) {
+                    drawScannerCanvas();
+                    scannerModal.classList.remove("hidden");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
